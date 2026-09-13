@@ -1,0 +1,46 @@
+name: Run Video Pipeline Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      series_name:
+        description: 'اسم السلسلة'
+        required: true
+        default: 'سلسلة الجبر الأساسي'
+      lesson_num:
+        description: 'رقم الدرس'
+        required: true
+        default: '1'
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install System Dependencies (FFmpeg & Fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-dejavu-core fonts-freefont-ttf
+
+      - name: Install Python Packages
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Execute Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+          SERIES_NAME: ${{ github.event.inputs.series_name }}
+          LESSON_NUM: ${{ github.event.inputs.lesson_num }}
+        run: |
+          python pipeline.py

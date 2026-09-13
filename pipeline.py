@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import json
 import asyncio
 import urllib.request
@@ -13,18 +14,18 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 from PIL import Image, ImageDraw, ImageFont
 
-# 1. التحقق الصارم من البيئة والمدخلات
+# 1. التحقق من البيئة
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_KEY:
-    print("❌ خطأ حرج: متغير GEMINI_API_KEY غير موجود في أسرار المستودع (GitHub Secrets)!")
+    print("❌ خطأ حرج: متغير GEMINI_API_KEY غير موجود في أسرار المستودع!")
     sys.exit(1)
 
 SERIES_NAME = os.environ.get("SERIES_NAME", "حيل الرياضيات السريعة")
 LESSON_NUM = os.environ.get("LESSON_NUM", "1")
 LANG = os.environ.get("VIDEO_LANG", "ar").lower().strip()
-TARGET_DURATION = int(os.environ.get("TARGET_DURATION", "35"))
+TARGET_DURATION = int(os.environ.get("TARGET_DURATION", "30"))
 
-# 2. معالجة النصوص وتشكيل الخط العربي لمنع تقطيع الحروف
+# 2. تشكيل الخط العربي
 def shape_text(text):
     if not text:
         return ""
@@ -47,7 +48,7 @@ def get_font(size):
             return ImageFont.truetype(p, size)
     return ImageFont.load_default()
 
-# 3. حساب مدة الصوت بدقة
+# 3. قياس مدة الصوت بدقة
 def get_audio_duration(file_path):
     cmd = [
         "ffprobe", "-v", "error",
@@ -62,9 +63,9 @@ def get_audio_duration(file_path):
     except Exception:
         return float(TARGET_DURATION)
 
-# 4. توليد BGM هادئ متوافق مع المدة
+# 4. توليد BGM
 def generate_ambient_bgm(duration, output_file="bgm.wav"):
-    print("🎵 فحص وتجهيز موسيقى الخلفية الهادئة (BGM)...")
+    print("🎵 فحص وتجهيز موسيقى الخلفية (BGM)...")
     if os.path.exists(output_file):
         return output_file
         
@@ -78,23 +79,21 @@ def generate_ambient_bgm(duration, output_file="bgm.wav"):
     ]
     
     with wave.open(output_file, "w") as f:
-        f.setnchannels(1)
-        f.setsampwidth(2)
-        f.setframerate(sample_rate)
+        f.setnchannels(1); f.setsampwidth(2); f.setframerate(sample_rate)
         data = []
         chord_len = int(sample_rate * 3.5)
         for i in range(total_samples):
             t = i / sample_rate
             chord_idx = (i // chord_len) % len(chords)
             sample_val = sum(math.sin(2 * math.pi * freq * t) for freq in chords[chord_idx])
-            sample_val = (sample_val / len(chords[chord_idx])) * 0.16
+            sample_val = (sample_val / len(chords[chord_idx])) * 0.15
             envelope = min(1.0, t / 1.5) * min(1.0, (duration - t) / 1.5)
             val = int(32767 * sample_val * envelope)
             data.append(struct.pack('<h', max(-32767, min(32767, val))))
         f.writeframes(b''.join(data))
     return output_file
 
-# 5. توليد المؤثرات الصوتية
+# 5. توليد المؤثرات الصوتية SFX
 def generate_sfx():
     print("🔊 توليد المؤثرات الصوتية...")
     with wave.open("ding.wav", "w") as f:
@@ -107,11 +106,9 @@ def generate_sfx():
         data = [struct.pack('<h', int(32767 * 0.6 * math.sin(2 * math.pi * max(45, 140 - 110 * (i/24000)) * (i/24000)) * math.exp(-3 * (i/24000)))) for i in range(19200)]
         f.writeframes(b''.join(data))
 
-# 6. رسم السبورة، المعلم، وبطاقات النصوص المعالجة باللغة العربية عبر Pillow
+# 6. رسم السبورة وبطاقات النصوص
 def generate_graphics_and_cards(data):
-    print("🎨 رسم السبورة وبطاقات النصوص العربية المصححة عبر Pillow...")
-    
-    # 6.1 السبورة الخلفية
+    print("🎨 رسم السبورة وبطاقات النصوص عبر Pillow...")
     board = Image.new("RGBA", (1080, 1920), "#452613")
     d = ImageDraw.Draw(board)
     d.rectangle([25, 45, 1055, 1875], fill="#693b1d")
@@ -121,13 +118,10 @@ def generate_graphics_and_cards(data):
     d.rectangle([200, 1805, 235, 1815], fill="#fde047")
     d.rectangle([250, 1805, 285, 1815], fill="#67e8f9")
     
-    # عنوان السلسلة في أعلى السبورة
     font_title = get_font(48)
-    title_txt = shape_text(SERIES_NAME)
-    d.text((540, 150), title_txt, font=font_title, fill="#fef08a", anchor="mm")
+    d.text((540, 150), shape_text(SERIES_NAME), font=font_title, fill="#fef08a", anchor="mm")
     board.save("chalkboard.png")
 
-    # 6.2 المعلم الكرتوني
     def draw_teacher(mouth_open=False):
         img = Image.new("RGBA", (340, 420), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
@@ -149,13 +143,11 @@ def generate_graphics_and_cards(data):
     draw_teacher(mouth_open=False).save("teacher_closed.png")
     draw_teacher(mouth_open=True).save("teacher_open.png")
 
-    # 6.3 بطاقات النصوص الشفافة (تمنع التقطيع وتمنع مشاكل الحروف تماماً)
     def make_text_overlay(text, font_size, fill_color, y_pos, filename, bg_box=False):
         img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
         font = get_font(font_size)
         shaped = shape_text(text)
-        
         if bg_box:
             bbox = dr.textbbox((540, y_pos), shaped, font=font, anchor="mm")
             pad = 20
@@ -170,45 +162,34 @@ def generate_graphics_and_cards(data):
     make_text_overlay(data.get("step_2", ""), 46, "#67e8f9", 840, "card_step2.png")
     make_text_overlay(data.get("result_text", ""), 56, "#86efac", 1060, "card_result.png", bg_box=True)
 
-    # 6.4 الاستيكر مع الإفيه مكتوب بداخله بالعربي السليم
     effect = data.get("effect_type", "shock")
     stk = Image.new("RGBA", (500, 150), (0, 0, 0, 0))
     d_stk = ImageDraw.Draw(stk)
     bg_col = "#dc2626" if effect == "shock" else "#059669"
     d_stk.rounded_rectangle([10, 10, 490, 140], radius=20, fill=bg_col, outline="#ffffff", width=4)
-    
-    joke_txt = shape_text(data.get("joke_text", "انتظر المفاجأة!"))
-    d_stk.text((250, 75), joke_txt, font=get_font(30), fill="#ffffff", anchor="mm")
+    d_stk.text((250, 75), shape_text(data.get("joke_text", "انتظر المفاجأة!")), font=get_font(30), fill="#ffffff", anchor="mm")
     stk.save("sticker_active.png")
 
-# 7. توليد المحتوى عبر Gemini مع احترام المدة المطلوبة
+# 7. توليد المحتوى عبر Gemini مع فرض طول الاسكريبت
 def generate_lesson_content():
-    print(f"⏳ توليد المحتوى ليتناسب مع مدة {TARGET_DURATION} ثانية عبر Gemini ({LANG.upper()})...")
-    
-    # حساب عدد الكلمات المستهدف: بمعدل 2.2 كلمة لكل ثانية
-    target_words = int(TARGET_DURATION * 2.2)
+    target_words = max(60, int(TARGET_DURATION * 2.3))
+    print(f"⏳ توليد محتوى {LANG.upper()} بطول مستهدف {target_words} كلمة...")
     
     if LANG == "ar":
         prompt = f"""
         أنت صانع محتوى رياضيات تيك توك وريلز مصري مضحك وسريع.
-        المطلوب درس ترفيهي عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
+        المطلوب درس عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
         
-        المدة المستهدفة للفيديو: {TARGET_DURATION} ثانية بالضبط (حوالي {target_words} كلمة في الاسكريبت).
-        
-        الشروط:
-        1. ابدأ بهوك صادم وفكاهي يسخر من صعوبة الطرق التقليدية.
-        2. الإفيه قصير جداً (أقل من 5 كلمات) ليناسب الاستيكر.
-        3. نصوص السبورة (الهوك، الخطوة 1، الخطوة 2، النتيجة) قصيرة جداً (أقل من 6 كلمات لكل منها).
-        4. اختر effect_type إما "shock" أو "idea".
+        شرط حاسم للمدة: يجب ألا يقل نص spoken_script عن {target_words} كلمة، لكي يستغرق التعليق الصوتي 30 ثانية كاملة.
         
         أخرج الرد بصيغة JSON حصرية:
         {{
           "title": "عنوان جذاب مع إيموجي",
           "description": "وصف كامل بالهاشتاجات #رياضيات #شورتس",
           "tags": "رياضيات, قدرات, جبر, شورتس",
-          "spoken_script": "نص الاسكريبت المنطوق بالعامية المصرية ومشكل بالحركات تماماً بطول حوالي {target_words} كلمة",
+          "spoken_script": "نص الاسكريبت المنطوق بالعامية المصرية ومشكل بالحركات تماماً بطول لا يقل عن {target_words} كلمة تفصيلية وسريعة",
           "hook_text": "المسألة أو المعادلة الصادمة",
-          "joke_text": "إفيه قصير للاستيكر",
+          "joke_text": "إفيه قصير جداً للاستيكر",
           "step_1": "الحيلة الأولى",
           "step_2": "التطبيق الفوري",
           "result_text": "الحل النهائي في ثانية 🎉",
@@ -219,17 +200,17 @@ def generate_lesson_content():
         prompt = f"""
         You are a funny, high-energy viral math Shorts creator.
         Create an entertaining reel about: {SERIES_NAME} - Episode {LESSON_NUM}.
-        Target Duration: {TARGET_DURATION} seconds (approx {target_words} words).
-        All board texts must be concise (under 30 characters).
+        
+        CRITICAL DURATION RULE: spoken_script MUST contain at least {target_words} words to guarantee a 30-second voiceover.
         
         Output ONLY valid JSON:
         {{
           "title": "Catchy Title with Emojis",
           "description": "Shorts description with hashtags",
           "tags": "math hacks, algebra, quick tips, shorts",
-          "spoken_script": "Spoken script matching exactly {target_words} words. Humorous and fast.",
+          "spoken_script": "Spoken script with AT LEAST {target_words} words. Detailed, humorous and punchy.",
           "hook_text": "The Problem",
-          "joke_text": "Short funny sticker caption",
+          "joke_text": "Short funny caption",
           "step_1": "Step 1 Hack",
           "step_2": "Step 2 Hack",
           "result_text": "Final Answer 🎉",
@@ -240,11 +221,10 @@ def generate_lesson_content():
     models_to_try = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite"]
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.8}
+        "generationConfig": {"response_mime_type": "application/json", "temperature": 0.75}
     }
     data_bytes = json.dumps(payload).encode("utf-8")
 
-    last_error = None
     for model_name in models_to_try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={GEMINI_KEY}"
         req = urllib.request.Request(url, data=data_bytes, headers={"Content-Type": "application/json"})
@@ -256,47 +236,65 @@ def generate_lesson_content():
                 if raw_text.startswith("```"): raw_text = raw_text[3:]
                 if raw_text.endswith("```"): raw_text = raw_text[:-3]
                 return json.loads(raw_text.strip())
-        except Exception as e:
-            last_error = e
+        except Exception:
             continue
-    raise RuntimeError(f"فشلت المحاولات مع كافة النماذج: {last_error}")
+    raise RuntimeError("فشلت محاولات الاتصال بكافة نماذج Gemini.")
 
-# 8. توليد الصوت مع Timeout ومعالجة Fallback للكابشنز
+# 8. تسجيل الصوت مع المحاولات المتكررة والبديل الآمن للترجمة
 async def create_voiceover_safe(text, output_file="voice.mp3"):
-    print("⏳ تسجيل التعليق الصوتي واستخراج التوقيتات بأمان...")
-    
-    lesson_idx = int(LESSON_NUM) if str(LESSON_NUM).isdigit() else 1
+    print("⏳ فحص النص وتنظيفه وتسجيل التعليق الصوتي...")
+    clean_text = re.sub(r'[^\w\s\d.,!?;:\'\"\-+\u0600-\u06FF]', '', str(text)).strip()
+    if len(clean_text) < 10:
+        clean_text = "Let us solve this math problem quickly and easily!" if LANG != "ar" else "يلا نحل المسألة دي في ثواني وبطريقة سهلة جداً!"
+
     if LANG == "ar":
-        voices = ["ar-EG-ShakirNeural", "ar-EG-SalmaNeural"]
+        voices_pool = ["ar-EG-ShakirNeural", "ar-EG-SalmaNeural"]
     else:
-        voices = ["en-US-ChristopherNeural", "en-US-JennyNeural", "en-US-GuyNeural"]
-    chosen_voice = voices[lesson_idx % len(voices)]
-    print(f"🎙️ الصوت المعتمد: {chosen_voice}")
+        voices_pool = ["en-US-ChristopherNeural", "en-US-GuyNeural", "en-US-JennyNeural", "en-US-AriaNeural"]
 
-    communicate = edge_tts.Communicate(text, chosen_voice)
     words_data = []
+    success = False
+    last_err = None
 
-    async def _fetch():
-        with open(output_file, "wb") as f:
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    f.write(chunk["data"])
-                elif chunk["type"] == "WordBoundary":
-                    start_sec = chunk["offset"] / 10_000_000.0
-                    dur_sec = chunk["duration"] / 10_000_000.0
-                    words_data.append({
-                        "start": start_sec,
-                        "end": start_sec + dur_sec,
-                        "word": chunk["text"]
-                    })
+    for attempt in range(3):
+        chosen_voice = voices_pool[attempt % len(voices_pool)]
+        print(f"🎙️ تجربة تسجيل الصوت ({attempt + 1}/3) عبر: {chosen_voice}")
+        try:
+            communicate = edge_tts.Communicate(clean_text, chosen_voice)
+            words_data.clear()
 
-    try:
-        # مهلة زمنية 50 ثانية كحد أقصى لمنع التعليق
-        await asyncio.wait_for(_fetch(), timeout=50)
-    except asyncio.TimeoutError:
-        raise RuntimeError("انتهت مهلة اتصال خدمة edge-tts دون استجابة!")
+            async def _fetch():
+                with open(output_file, "wb") as f:
+                    async for chunk in communicate.stream():
+                        if chunk["type"] == "audio":
+                            f.write(chunk["data"])
+                        elif chunk["type"] == "WordBoundary":
+                            start_sec = chunk["offset"] / 10_000_000.0
+                            dur_sec = chunk["duration"] / 10_000_000.0
+                            words_data.append({
+                                "start": start_sec,
+                                "end": start_sec + dur_sec,
+                                "word": chunk["text"]
+                            })
 
-    # بناء الكابشنز
+            await asyncio.wait_for(_fetch(), timeout=40)
+            if os.path.exists(output_file) and os.path.getsize(output_file) > 1000:
+                print("✓ تم تسجيل واستلام الصوت بنجاح!")
+                success = True
+                break
+            else:
+                raise RuntimeError("ملف صوتي فارغ")
+        except Exception as e:
+            print(f"⚠️ تعثر الصوت: {e}")
+            last_err = e
+            await asyncio.sleep(2)
+
+    if not success:
+        raise RuntimeError(f"فشلت كافة محاولات استخراج الصوت: {last_err}")
+
+    # قياس مدة الصوت الفعلية
+    actual_dur = get_audio_duration(output_file)
+
     def format_srt_time(seconds):
         hrs = int(seconds // 3600)
         mins = int((seconds % 3600) // 60)
@@ -305,21 +303,33 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
         return f"{hrs:02d}:{mins:02d}:{secs:02d},{millis:03d}"
 
     srt_lines = []
-    chunk_size = 4
-    sub_idx = 1
-    for i in range(0, len(words_data), chunk_size):
-        chunk = words_data[i:i + chunk_size]
-        start_ts = format_srt_time(chunk[0]["start"])
-        end_ts = format_srt_time(chunk[-1]["end"] + 0.15)
-        txt = " ".join(w["word"] for w in chunk).strip()
-        if txt:
-            srt_lines.append(f"{sub_idx}\n{start_ts} --> {end_ts}\n{txt}\n")
-            sub_idx += 1
+    
+    # إذا نجح WordBoundary نستخدمه، وإذا لم ينجح نقوم بتقسيم النص تلقائياً (Fallback) لمنع انهيار FFmpeg
+    if words_data:
+        chunk_size = 4
+        sub_idx = 1
+        for i in range(0, len(words_data), chunk_size):
+            chunk = words_data[i:i + chunk_size]
+            start_ts = format_srt_time(chunk[0]["start"])
+            end_ts = format_srt_time(chunk[-1]["end"] + 0.15)
+            txt = " ".join(w["word"] for w in chunk).strip()
+            if txt:
+                srt_lines.append(f"{sub_idx}\n{start_ts} --> {end_ts}\n{txt}\n")
+                sub_idx += 1
+    else:
+        print("⚠️ لم يتم استلام WordBoundary، جاري إنشاء توقيتات الترجمة برمجياً...")
+        words = clean_text.split()
+        chunk_size = 4
+        chunks = [" ".join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
+        step_dur = actual_dur / max(1, len(chunks))
+        for idx, ch in enumerate(chunks):
+            s_t = format_srt_time(idx * step_dur)
+            e_t = format_srt_time((idx + 1) * step_dur)
+            srt_lines.append(f"{idx+1}\n{s_t} --> {e_t}\n{ch}\n")
 
     with open("captions.srt", "w", encoding="utf-8") as f:
         f.write("\n".join(srt_lines))
 
-    # استخراج فترات الكلام لحركة الفم
     speech_intervals = []
     if words_data:
         curr_start = words_data[0]["start"]
@@ -332,13 +342,14 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
                 curr_start = w["start"]
                 curr_end = w["end"]
         speech_intervals.append((curr_start, curr_end))
+    else:
+        speech_intervals.append((0.5, actual_dur))
 
-    return speech_intervals
+    return speech_intervals, actual_dur
 
-# 9. المونتاج والرندرة الكاملة عبر بطاقات الصور (خالي تماماً من مشاكل drawtext واللغة العربية)
+# 9. المونتاج والرندرة
 def build_video_with_ffmpeg(data, duration, speech_intervals):
     print(f"⏳ رندرة الفيديو الاحترافي عبر FFmpeg (المدة: {duration:.2f}s)...")
-    
     effect = data.get("effect_type", "shock")
     sfx_file = "boom.wav" if effect == "shock" else "ding.wav"
 
@@ -356,18 +367,10 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         speech_cond = f"between(t,0.5,{duration:.2f})"
     mouth_flap_expr = f"({speech_cond}) * between(mod(t,0.28),0,0.14)"
 
-    # المدخلات (كل النصوص مجهزة مسبقاً كصور PNG شفافة عبر Pillow لضمان سلامة التشكيل العربي 100%):
-    # 0: chalkboard.png
-    # 1: voice.mp3
-    # 2: teacher_closed.png
-    # 3: teacher_open.png
-    # 4: sticker_active.png
-    # 5: card_hook.png
-    # 6: card_step1.png
-    # 7: card_step2.png
-    # 8: card_result.png
-    # 9: sfx_file
-    # 10: bgm.wav
+    # التحقق من وجود ملف الترجمة وصلاحيته
+    has_sub = os.path.exists("captions.srt") and os.path.getsize("captions.srt") > 15
+    sub_filter = ",subtitles=captions.srt:force_style='FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,MarginV=190'" if has_sub else ""
+
     vf = (
         "[0:v]scale=1080:1920[bg];"
         "[bg][2:v]overlay=x=690:y=1380[v_base];"
@@ -377,8 +380,8 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         f"[v_h][6:v]overlay=x=0:y=0:enable='between(t,{t_s1},{duration:.2f})'[v_s1];"
         f"[v_s1][7:v]overlay=x=0:y=0:enable='between(t,{t_s2},{duration:.2f})'[v_s2];"
         f"[v_s2][8:v]overlay=x=0:y=0:enable='between(t,{t_res},{duration:.2f})'[v_res];"
-        f"[v_res]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill,"
-        "subtitles=captions.srt:force_style='FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,MarginV=190'[outv]"
+        f"[v_res]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill"
+        f"{sub_filter}[outv]"
     )
 
     af = (
@@ -424,9 +427,8 @@ async def main():
         f.write(f"الوصف:\n{data.get('description', '')}\n\n")
         f.write(f"الكلمات المفتاحية:\n{data.get('tags', '')}\n")
 
-    speech_intervals = await create_voiceover_safe(data["spoken_script"])
-    actual_duration = get_audio_duration("voice.mp3")
-    print(f"⏱️ مدة الصوت الفعلية: {actual_duration:.2f} ثانية")
+    speech_intervals, actual_duration = await create_voiceover_safe(data["spoken_script"])
+    print(f"⏱️ مدة الصوت المعتمدة: {actual_duration:.2f} ثانية")
     
     generate_ambient_bgm(actual_duration + 3)
     build_video_with_ffmpeg(data, actual_duration, speech_intervals)

@@ -8,12 +8,12 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import edge_tts
 
-# 1. تهيئة المتغيرات
-GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
-GDRIVE_KEY_JSON = os.environ.get("GDRIVE_KEY")
-FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID")
-SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي")
-LESSON_NUM = os.environ.get("LESSON_NUM", "1")
+# 1. تهيئة المتغيرات (مع تنظيف أي مسافات أو أسطر زيادة)
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
+GDRIVE_KEY_JSON = os.environ.get("GDRIVE_KEY", "").strip()
+FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", "").strip()
+SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي").strip()
+LESSON_NUM = os.environ.get("LESSON_NUM", "1").strip()
 
 # 2. استدعاء الموديل مباشرة عبر REST API
 def generate_lesson_content():
@@ -113,7 +113,10 @@ def upload_to_drive(file_path, file_name, mime_type):
 
     service = build("drive", "v3", credentials=creds)
 
-    metadata = {"name": file_name, "parents": [FOLDER_ID]}
+    # تنظيف الـ FOLDER_ID من أي مسافات أو أسطر جديد أو علامات اقتباس زيادة
+    clean_folder_id = FOLDER_ID.strip().strip('"').strip("'")
+
+    metadata = {"name": file_name, "parents": [clean_folder_id]}
     media = MediaFileUpload(file_path, mimetype=mime_type)
     uploaded = service.files().create(
         body=metadata,

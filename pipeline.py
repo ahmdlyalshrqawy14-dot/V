@@ -104,21 +104,20 @@ def build_video_with_ffmpeg(board_text):
 # 5. الرفع إلى Google Drive
 def upload_to_drive(file_path, file_name, mime_type):
     print(f"⏳ جاري رفع {file_name} إلى مجلد Google Drive...")
-    
-    # تفكيك الرابط لمنع الهاتف من تحويله لرابط تشعبي مشوه
-    drive_scope = "https://" + "[www.googleapis.com](https://www.googleapis.com)" + "/auth/drive"
-    
+
+    drive_scope = "https://www.googleapis.com/auth/drive"
+
     creds_info = json.loads(GDRIVE_KEY_JSON)
     creds = service_account.Credentials.from_service_account_info(creds_info)
     creds = creds.with_scopes([drive_scope])
-    
+
     service = build("drive", "v3", credentials=creds)
 
     metadata = {"name": file_name, "parents": [FOLDER_ID]}
     media = MediaFileUpload(file_path, mimetype=mime_type)
     uploaded = service.files().create(
-        body=metadata, 
-        media_body=media, 
+        body=metadata,
+        media_body=media,
         fields="id",
         supportsAllDrives=True
     ).execute()

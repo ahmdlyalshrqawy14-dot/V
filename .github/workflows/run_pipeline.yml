@@ -3,12 +3,16 @@ name: Run Video Pipeline Test
 on:
   workflow_dispatch:
     inputs:
-      series_name:
-        description: 'اسم السلسلة'
+      language:
+        description: 'اللغة / Language (ar or en)'
         required: true
-        default: 'سلسلة الجبر الأساسي'
+        default: 'ar'
+      series_name:
+        description: 'اسم السلسلة / Series Title'
+        required: true
+        default: 'حيل الرياضيات السريعة'
       lesson_num:
-        description: 'رقم الدرس'
+        description: 'رقم الدرس / Episode Number'
         required: true
         default: '1'
 
@@ -25,21 +29,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install System Dependencies (FFmpeg & Fonts)
+      - name: Install System Dependencies (FFmpeg & Arabic Fonts)
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-dejavu-core fonts-freefont-ttf
+          sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-dejavu-core fonts-freefont-ttf fonts-kacst
 
       - name: Install Python Packages
         run: |
           pip install --upgrade pip
-          pip install edge-tts
+          pip install -r requirements.txt
 
       - name: Execute Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SERIES_NAME: ${{ github.event.inputs.series_name }}
           LESSON_NUM: ${{ github.event.inputs.lesson_num }}
+          VIDEO_LANG: ${{ github.event.inputs.language }}
         run: |
           python pipeline.py
 
@@ -49,4 +54,4 @@ jobs:
           name: video-lesson-output
           path: |
             final_video.mp4
-            بيانات_اليوتيوب_*.txt
+            بيانات_*.txt

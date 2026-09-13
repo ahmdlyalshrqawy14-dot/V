@@ -35,7 +35,8 @@ def generate_lesson_content():
     models_to_try = [
         "gemini-3.8-flash",
         "gemini-3.7-flash",
-        "gemini-3.5-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
         "gemini-3.1-flash"
     ]
 
@@ -64,7 +65,6 @@ def generate_lesson_content():
                 res_data = json.loads(resp.read().decode("utf-8"))
                 raw_text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
                 
-                # إزالة أي وسوم markdown إضافية إن وُجدت
                 if raw_text.startswith("```json"):
                     raw_text = raw_text[7:]
                 if raw_text.startswith("```"):
@@ -79,7 +79,7 @@ def generate_lesson_content():
             last_error = e
             continue
 
-    raise RuntimeError(f"فشلت المحاولات مع كافة النماذج: {last_error}")
+    raise RuntimeError(f"فشلت المحاولات مع كافة النماذج المحددة: {last_error}")
 
 # 3. تحويل النص إلى صوت
 async def create_voiceover(text, output_file="voice.mp3"):

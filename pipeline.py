@@ -3,17 +3,12 @@ import json
 import asyncio
 import urllib.request
 import urllib.error
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
 import edge_tts
 
-# 1. تهيئة المتغيرات (مع تنظيف أي مسافات أو أسطر زيادة)
-GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
-GDRIVE_KEY_JSON = os.environ.get("GDRIVE_KEY", "").strip()
-FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", "").strip()
-SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي").strip()
-LESSON_NUM = os.environ.get("LESSON_NUM", "1").strip()
+# 1. تهيئة المتغيرات
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
+SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي")
+LESSON_NUM = os.environ.get("LESSON_NUM", "1")
 
 # 2. استدعاء الموديل مباشرة عبر REST API
 def generate_lesson_content():
@@ -101,47 +96,24 @@ def build_video_with_ffmpeg(board_text):
     os.system(cmd)
     print("✓ تم تجميع الفيديو النهائي بنجاح.")
 
-# 5. الرفع إلى Google Drive
-def upload_to_drive(file_path, file_name, mime_type):
-    print(f"⏳ جاري رفع {file_name} إلى مجلد Google Drive...")
-
-    drive_scope = "https://www.googleapis.com/auth/drive"
-
-    creds_info = json.loads(GDRIVE_KEY_JSON)
-    creds = service_account.Credentials.from_service_account_info(creds_info)
-    creds = creds.with_scopes([drive_scope])
-
-    service = build("drive", "v3", credentials=creds)
-
-    # تنظيف الـ FOLDER_ID من أي مسافات أو أسطر جديد أو علامات اقتباس زيادة
-    clean_folder_id = FOLDER_ID.strip().strip('"').strip("'")
-
-    metadata = {"name": file_name, "parents": [clean_folder_id]}
-    media = MediaFileUpload(file_path, mimetype=mime_type)
-    uploaded = service.files().create(
-        body=metadata,
-        media_body=media,
-        fields="id",
-        supportsAllDrives=True
-    ).execute()
-    print(f"✓ تم الرفع بنجاح! معرّف الملف: {uploaded.get('id')}")
-
 # المسار الرئيسي
 async def main():
     data = generate_lesson_content()
     
+    # حفظ بيانات اليوتيوب
     txt_filename = f"بيانات_اليوتيوب_درس_{LESSON_NUM}.txt"
     with open(txt_filename, "w", encoding="utf-8") as f:
         f.write(f"العنوان المقترح:\n{data['title']}\n\n")
         f.write(f"الوصف:\n{data['description']}\n\n")
         f.write(f"الكلمات المفتاحية:\n{data['tags']}\n")
 
+    # الصوت
     await create_voiceover(data["spoken_script"])
+    
+    # المونتاج والرندرة
     build_video_with_ffmpeg(data.get("board_summary", ""))
-
-    upload_to_drive("final_video.mp4", f"فيديو_درس_{LESSON_NUM}_{SERIES_NAME}.mp4", "video/mp4")
-    upload_to_drive(txt_filename, txt_filename, "text/plain")
-    print("🎉 اكتمل خط الإنتاج بنجاح وتم تسليم كافة المخرجات إلى درايف!")
+    
+    print("🎉 تم إنتاج الفيديو وتجهيز الملفات للحفظ بنجاح!")
 
 if __name__ == "__main__":
     asyncio.run(main())

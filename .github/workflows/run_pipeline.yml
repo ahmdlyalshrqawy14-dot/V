@@ -33,14 +33,20 @@ jobs:
       - name: Install Python Packages
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install edge-tts
 
       - name: Execute Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
-          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           SERIES_NAME: ${{ github.event.inputs.series_name }}
           LESSON_NUM: ${{ github.event.inputs.lesson_num }}
         run: |
           python pipeline.py
+
+      - name: Upload Output Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-lesson-output
+          path: |
+            final_video.mp4
+            بيانات_اليوتيوب_*.txt

@@ -15,6 +15,10 @@ on:
         description: 'رقم الدرس / Episode Number'
         required: true
         default: '1'
+      target_duration:
+        description: 'المدة المستهدفة بالثواني / Target Duration (seconds)'
+        required: true
+        default: '35'
 
 jobs:
   build-and-upload:
@@ -32,7 +36,7 @@ jobs:
       - name: Install System Dependencies (FFmpeg & Fonts)
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-dejavu-core fonts-freefont-ttf fonts-kacst
+          sudo apt-get install -y ffmpeg fonts-noto-core fonts-dejavu-core fonts-kacst
 
       - name: Install Python Packages
         run: |
@@ -45,6 +49,7 @@ jobs:
           SERIES_NAME: ${{ github.event.inputs.series_name }}
           LESSON_NUM: ${{ github.event.inputs.lesson_num }}
           VIDEO_LANG: ${{ github.event.inputs.language }}
+          TARGET_DURATION: ${{ github.event.inputs.target_duration }}
         run: |
           python pipeline.py
 

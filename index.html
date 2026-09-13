@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MathAuto Studio | لوحة التحكم</title>
+<style>
+  :root {
+    --bg-main: #0a0b0e;
+    --bg-card: #12141a;
+    --bg-input: #181b22;
+    --border: #232734;
+    --accent: #6d4aff;
+    --accent-hover: #5b3ce0;
+    --accent-light: #9d85ff;
+    --text-main: #f0f2f7;
+    --text-muted: #8b92a5;
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --info: #0ea5e9;
+    --danger: #ef4444;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg-main); color: var(--text-main); padding: 14px 14px 90px; }
+  .container { max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+
+  /* Utilities */
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  svg { flex-shrink: 0; display: inline-block; vertical-align: middle; }
+  .hidden { display: none !important; }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 30; background: rgba(10, 11, 14, 0.9); backdrop-filter: blur(10px); padding-bottom: 8px; }
+  .nav-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-box { width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), #4318ff); border-radius: 10px; display: grid; place-items: center; }
+  .logo-title { font-size: 15px; font-weight: 700; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); }
+
+  .status-pill { display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+  .icon-btn { width: 40px; height: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); display: grid; place-items: center; cursor: pointer; }
+
+  .banner { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+  .banner-icon { width: 34px; height: 34px; border-radius: 8px; background: rgba(16, 185, 129, 0.12); display: grid; place-items: center; color: var(--ok); }
+
+  /* Controller */
+  .section-title { font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .badge { background: rgba(109, 74, 255, 0.2); color: var(--accent-light); padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg-input); padding: 4px; border-radius: 10px; margin-bottom: 12px; }
+  .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+
+  /* Range */
+  .range-wrap { margin-top: 8px; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: #232734; border-radius: 4px; outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); cursor: pointer; }
+
+  /* Big Action */
+  .hero-card { text-align: center; border: 1px solid rgba(109, 74, 255, 0.4); background: radial-gradient(circle at 50% 0%, rgba(109, 74, 255, 0.12), var(--bg-card) 70%); }
+  .big-btn { width: 100%; min-height: 60px; background: linear-gradient(180deg, var(--accent-light), var(--accent)); color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 20px rgba(109, 74, 255, 0.35); }
+  .big-btn:active { transform: scale(0.98); }
+  .preview-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-input); border: 1px solid var(--border); padding: 8px 12px; border-radius: 10px; font-size: 12px; color: var(--text-muted); margin-top: 14px; }
+
+  /* Custom Box */
+  textarea { width: 100%; height: 80px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: #fff; font-size: 13px; resize: none; outline: none; }
+  textarea:focus { border-color: var(--warn); }
+  .custom-btn { width: 100%; min-height: 46px; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warn); color: var(--warn); border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+
+  /* Delivery Output */
+  .drive-link { display: flex; align-items: center; gap: 10px; background: var(--bg-input); border: 1px solid var(--border); padding: 12px; border-radius: 10px; text-decoration: none; color: var(--text-main); margin-bottom: 10px; }
+  .meta-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-top: 8px; font-size: 12px; }
+  .copy-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .copy-tag { font-size: 10px; color: var(--text-muted); font-weight: bold; }
+  .copy-btn { background: transparent; border: none; color: var(--accent-light); font-size: 11px; font-weight: bold; cursor: pointer; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(5px); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+  .modal-card { width: 100%; max-width: 500px; background: var(--bg-card); border-top: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 20px; }
+  .form-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+  .input-field { width: 100%; height: 46px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; color: #fff; font-size: 14px; outline: none; margin-bottom: 12px; }
+  .counter-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .counter-btn { width: 50px; height: 46px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 20px; font-weight: bold; cursor: pointer; }
+
+  /* Toast */
+  #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #2b3040; border: 1px solid #3d4356; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; z-index: 99; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="nav-bar">
+      <div class="logo">
+        <div class="logo-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polygon points="6 3 20 12 6 21 6 3" fill="#fff"/></svg>
+        </div>
+        <div>
+          <div class="logo-title">MathAuto Studio</div>
+          <div class="logo-sub">أتمتة إنتاج فيديوهات الرياضيات</div>
+        </div>
+      </div>
+
+      <div class="status-pill">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">جاهز للإنتاج</span>
+      </div>
+
+      <button class="icon-btn" id="openSettingsBtn" aria-label="الإعدادات">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <!-- Last Upload Banner -->
+    <div class="banner">
+      <div class="banner-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 10px; color: var(--text-muted);">آخر درس تم رفعه على درايف</div>
+        <div style="font-size: 14px; font-weight: 700;">
+          <span id="lastSeriesName" style="color: var(--accent-light);">سلسلة الجبر الأساسي</span>
+          <span style="color: var(--text-muted);"> - الدرس رقم </span>
+          <span id="lastLessonNumber">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Duration Controller -->
+  <section class="card">
+    <div class="section-title">
+      <span>نوع ومدة الفيديو</span>
+      <span class="badge" id="durationBadge">00:45</span>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabShort" onclick="setMode('short')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4.1 12.9c-.4.5 0 1.1.6 1.1H11l-1 8 8.9-10.9c.4-.5 0-1.1-.6-1.1H13z"/></svg>
+        قصير (Shorts)
+      </button>
+      <button class="tab-btn" id="tabLong" onclick="setMode('long')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5l5 2.5-5 2.5z"/></svg>
+        طويل (أسبوعي)
+      </button>
+    </div>
+    <div class="range-wrap">
+      <div class="range-labels">
+        <span id="rangeMin">20 ثانية</span>
+        <span id="rangeVal" style="color: #fff; font-weight: bold;">المدة: 00:45</span>
+        <span id="rangeMax">60 ثانية</span>
+      </div>
+      <input type="range" id="durationSlider" min="20" max="60" value="45" oninput="onSliderChange(this.value)">
+    </div>
+  </section>
+
+  <!-- One-Click Sequential Action -->
+  <section class="card hero-card">
+    <div style="font-size: 11px; font-weight: bold; color: var(--accent-light); margin-bottom: 4px;">الإنتاج التسلسلي بضغطة زر</div>
+    <div style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">درس جديد جاهز في مجلد درايف</div>
+
+    <button class="big-btn" id="produceBtn" onclick="triggerProduction(false)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+      <span id="produceBtnText">إنتاج الدرس التالي تلقائياً</span>
+    </button>
+
+    <div class="preview-pill">
+      <span>القادم: الدرس رقم <b id="nextNum" style="color:#fff;">1</b></span>
+      <span>•</span>
+      <span>سلسلة: <b id="nextSeries" style="color: var(--accent-light);">سلسلة الجبر الأساسي</b></span>
+    </div>
+  </section>
+
+  <!-- Custom Override Prompt -->
+  <section class="card">
+    <div class="section-title">
+      <span>إدخال يدوي مخصص (لا يغير العداد)</span>
+    </div>
+    <textarea id="customPrompt" placeholder="اكتب فكرة الدرس أو مسألة معينة لشرحها بدون تغيير تسلسل السلسلة..."></textarea>
+    <button class="custom-btn" onclick="triggerProduction(true)">إنتاج الدرس المخصص</button>
+  </section>
+
+  <!-- Google Drive Delivery Card -->
+  <section class="card">
+    <div class="section-title">
+      <span>مخرجات التسليم — Google Drive</span>
+      <span class="badge" style="background: rgba(14, 165, 233, 0.2); color: var(--info);" id="deliveryTag">الدرس رقم 0</span>
+    </div>
+
+    <a href="#" target="_blank" id="driveLink" class="drive-link">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>
+      <div style="flex: 1; overflow: hidden;">
+        <div id="driveFileName" style="font-size: 13px; font-weight: 700; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">math_lesson_output.mp4</div>
+        <div style="font-size: 11px; color: var(--text-muted);">فتح الفيديو على Google Drive ↗</div>
+      </div>
+    </a>
+
+    <div class="meta-box">
+      <div class="copy-row">
+        <span class="copy-tag">العنوان المقترح</span>
+        <button class="copy-btn" onclick="copyText('metaTitle')">نسخ</button>
+      </div>
+      <div id="metaTitle" style="font-weight: 600; font-size: 13px;">—</div>
+    </div>
+
+    <div class="meta-box">
+      <div class="copy-row">
+        <span class="copy-tag">الوصف الجاهز</span>
+        <button class="copy-btn" onclick="copyText('metaDesc')">نسخ</button>
+      </div>
+      <div id="metaDesc" style="color: var(--text-muted); line-height: 1.4; white-space: pre-wrap;">—</div>
+    </div>
+
+    <div class="meta-box">
+      <div class="copy-row">
+        <span class="copy-tag">الكلمات المفتاحية (Tags)</span>
+        <button class="copy-btn" onclick="copyText('metaTags')">نسخ</button>
+      </div>
+      <div id="metaTags" dir="ltr" style="color: var(--text-muted); text-align: left; font-size: 11px;">—</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay hidden" id="modal">
+  <div class="modal-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="font-size:15px; font-weight:700;">إعدادات السلسلة والعداد</h3>
+      <button class="icon-btn" onclick="closeModal()">✕</button>
+    </div>
+
+    <label class="form-label">اسم السلسلة</label>
+    <input type="text" id="seriesInput" class="input-field">
+
+    <label class="form-label">رقم الدرس الحالي (آخر درس مرفوع)</label>
+    <div class="counter-row">
+      <button class="counter-btn" onclick="adjustCount(-1)">−</button>
+      <input type="number" id="countInput" class="input-field" style="text-align:center; font-size:18px; font-weight:bold; margin-bottom:0;">
+      <button class="counter-btn" onclick="adjustCount(1)">+</button>
+    </div>
+
+    <button class="big-btn" style="min-height:50px; font-size:14px;" onclick="saveSettings()">حفظ التغييرات</button>
+  </div>
+</div>
+
+<div id="toast">تم الإجراء بنجاح</div>
+
+<script>
+  let state = {
+    series: 'سلسلة الجبر الأساسي',
+    lesson: 0,
+    mode: 'short',
+    sec: 45
+  };
+
+  // Load from local storage
+  if (localStorage.getItem('math_app_state')) {
+    try { state = Object.assign(state, JSON.parse(localStorage.getItem('math_app_state'))); } catch(e){}
+  }
+
+  function save() {
+    localStorage.setItem('math_app_state', JSON.stringify(state));
+    render();
+  }
+
+  function render() {
+    document.getElementById('lastSeriesName').innerText = state.series;
+    document.getElementById('lastLessonNumber').innerText = state.lesson;
+    document.getElementById('nextNum').innerText = state.lesson + 1;
+    document.getElementById('nextSeries').innerText = state.series;
+    document.getElementById('deliveryTag').innerText = 'الدرس رقم ' + state.lesson;
+    document.getElementById('durationBadge').innerText = fmtTime(state.sec);
+    document.getElementById('rangeVal').innerText = 'المدة: ' + fmtTime(state.sec);
+    document.getElementById('durationSlider').value = state.sec;
+  }
+
+  function fmtTime(s) {
+    let m = Math.floor(s / 60);
+    let sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function setMode(m) {
+    state.mode = m;
+    let s = document.getElementById('durationSlider');
+    let tabS = document.getElementById('tabShort');
+    let tabL = document.getElementById('tabLong');
+    if (m === 'short') {
+      tabS.classList.add('active'); tabL.classList.remove('active');
+      s.min = 20; s.max = 60; state.sec = 45;
+      document.getElementById('rangeMin').innerText = '20 ثانية';
+      document.getElementById('rangeMax').innerText = '60 ثانية';
+    } else {
+      tabL.classList.add('active'); tabS.classList.remove('active');
+      s.min = 180; s.max = 900; state.sec = 480;
+      document.getElementById('rangeMin').innerText = '3 دقائق';
+      document.getElementById('rangeMax').innerText = '15 دقيقة';
+    }
+    save();
+  }
+
+  function onSliderChange(v) {
+    state.sec = parseInt(v);
+    save();
+  }
+
+  function toast(msg) {
+    let t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function copyText(id) {
+    let txt = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(txt);
+    toast('تم النسخ بنجاح 📋');
+  }
+
+  // Production Action Simulation
+  function triggerProduction(isCustom) {
+    let btn = document.getElementById('produceBtn');
+    let text = document.getElementById('produceBtnText');
+    let statusText = document.getElementById('statusText');
+    let statusDot = document.getElementById('statusDot');
+
+    btn.disabled = true;
+    text.innerText = 'جاري التوليد والرفع لدرايف...';
+    statusText.innerText = 'جاري التوليد…';
+    statusText.style.color = 'var(--warn)';
+    statusDot.style.background = 'var(--warn)';
+
+    setTimeout(() => {
+      btn.disabled = false;
+      text.innerText = 'إنتاج الدرس التالي تلقائياً';
+      statusText.innerText = 'جاهز للإنتاج';
+      statusText.style.color = 'var(--text-main)';
+      statusDot.style.background = 'var(--ok)';
+
+      if (!isCustom) state.lesson += 1;
+      save();
+
+      // Set sample data
+      document.getElementById('metaTitle').innerText = (isCustom ? 'درس مخصص: ' : state.series + ' | الدرس رقم ' + state.lesson) + ' — شرح مبسط وممتع';
+      document.getElementById('metaDesc').innerText = 'شرح تفصيلي ومبسط لخطوات الحل مع أهم الأخطاء الشائعة.\nاشترك بالقناة وشارك المقطع!';
+      document.getElementById('metaTags').innerText = 'رياضيات, شرح, ثانوية عامة, math, shorts, ' + state.series;
+      document.getElementById('driveFileName').innerText = 'lesson_' + state.lesson + '.mp4';
+      document.getElementById('driveLink').href = 'https://drive.google.com/drive/folders/15qu4pzjJuNb6rIjfz-sSyNn-kLi2kPy0';
+
+      toast('تم إنتاج ورفع الفيديو إلى Google Drive بنجاح 🎉');
+    }, 3000);
+  }
+
+  // Modal Settings
+  const modal = document.getElementById('modal');
+  document.getElementById('openSettingsBtn').onclick = () => {
+    document.getElementById('seriesInput').value = state.series;
+    document.getElementById('countInput').value = state.lesson;
+    modal.classList.remove('hidden');
+  };
+  function closeModal() { modal.classList.add('hidden'); }
+  function adjustCount(n) {
+    let inp = document.getElementById('countInput');
+    inp.value = Math.max(0, parseInt(inp.value || 0) + n);
+  }
+  function saveSettings() {
+    state.series = document.getElementById('seriesInput').value.trim() || state.series;
+    state.lesson = parseInt(document.getElementById('countInput').value) || 0;
+    save();
+    closeModal();
+    toast('تم حفظ الإعدادات بنجاح ✓');
+  }
+
+  render();
+</script>
+</body>
+</html>

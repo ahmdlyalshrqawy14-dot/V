@@ -1,7 +1,8 @@
 import os
 import json
 import asyncio
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
@@ -14,40 +15,64 @@ FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID")
 SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي")
 LESSON_NUM = os.environ.get("LESSON_NUM", "1")
 
-genai.configure(api_key=GEMINI_KEY)
+# إعداد العميل الرسمي
+client = genai.Client(api_key=GEMINI_KEY)
 
-# 2. توليد خطة الشرح والمحتوى والـ SEO بواسطة Gemini
+# 2. توليد خطة الشرح والمحتوى والـ SEO
 def generate_lesson_content():
     print("⏳ جاري توليد محتوى الدرس بواسطة الذكاء الاصطناعي...")
     prompt = f"""
-    أنت معلم رياضيات متميز في إنتاج محتوى تعليمي تفاعلي وقصير.
-    المطلوب إعداد محتوى: {SERIES_NAME} - الدرس رقم {LESSON_NUM}.
+    أنت معلم رياضيات خبير ومبتكر في إنتاج فيديوهات تعليمية مبسطة وجذابة.
+    المطلوب إعداد سيناريو كامل لـ: {SERIES_NAME} - الدرس رقم {LESSON_NUM}.
     
-    أخرج الرد بصيغة JSON حصرية وصالحة 100% وبدون أي شروحات خارج الـ JSON:
+    أخرج الرد بصيغة JSON حصرية وصالحة 100% وبدون أي markdown إضافي خارج النص:
     {{
-      "title": "عنوان جذاب للفيديو مع رمز تعبيري",
-      "description": "وصف مفصل لليوتيوب يوضح خطوات الحل والنصائح والروابط",
-      "tags": "كلمات, مفتاحية, مفصولة, بفواصل",
-      "spoken_script": "نص الشرح المنطوق باللغة العربية ومشكل بالحركات لتسهيل النطق الصوتي بدقة",
-      "board_summary": "العنوان الرئيسي والمعادلة المركزية التي تكتب على السبورة"
+      "title": "عنوان جذاب ومثير لليوتيوب مع رمز تعبيري",
+      "description": "وصف يوتيوب مهيأ بالكامل للـ SEO ومحركات البحث ويوضح محاور الفيديو والروابط",
+      "tags": "كلمات, مفتاحية, دقيقة, مفصولة, بفواصل",
+      "spoken_script": "نص الشرح المنطوق باللغة العربية ومشكل بالتشكيل والحركات لنطقه صوتياً بسلاسة ووضوح",
+      "board_summary": "العنوان والمعادلة الرياضية الأساسية للسبورة"
     }}
     """
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    res = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
-    return json.loads(res.text)
+    
+    models_to_try = [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.5-flash",
+        "gemini-3.1-flash"
+    ]
+    
+    last_error = None
+    for model_name in models_to_try:
+        try:
+            print(f"🔄 محاولة الاتصال بالنموذج: {model_name}...")
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    temperature=0.7
+                ),
+            )
+            print(f"✓ تم استخراج المحتوى بنجاح عبر: {model_name}")
+            return json.loads(response.text)
+        except Exception as e:
+            print(f"⚠️ تعذر عبر {model_name}: {e}")
+            last_error = e
+            continue
 
-# 3. تحويل النص إلى صوت بشري احترافي
+    raise RuntimeError(f"فشلت المحاولات مع كافة النماذج: {last_error}")
+
+# 3. تحويل النص إلى صوت بشري
 async def create_voiceover(text, output_file="voice.mp3"):
-    print("⏳ جاري تحويل الشرح إلى صوت بشري واقعي...")
-    # استخدام نبرة عربية طبيعية (شاكر - صوت تعليمي واضح)
+    print("⏳ جاري تحويل الشرح إلى صوت بشري...")
     communicate = edge_tts.Communicate(text, "ar-EG-ShakirNeural")
     await communicate.save(output_file)
-    print("✓ تم توليد الملف الصوتي بنجاح.")
+    print("✓ تم إنشاء الملف الصوتي بنجاح.")
 
 # 4. بناء الفيديو ودمج السبورة والصوت بواسطة FFmpeg
 def build_video_with_ffmpeg(board_text):
     print("⏳ جاري رندرة الفيديو والسبورة بواسطة FFmpeg...")
-    # إنشاء خلفية داكنة مع نص توضيحي يمثل السبورة ومزامنتها مع طول الصوت
     cmd = (
         f'ffmpeg -y -f lavfi -i color=c="#0c0d12":s=1080x1920:d=60 '
         f'-i voice.mp3 '
@@ -76,20 +101,15 @@ def upload_to_drive(file_path, file_name, mime_type):
 async def main():
     data = generate_lesson_content()
     
-    # حفظ وتصدير ملف بيانات اليوتيوب النصي (.txt)
     txt_filename = f"بيانات_اليوتيوب_درس_{LESSON_NUM}.txt"
     with open(txt_filename, "w", encoding="utf-8") as f:
         f.write(f"العنوان المقترح:\n{data['title']}\n\n")
         f.write(f"الوصف:\n{data['description']}\n\n")
         f.write(f"الكلمات المفتاحية:\n{data['tags']}\n")
 
-    # الصوت
     await create_voiceover(data["spoken_script"])
-
-    # المونتاج والسبورة
     build_video_with_ffmpeg(data.get("board_summary", ""))
 
-    # الرفع لدرايف
     upload_to_drive("final_video.mp4", f"فيديو_درس_{LESSON_NUM}_{SERIES_NAME}.mp4", "video/mp4")
     upload_to_drive(txt_filename, txt_filename, "text/plain")
     print("🎉 اكتمل خط الإنتاج بنجاح وتم تسليم كافة المخرجات إلى درايف!")

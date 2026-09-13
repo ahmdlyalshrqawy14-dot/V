@@ -106,13 +106,19 @@ def upload_to_drive(file_path, file_name, mime_type):
     print(f"⏳ جاري رفع {file_name} إلى مجلد Google Drive...")
     creds_info = json.loads(GDRIVE_KEY_JSON)
     creds = service_account.Credentials.from_service_account_info(
-        creds_info, scopes=["[https://www.googleapis.com/auth/drive](https://www.googleapis.com/auth/drive)"]
+        creds_info, 
+        scopes=["[https://www.googleapis.com/auth/drive](https://www.googleapis.com/auth/drive)"]
     )
     service = build("drive", "v3", credentials=creds)
 
     metadata = {"name": file_name, "parents": [FOLDER_ID]}
     media = MediaFileUpload(file_path, mimetype=mime_type)
-    uploaded = service.files().create(body=metadata, media_body=media, fields="id").execute()
+    uploaded = service.files().create(
+        body=metadata, 
+        media_body=media, 
+        fields="id",
+        supportsAllDrives=True
+    ).execute()
     print(f"✓ تم الرفع بنجاح! معرّف الملف: {uploaded.get('id')}")
 
 # المسار الرئيسي

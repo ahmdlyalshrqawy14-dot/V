@@ -1,0 +1,98 @@
+import os
+import json
+import asyncio
+import google.generativeai as genai
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+import edge_tts
+
+# 1. تهيئة المفاتيح من خزانة الأمان
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
+GDRIVE_KEY_JSON = os.environ.get("GDRIVE_KEY")
+FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID")
+SERIES_NAME = os.environ.get("SERIES_NAME", "سلسلة الجبر الأساسي")
+LESSON_NUM = os.environ.get("LESSON_NUM", "1")
+
+genai.configure(api_key=GEMINI_KEY)
+
+# 2. توليد خطة الشرح والمحتوى والـ SEO بواسطة Gemini
+def generate_lesson_content():
+    print("⏳ جاري توليد محتوى الدرس بواسطة الذكاء الاصطناعي...")
+    prompt = f"""
+    أنت معلم رياضيات متميز في إنتاج محتوى تعليمي تفاعلي وقصير.
+    المطلوب إعداد محتوى: {SERIES_NAME} - الدرس رقم {LESSON_NUM}.
+    
+    أخرج الرد بصيغة JSON حصرية وصالحة 100% وبدون أي شروحات خارج الـ JSON:
+    {{
+      "title": "عنوان جذاب للفيديو مع رمز تعبيري",
+      "description": "وصف مفصل لليوتيوب يوضح خطوات الحل والنصائح والروابط",
+      "tags": "كلمات, مفتاحية, مفصولة, بفواصل",
+      "spoken_script": "نص الشرح المنطوق باللغة العربية ومشكل بالحركات لتسهيل النطق الصوتي بدقة",
+      "board_summary": "العنوان الرئيسي والمعادلة المركزية التي تكتب على السبورة"
+    }}
+    """
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    res = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
+    return json.loads(res.text)
+
+# 3. تحويل النص إلى صوت بشري احترافي
+async def create_voiceover(text, output_file="voice.mp3"):
+    print("⏳ جاري تحويل الشرح إلى صوت بشري واقعي...")
+    # استخدام نبرة عربية طبيعية (شاكر - صوت تعليمي واضح)
+    communicate = edge_tts.Communicate(text, "ar-EG-ShakirNeural")
+    await communicate.save(output_file)
+    print("✓ تم توليد الملف الصوتي بنجاح.")
+
+# 4. بناء الفيديو ودمج السبورة والصوت بواسطة FFmpeg
+def build_video_with_ffmpeg(board_text):
+    print("⏳ جاري رندرة الفيديو والسبورة بواسطة FFmpeg...")
+    # إنشاء خلفية داكنة مع نص توضيحي يمثل السبورة ومزامنتها مع طول الصوت
+    cmd = (
+        f'ffmpeg -y -f lavfi -i color=c="#0c0d12":s=1080x1920:d=60 '
+        f'-i voice.mp3 '
+        f'-filter_complex "[0:v]drawtext=text=\'{SERIES_NAME}\':fontcolor=white:fontsize=48:x=(w-text_w)/2:y=200,'
+        f'drawtext=text=\'الدرس رقم {LESSON_NUM}\':fontcolor=#9d85ff:fontsize=64:x=(w-text_w)/2:y=300[v]" '
+        f'-map "[v]" -map 1:a -c:v libx264 -c:a aac -shortest final_video.mp4'
+    )
+    os.system(cmd)
+    print("✓ تم تجميع الفيديو النهائي بنجاح.")
+
+# 5. رفع الملفات إلى Google Drive
+def upload_to_drive(file_path, file_name, mime_type):
+    print(f"⏳ جاري رفع {file_name} إلى مجلد Google Drive...")
+    creds_info = json.loads(GDRIVE_KEY_JSON)
+    creds = service_account.Credentials.from_service_account_info(
+        creds_info, scopes=["https://www.googleapis.com/auth/drive"]
+    )
+    service = build("drive", "v3", credentials=creds)
+
+    metadata = {"name": file_name, "parents": [FOLDER_ID]}
+    media = MediaFileUpload(file_path, mimetype=mime_type)
+    uploaded = service.files().create(body=metadata, media_body=media, fields="id").execute()
+    print(f"✓ تم الرفع بنجاح! معرّف الملف: {uploaded.get('id')}")
+
+# مسار التشغيل الكامل
+async def main():
+    data = generate_lesson_content()
+    
+    # حفظ وتصدير ملف بيانات اليوتيوب النصي (.txt)
+    txt_filename = f"بيانات_اليوتيوب_درس_{LESSON_NUM}.txt"
+    with open(txt_filename, "w", encoding="utf-8") as f:
+        f.write(f"العنوان المقترح:\n{data['title']}\n\n")
+        f.write(f"الوصف:\n{data['description']}\n\n")
+        f.write(f"الكلمات المفتاحية:\n{data['tags']}\n")
+
+    # الصوت
+    await create_voiceover(data["spoken_script"])
+
+    # المونتاج والسبورة
+    build_video_with_ffmpeg(data.get("board_summary", ""))
+
+    # الرفع لدرايف
+    upload_to_drive("final_video.mp4", f"فيديو_درس_{LESSON_NUM}_{SERIES_NAME}.mp4", "video/mp4")
+    upload_to_drive(txt_filename, txt_filename, "text/plain")
+    print("🎉 اكتمل خط الإنتاج بنجاح وتم تسليم كافة المخرجات إلى درايف!")
+
+if __name__ == "__main__":
+    asyncio.run(main())

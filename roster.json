@@ -1,0 +1,100 @@
+{
+  "faculty": [
+    {
+      "id": "arthur",
+      "name": "Prof. Arthur Sterling",
+      "tagline": "The Eccentric Genius",
+      "watermark": "Prof. Arthur Sterling | Speed Math",
+      "voice": {
+        "model": "en-GB-RyanNeural",
+        "dsp": {
+          "pitch_shift": "-1.5",
+          "chest_eq_gain": "4",
+          "presence_eq_gain": "-3"
+        }
+      },
+      "theme": {
+        "board_top": "#16382c",
+        "board_bottom": "#0b1f18",
+        "chalk_colors": {
+          "hook": "#ffffff",
+          "step1": "#fde047",
+          "step2": "#67e8f9",
+          "result": "#4ade80"
+        }
+      }
+    },
+    {
+      "id": "maya",
+      "name": "Dr. Maya Lin",
+      "tagline": "MIT Algorithm Hacker",
+      "watermark": "Dr. Maya Lin | Math Hacks",
+      "voice": {
+        "model": "en-US-MichelleNeural",
+        "dsp": {
+          "pitch_shift": "+0.5",
+          "chest_eq_gain": "2",
+          "presence_eq_gain": "-4"
+        }
+      },
+      "theme": {
+        "board_top": "#0f172a",
+        "board_bottom": "#020617",
+        "chalk_colors": {
+          "hook": "#38bdf8",
+          "step1": "#a7f3d0",
+          "step2": "#fef08a",
+          "result": "#34d399"
+        }
+      }
+    },
+    {
+      "id": "leo",
+      "name": "Leo Vance",
+      "tagline": "The Math Coach",
+      "watermark": "Leo Vance | Brain Gains",
+      "voice": {
+        "model": "en-AU-WilliamNeural",
+        "dsp": {
+          "pitch_shift": "-2.0",
+          "chest_eq_gain": "5",
+          "presence_eq_gain": "-5"
+        }
+      },
+      "theme": {
+        "board_top": "#1c1917",
+        "board_bottom": "#0c0a09",
+        "chalk_colors": {
+          "hook": "#fbbf24",
+          "step1": "#f59e0b",
+          "step2": "#fb923c",
+          "result": "#22c55e"
+        }
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Prof. Clara Dubois",
+      "tagline": "Architect of Logic",
+      "watermark": "Prof. Clara Dubois | Pure Logic",
+      "voice": {
+        "model": "en-IE-EmilyNeural",
+        "dsp": {
+          "pitch_shift": "-0.5",
+          "chest_eq_gain": "3",
+          "presence_eq_gain": "-3"
+        }
+      },
+      "theme": {
+        "board_top": "#1e1b4b",
+        "board_bottom": "#0f0e2b",
+        "chalk_colors": {
+          "hook": "#c084fc",
+          "step1": "#e879f9",
+          "step2": "#818cf8",
+          "result": "#4ade80"
+        }
+      }
+    }
+  ]
+}

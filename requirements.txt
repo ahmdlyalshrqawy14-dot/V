@@ -1,5 +1,3 @@
 pillow
 edge-tts
 gtts
-arabic-reshaper
-python-bidi

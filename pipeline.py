@@ -11,9 +11,7 @@ import struct
 import subprocess
 import edge_tts
 from gtts import gTTS
-import arabic_reshaper
-from bidi.algorithm import get_display
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 # 1. التحقق من البيئة
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY")
@@ -26,41 +24,7 @@ LESSON_NUM = os.environ.get("LESSON_NUM", "1")
 LANG = os.environ.get("VIDEO_LANG", "ar").lower().strip()
 TARGET_DURATION = int(os.environ.get("TARGET_DURATION", "30"))
 
-# 2. قراءة الخط العربي المحلي المرفوع في المستودع
-def get_font(size):
-    candidates = [
-        "Cairo-Bold.ttf",
-        "fonts/Cairo-Bold.ttf",
-        "font.ttf",
-        "/usr/share/fonts/truetype/kacst/KacstOne.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-    ]
-    if os.path.exists("fonts"):
-        for f in os.listdir("fonts"):
-            if f.lower().endswith(".ttf"):
-                candidates.insert(0, os.path.join("fonts", f))
-
-    for path in candidates:
-        if os.path.exists(path):
-            try:
-                return ImageFont.truetype(path, size)
-            except Exception:
-                continue
-    return ImageFont.load_default()
-
-# 3. تشكيل وضبط اتجاه الحروف العربية
-def shape_text(text):
-    if not text:
-        return ""
-    if LANG == "ar":
-        try:
-            reshaped = arabic_reshaper.reshape(str(text))
-            return get_display(reshaped)
-        except Exception:
-            return str(text)
-    return str(text)
-
-# 4. قياس مدة الصوت بدقة
+# 2. قياس مدة الصوت بدقة
 def get_audio_duration(file_path):
     cmd = [
         "ffprobe", "-v", "error",
@@ -75,12 +39,12 @@ def get_audio_duration(file_path):
     except Exception:
         return float(TARGET_DURATION)
 
-# 5. توليد موسيقى خلفية هادئة (BGM)
+# 3. توليد BGM
 def generate_ambient_bgm(duration, output_file="bgm.wav"):
     print("🎵 فحص وتجهيز موسيقى الخلفية (BGM)...")
     if os.path.exists(output_file):
         return output_file
-
+        
     sample_rate = 24000
     total_samples = int(duration * sample_rate)
     chords = [
@@ -89,7 +53,7 @@ def generate_ambient_bgm(duration, output_file="bgm.wav"):
         [87.31,  110.00, 130.81, 164.81],
         [98.00,  123.47, 146.83, 174.61],
     ]
-
+    
     with wave.open(output_file, "w") as f:
         f.setnchannels(1); f.setsampwidth(2); f.setframerate(sample_rate)
         data = []
@@ -105,7 +69,7 @@ def generate_ambient_bgm(duration, output_file="bgm.wav"):
         f.writeframes(b''.join(data))
     return output_file
 
-# 6. توليد المؤثرات الصوتية SFX
+# 4. توليد المؤثرات الصوتية SFX
 def generate_sfx():
     print("🔊 توليد المؤثرات الصوتية...")
     with wave.open("ding.wav", "w") as f:
@@ -118,9 +82,11 @@ def generate_sfx():
         data = [struct.pack('<h', int(32767 * 0.6 * math.sin(2 * math.pi * max(45, 140 - 110 * (i/24000)) * (i/24000)) * math.exp(-3 * (i/24000)))) for i in range(19200)]
         f.writeframes(b''.join(data))
 
-# 7. رسم الجرافيك ووضعيات المعلم التفاعلي
-def generate_graphics_and_cards(data):
-    print("🎨 رسم السبورة الموسعة ووضعيات المعلم التفاعلي...")
+# 5. رسم السبورة والمعلم وحاوية الاستيكر (بدون نصوص مشوهة)
+def generate_graphics(data):
+    print("🎨 رسم السبورة ووضعيات المعلم واستيكر الإفيه...")
+    
+    # 5.1 السبورة الموسعة لـ Ken Burns
     board = Image.new("RGBA", (1140, 2020), "#3c2211")
     d = ImageDraw.Draw(board)
     d.rectangle([25, 45, 1115, 1975], fill="#5a3217")
@@ -129,11 +95,9 @@ def generate_graphics_and_cards(data):
     d.rectangle([160, 1895, 195, 1905], fill="#ffffff")
     d.rectangle([210, 1895, 245, 1905], fill="#fde047")
     d.rectangle([260, 1895, 295, 1905], fill="#67e8f9")
-
-    font_title = get_font(48)
-    d.text((570, 150), shape_text(SERIES_NAME), font=font_title, fill="#fef08a", anchor="mm")
     board.save("chalkboard.png")
 
+    # 5.2 وضعيات المعلم التفاعلي
     def draw_character(mouth_open=False, is_pointing=False):
         img = Image.new("RGBA", (450, 480), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
@@ -167,38 +131,16 @@ def generate_graphics_and_cards(data):
     draw_character(mouth_open=False, is_pointing=True).save("t_point_closed.png")
     draw_character(mouth_open=True, is_pointing=True).save("t_point_open.png")
 
-    def make_text_overlay(text, font_size, fill_color, y_pos, filename, bg_box=False, prefix=""):
-        img = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0))
-        dr = ImageDraw.Draw(img)
-        font = get_font(font_size)
-        display_str = f"{prefix} {text}".strip() if prefix else str(text).strip()
-        shaped = shape_text(display_str)
-
-        if bg_box:
-            bbox = dr.textbbox((540, y_pos), shaped, font=font, anchor="mm")
-            pad_x, pad_y = 35, 18
-            dr.rounded_rectangle([bbox[0]-pad_x, bbox[1]-pad_y, bbox[2]+pad_x, bbox[3]+pad_y], radius=18, fill="#064e3b", outline="#86efac", width=3)
-            dr.text((540, y_pos), shaped, font=font, fill="#86efac", anchor="mm")
-        else:
-            dr.text((540, y_pos), shaped, font=font, fill=fill_color, anchor="mm")
-        img.save(filename)
-
-    make_text_overlay(data.get("hook_text", ""), 48, "#ffffff", 360, "card_hook.png")
-    make_text_overlay(data.get("step_1", ""), 42, "#fef08a", 540, "card_step1.png", prefix="1.")
-    make_text_overlay(data.get("step_2", ""), 42, "#67e8f9", 720, "card_step2.png", prefix="2.")
-    make_text_overlay(data.get("result_text", ""), 50, "#86efac", 920, "card_result.png", bg_box=True)
-
+    # 5.3 كارت الاستيكر الملون مع الظل ثلاثي الأبعاد
     effect = data.get("effect_type", "shock")
     stk = Image.new("RGBA", (520, 160), (0, 0, 0, 0))
     d_stk = ImageDraw.Draw(stk)
     bg_col = "#dc2626" if effect == "shock" else "#059669"
     d_stk.rounded_rectangle([18, 18, 508, 148], radius=22, fill=(15, 23, 42, 150))
     d_stk.rounded_rectangle([10, 10, 500, 140], radius=22, fill=bg_col, outline="#ffffff", width=4)
-    joke_txt = shape_text(data.get("joke_text", "حساب عبقري!"))
-    d_stk.text((255, 75), joke_txt, font=get_font(28), fill="#ffffff", anchor="mm")
     stk.save("sticker_active.png")
 
-# 8. صياغة البرومبت بدقة تعليمية
+# 6. توليد المحتوى عبر Gemini
 def generate_lesson_content():
     target_words = max(55, int(TARGET_DURATION * 2.2))
     print(f"⏳ توليد المحتوى التعليمي عبر Gemini ({LANG.upper()})...")
@@ -206,16 +148,15 @@ def generate_lesson_content():
     if LANG == "ar":
         prompt = f"""
         أنت صانع محتوى رياضيات تيك توك وريلز مصري احترافي وممتع.
-        المطلوب: شرح حيلة رياضية سريعة ومفيدة عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
+        المطلوب: حيلة رياضية سريعة ومفيدة عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
 
-        شروط الجودة البصرية:
-        - ممنوع خلط الرموز الإنجليزية مع الكلمات العربية في نفس السطر.
-        - hook_text: المسألة أو الفكرة باختصار (مثال: "ضرب أي رقم في 11 ذهنياً").
-        - step_1: الخطوة الأولى واضحة (مثال: "افصل الرقمين: 35 تصبح 3 و 5").
-        - step_2: الخطوة الثانية المباشرة (مثال: "اجمع الرقمين: 3 + 5 = 8").
-        - result_text: الناتج النهائي المباشر (مثال: "الناتج النهائي = 385 🎉").
-        - joke_text: إفيه أو تشجيع قصير للاستيكر (أقل من 5 كلمات).
-        - spoken_script: سيناريو بالعامية المصرية الودودة بطول حوالي {target_words} كلمة، مشكول بالحركات تماماً لسلامة النطق الصوتي وبدون رموز لاتينية.
+        شروط أساسية:
+        - hook_text: عنوان المسألة (مثال: "ضرب أي رقم في 11 ذهنياً").
+        - step_1: الخطوة الأولى (مثال: "1. افصل الرقمين: 43 تصبح 4 و 3").
+        - step_2: الخطوة الثانية بالمعادلة (مثال: "2. اجمع الرقمين: 4 + 3 = 7 في المنتصف").
+        - result_text: الناتج النهائي (مثال: "الناتج النهائي = 473 🎉").
+        - joke_text: إفيه قصير للاستيكر (مثال: "وفرت وقت الامتحان!").
+        - spoken_script: سيناريو بالعامية المصرية الودودة بطول حوالي {target_words} كلمة، مشكول بالحركات لضبط الصوت وبدون رموز لاتينية.
 
         أخرج الرد بصيغة JSON حصرية:
         {{
@@ -235,7 +176,7 @@ def generate_lesson_content():
         prompt = f"""
         You are a top-tier viral math educator on TikTok and Shorts.
         Create a quick math hack video about: {SERIES_NAME} - Episode {LESSON_NUM}.
-        Target length: {target_words} words. All board texts concise and crystal clear.
+        Target length: {target_words} words.
         Output ONLY valid JSON.
         """
 
@@ -261,7 +202,7 @@ def generate_lesson_content():
             continue
     raise RuntimeError("فشلت كافة محاولات الاتصال بنماذج Gemini.")
 
-# 9. تسجيل الصوت مع المحرك الاحتياطي
+# 7. تسجيل الصوت الآمن
 async def create_voiceover_safe(text, output_file="voice.mp3"):
     print("⏳ فحص النص وتنظيفه وتسجيل الصوت...")
 
@@ -318,38 +259,6 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
 
     actual_dur = get_audio_duration(output_file)
 
-    def format_srt_time(seconds):
-        hrs = int(seconds // 3600)
-        mins = int((seconds % 3600) // 60)
-        secs = int(seconds % 60)
-        millis = int((seconds - int(seconds)) * 1000)
-        return f"{hrs:02d}:{mins:02d}:{secs:02d},{millis:03d}"
-
-    srt_lines = []
-    if words_data:
-        chunk_size = 4
-        sub_idx = 1
-        for i in range(0, len(words_data), chunk_size):
-            chunk = words_data[i:i + chunk_size]
-            start_ts = format_srt_time(chunk[0]["start"])
-            end_ts = format_srt_time(chunk[-1]["end"] + 0.15)
-            txt = " ".join(w["word"] for w in chunk).strip()
-            if txt:
-                srt_lines.append(f"{sub_idx}\n{start_ts} --> {end_ts}\n{txt}\n")
-                sub_idx += 1
-    else:
-        words = clean_text.split()
-        chunk_size = 4
-        chunks = [" ".join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
-        step_dur = actual_dur / max(1, len(chunks))
-        for idx, ch in enumerate(chunks):
-            s_t = format_srt_time(idx * step_dur)
-            e_t = format_srt_time(min(actual_dur, (idx + 1) * step_dur))
-            srt_lines.append(f"{idx+1}\n{s_t} --> {e_t}\n{ch}\n")
-
-    with open("captions.srt", "w", encoding="utf-8") as f:
-        f.write("\n".join(srt_lines))
-
     speech_intervals = []
     if words_data:
         curr_start = words_data[0]["start"]
@@ -365,18 +274,97 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
     else:
         speech_intervals.append((0.3, actual_dur))
 
-    return speech_intervals, actual_dur
+    return speech_intervals, actual_dur, words_data, clean_text
 
-# 10. المونتاج الحركي والرندرة
-def build_video_with_ffmpeg(data, duration, speech_intervals):
-    print(f"⏳ رندرة الفيديو الاحترافي عبر FFmpeg (المدة: {duration:.2f}s)...")
-    effect = data.get("effect_type", "shock")
-    sfx_file = "boom.wav" if effect == "shock" else "ding.wav"
+# 8. توليد ملف ASS الموحد لكافة نصوص السبورة والترجمة بخط Cairo
+def generate_master_ass(data, duration, words_data, clean_text):
+    print("📝 بناء ملف نصوص السبورة والترجمة الموحد (HarfBuzz Engine)...")
+
+    def to_ass_time(sec):
+        sec = max(0.0, float(sec))
+        h = int(sec // 3600)
+        m = int((sec % 3600) // 60)
+        s = int(sec % 60)
+        cs = int(round((sec - int(sec)) * 100))
+        if cs >= 100:
+            s += 1
+            cs = 0
+        return f"{h}:{m:02d}:{s:02d}.{cs:02d}"
 
     t_hook = 0.5
     t_s1 = round(duration * 0.22, 2)
     t_s2 = round(duration * 0.48, 2)
     t_res = round(duration * 0.72, 2)
+    t_joke_start = round(duration * 0.35, 2)
+    t_joke_end = round(duration * 0.55, 2)
+
+    dur_str = to_ass_time(duration)
+
+    ass_header = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Title,Cairo,46,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,40,40,150,1
+Style: Hook,Cairo,48,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,40,40,360,1
+Style: Step1,Cairo,44,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,40,40,540,1
+Style: Step2,Cairo,44,&H00F9E867,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,40,40,720,1
+Style: Result,Cairo,52,&H00ACF686,&H000000FF,&H003B4E06,&H003B4E06,-1,0,0,0,100,100,0,0,3,18,0,8,40,40,920,1
+Style: Joke,Cairo,30,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,8,40,40,1175,1
+Style: Captions,Cairo,34,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,2,0,2,40,40,140,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    events = []
+    # 1. عنوان السلسلة
+    events.append(f"Dialogue: 0,{to_ass_time(0.0)},{dur_str},Title,,0,0,0,,{SERIES_NAME}")
+    
+    # 2. خطوات السبورة بانتقال Fade-in ناعم (350ms)
+    events.append(f"Dialogue: 1,{to_ass_time(t_hook)},{dur_str},Hook,,0,0,0,,{{\\fad(350,0)}}{data.get('hook_text', '')}")
+    events.append(f"Dialogue: 1,{to_ass_time(t_s1)},{dur_str},Step1,,0,0,0,,{{\\fad(350,0)}}{data.get('step_1', '')}")
+    events.append(f"Dialogue: 1,{to_ass_time(t_s2)},{dur_str},Step2,,0,0,0,,{{\\fad(350,0)}}{data.get('step_2', '')}")
+    events.append(f"Dialogue: 1,{to_ass_time(t_res)},{dur_str},Result,,0,0,0,,{{\\fad(350,0)}}{data.get('result_text', '')}")
+    
+    # 3. إفيه الاستيكر في توقيته المتزامن
+    events.append(f"Dialogue: 2,{to_ass_time(t_joke_start)},{to_ass_time(t_joke_end)},Joke,,0,0,0,,{{\\fad(200,200)}}{data.get('joke_text', 'حساب عبقري!')}")
+
+    # 4. شريط الترجمة السفلي
+    if words_data:
+        chunk_size = 4
+        for i in range(0, len(words_data), chunk_size):
+            chunk = words_data[i:i + chunk_size]
+            s_t = to_ass_time(chunk[0]["start"])
+            e_t = to_ass_time(chunk[-1]["end"] + 0.15)
+            txt = " ".join(w["word"] for w in chunk).strip()
+            if txt:
+                events.append(f"Dialogue: 3,{s_t},{e_t},Captions,,0,0,0,,{txt}")
+    else:
+        words = clean_text.split()
+        chunk_size = 4
+        chunks = [" ".join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
+        step_dur = duration / max(1, len(chunks))
+        for idx, ch in enumerate(chunks):
+            s_t = to_ass_time(idx * step_dur)
+            e_t = to_ass_time(min(duration, (idx + 1) * step_dur))
+            events.append(f"Dialogue: 3,{s_t},{e_t},Captions,,0,0,0,,{ch}")
+
+    with open("master_video.ass", "w", encoding="utf-8") as f:
+        f.write(ass_header + "\n".join(events))
+    print("✓ تم تجهيز ملف نصوص الفيديو الشامل بنجاح.")
+
+# 9. المونتاج والرندرة السريعة عبر FFmpeg
+def build_video_with_ffmpeg(data, duration, speech_intervals):
+    print(f"⏳ رندرة الفيديو السريعة عبر FFmpeg (المدة: {duration:.2f}s)...")
+    effect = data.get("effect_type", "shock")
+    sfx_file = "boom.wav" if effect == "shock" else "ding.wav"
+
+    t_s1 = round(duration * 0.22, 2)
+    t_s2 = round(duration * 0.48, 2)
     t_joke_start = round(duration * 0.35, 2)
     t_joke_end = round(duration * 0.55, 2)
     sfx_delay_ms = int(t_joke_start * 1000)
@@ -393,51 +381,23 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
     cond_point_closed = f"({is_pointing}) * (not({is_talking}))"
     cond_point_open = f"({is_pointing}) * ({is_talking})"
 
-    # ملاحظة: overlay لا يدعم alpha كتعبير حسابي، لذلك التلاشي (fade)
-    # بيتعمل بفلتر fade منفصل على الصورة قبل الدمج بالـ overlay
-    def slide_overlay(src_label, out_label, t_start, prev_label):
-        fade_label = f"{src_label.replace(':', '_')}_f"
-        y_expr = f"-25*max(0,1-(t-{t_start})/0.35)"
-        fade_line = f"[{src_label}]fade=t=in:st={t_start}:d=0.35:alpha=1[{fade_label}]"
-        overlay_line = f"[{prev_label}][{fade_label}]overlay=x=0:y='{y_expr}':enable='between(t,{t_start},{duration:.2f})'[{out_label}]"
-        return fade_line, overlay_line
-
-    has_sub = os.path.exists("captions.srt") and os.path.getsize("captions.srt") > 15
-    sub_filter = (
-        ",subtitles=captions.srt:force_style='"
-        "PlayResX=1080,PlayResY=1920,FontName=Cairo,FontSize=34,"
-        "PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,"
-        "MarginV=140,Alignment=2'"
-    ) if has_sub else ""
-
-    stk_fade = f"[6:v]fade=t=in:st={t_joke_start}:d=0.25:alpha=1[stk_f]"
-    hook_fade, hook_ov = slide_overlay("7:v", "v_h", t_hook, "v_stk")
-    s1_fade, s1_ov = slide_overlay("8:v", "v_s1", t_s1, "v_h")
-    s2_fade, s2_ov = slide_overlay("9:v", "v_s2", t_s2, "v_s1")
-    res_fade, res_ov = slide_overlay("10:v", "v_res", t_res, "v_s2")
-
     vf = (
         f"[0:v]crop=w=1080:h=1920:x='(in_w-1080)*(t/{duration:.2f})':y='(in_h-1920)*(t/{duration:.2f})'[bg];"
         "[bg][2:v]overlay=x=630:y=1340[t_base];"
         f"[t_base][3:v]overlay=x=630:y=1340:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x=630:y=1340:enable='{cond_point_closed}'[t_pt_cl];"
         f"[t_pt_cl][5:v]overlay=x=630:y=1340:enable='{cond_point_open}'[v_teacher];"
-        f"{stk_fade};"
-        f"[v_teacher][stk_f]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})'[v_stk];"
-        f"{hook_fade};{hook_ov};"
-        f"{s1_fade};{s1_ov};"
-        f"{s2_fade};{s2_ov};"
-        f"{res_fade};{res_ov};"
-        f"[v_res]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill"
-        f"{sub_filter}[outv]"
+        f"[v_teacher][6:v]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})':alpha='min(1,(t-{t_joke_start})/0.2)'[v_stk];"
+        f"[v_stk]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill,"
+        "subtitles=master_video.ass:fontsdir=.[outv]"
     )
 
     af = (
-        f"[12:a]volume=0.10[bgm_soft]; "
+        f"[8:a]volume=0.10[bgm_soft]; "
         f"[1:a]asplit=2[v_main][v_sc]; "
         f"[bgm_soft][v_sc]sidechaincompress=threshold=0.03:ratio=5:attack=100:release=400[bgm_ducked]; "
         f"[v_main][bgm_ducked]amix=inputs=2:duration=first[a_voice_bgm]; "
-        f"[11:a]adelay={sfx_delay_ms}|{sfx_delay_ms},volume=0.85[a_sfx]; "
+        f"[7:a]adelay={sfx_delay_ms}|{sfx_delay_ms},volume=0.85[a_sfx]; "
         f"[a_voice_bgm][a_sfx]amix=inputs=2:duration=first[outa]"
     )
 
@@ -450,10 +410,6 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         f'-loop 1 -t {duration:.2f} -i t_point_closed.png '
         f'-loop 1 -t {duration:.2f} -i t_point_open.png '
         f'-loop 1 -t {duration:.2f} -i sticker_active.png '
-        f'-loop 1 -t {duration:.2f} -i card_hook.png '
-        f'-loop 1 -t {duration:.2f} -i card_step1.png '
-        f'-loop 1 -t {duration:.2f} -i card_step2.png '
-        f'-loop 1 -t {duration:.2f} -i card_result.png '
         f'-i {sfx_file} '
         f'-i bgm.wav '
         f'-filter_complex "{vf}; {af}" '
@@ -465,11 +421,11 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
     subprocess.run(f'ffmpeg -y -ss {thumb_time:.2f} -i final_video.mp4 -vframes 1 -q:v 2 thumbnail.jpg', shell=True)
     print("✓ اكتمل إنتاج الفيديو بنجاح تام.")
 
-# 11. تشغيل المسار
+# 10. تشغيل المسار الرئيسي
 async def main():
     generate_sfx()
     data = generate_lesson_content()
-    generate_graphics_and_cards(data)
+    generate_graphics(data)
 
     txt_filename = f"بيانات_{LANG}_درس_{LESSON_NUM}.txt"
     with open(txt_filename, "w", encoding="utf-8") as f:
@@ -478,12 +434,13 @@ async def main():
         f.write(f"الكلمات المفتاحية:\n{data.get('tags', '')}\n")
 
     spoken_script = data.get("spoken_script", "يلا نحل المسألة دي في ثواني وبطريقة سهلة جداً!")
-    speech_intervals, actual_duration = await create_voiceover_safe(spoken_script)
+    speech_intervals, actual_duration, words_data, clean_text = await create_voiceover_safe(spoken_script)
     print(f"⏱️ مدة الصوت المعتمدة: {actual_duration:.2f} ثانية")
 
+    generate_master_ass(data, actual_duration, words_data, clean_text)
     generate_ambient_bgm(actual_duration + 3)
     build_video_with_ffmpeg(data, actual_duration, speech_intervals)
-    print("🎉 انتهى خط الإنتاج بالكامل بمستوى بصري احترافي!")
+    print("🎉 انتهى خط الإنتاج بالكامل وبأعلى جودة خط عربي ممكنة!")
 
 if __name__ == "__main__":
     asyncio.run(main())

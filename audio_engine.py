@@ -98,7 +98,11 @@ async def synthesize_raw_chunk(text, voice_model, raw_output_path):
                         "word": chunk["text"]
                     })
     except Exception as e:
-        print(f"[WARN] Edge-TTS failed for chunk, falling back to gTTS: {e}")
+        print(f"[WARN] Edge-TTS failed for chunk: {e}")
+
+    # Fallback to gTTS if Edge-TTS failed or wrote an empty file
+    if not os.path.exists(raw_output_path) or os.path.getsize(raw_output_path) < 1000:
+        print(f"[AUDIO] Triggering gTTS fallback for: {clean[:30]}...")
         tts = gTTS(text=clean, lang="en")
         tts.save(raw_output_path)
 
@@ -127,7 +131,7 @@ def apply_vocal_dsp(input_path, output_path, dsp_config):
         f'ffmpeg -y -i "{input_path}" '
         f'-af "{filter_str}" -ar {SAMPLE_RATE} -ac 1 -c:a libmp3lame -q:a 2 "{output_path}"'
     )
-    subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(cmd, shell=True, check=True)
 
 async def build_complete_voiceover(content_data, persona):
     print(f"[AUDIO] Synthesizing full broadcast audio with persona: {persona['name']}...")
@@ -182,9 +186,10 @@ async def build_complete_voiceover(content_data, persona):
         f'ffmpeg -y '
         f'{" ".join([f"-i {f}" for f in processed_files])} '
         f'-filter_complex "{filter_inputs}concat=n={len(processed_files)}:v=0:a=1[outa]" '
+        f'-map "[outa]" '
         f'-c:a libmp3lame -q:a 2 voice.mp3'
     )
-    subprocess.run(concat_cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(concat_cmd, shell=True, check=True)
 
     total_dur = get_audio_duration("voice.mp3") + 0.4
     timestamps["total"] = round(total_dur, 2)

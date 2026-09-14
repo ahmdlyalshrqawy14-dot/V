@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import shutil
+import random
 import asyncio
 import urllib.request
 import subprocess
@@ -43,6 +44,70 @@ def ensure_fonts():
             shutil.copyfile(found, target)
         print(f"[FONTS] Local font verified: {found}")
     FONT_NAME = "Cairo"
+
+# ============================================================
+# 2.5 Music Manager (Random Popular Tracks @ 25% Volume)
+# ============================================================
+POPULAR_TRACKS = [
+    {
+        "name": "monkeys_spinning",
+        "start": 0,
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Monkeys_Spinning_Monkeys.ogg"
+    },
+    {
+        "name": "sneaky_snitch",
+        "start": 5,
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Sneaky_Snitch.ogg"
+    },
+    {
+        "name": "invincible_ncs",
+        "start": 50,
+        "url": "https://archive.org/download/deaf-kev-invincible-ncs-release/DEAF%20KEV%20-%20Invincible%20%5BNCS%20Release%5D.mp3"
+    },
+    {
+        "name": "xenogenesis",
+        "start": 58,
+        "url": "https://archive.org/download/thefatrat-xenogenesis/TheFatRat%20-%20Xenogenesis.mp3"
+    },
+    {
+        "name": "sky_high_ncs",
+        "start": 45,
+        "url": "https://archive.org/download/elektronomia-sky-high-ncs-release/Elektronomia%20-%20Sky%20High%20%5BNCS%20Release%5D.mp3"
+    }
+]
+
+def prepare_random_bgm(duration=30):
+    track = random.choice(POPULAR_TRACKS)
+    raw_ext = "ogg" if track["url"].endswith(".ogg") else "mp3"
+    raw_file = f"temp_{track['name']}.{raw_ext}"
+    cut_file = "bgm.wav"
+
+    print(f"[AUDIO] Selected Track: {track['name']} (Drop at {track['start']}s)")
+
+    if not os.path.exists(raw_file):
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        req = urllib.request.Request(track['url'], headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp, open(raw_file, 'wb') as f:
+                f.write(resp.read())
+        except Exception as e:
+            print(f"[AUDIO WARN] Download failed for {track['name']}: {e}")
+            return False
+
+    cmd = [
+        "ffmpeg", "-y",
+        "-ss", str(track['start']),
+        "-t", str(duration),
+        "-i", raw_file,
+        "-c:a", "pcm_s16le",
+        cut_file
+    ]
+    try:
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        return True
+    except Exception as e:
+        print(f"[AUDIO WARN] FFmpeg cut failed: {e}")
+        return False
 
 # ============================================================
 # 3. Gemini Structured Lesson Generation
@@ -162,7 +227,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     )
 
     af = (
-        f"[9:a]volume=0.09[bgm_soft]; "
+        f"[9:a]volume=0.25[bgm_soft]; "
         f"[1:a]asplit=2[v_main][v_sc]; "
         f"[bgm_soft][v_sc]sidechaincompress=threshold=0.03:ratio=5:attack=100:release=400[bgm_ducked]; "
         f"[v_main][bgm_ducked]amix=inputs=2:duration=first[a_voice_bgm]; "
@@ -226,7 +291,12 @@ async def main():
     # Synthesize audio, build typography, and render
     timestamps, words_data = await audio_engine.build_complete_voiceover(content_data, persona)
     ass_engine.generate_master_ass(content_data, timestamps, words_data, persona, font_name=FONT_NAME)
-    audio_engine.generate_ambient_bgm(timestamps["total"] + 2.5)
+    
+    # Download and prepare random popular BGM (drop cut)
+    bgm_ready = prepare_random_bgm(timestamps["total"] + 2.5)
+    if not bgm_ready:
+        audio_engine.generate_ambient_bgm(timestamps["total"] + 2.5)
+
     render_final_composition(content_data, timestamps, persona)
 
     # Commit progress to disk

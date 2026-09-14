@@ -87,7 +87,13 @@ def generate_lesson_script(lesson_info, persona):
     }}
     """
 
-    models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+    models = [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-3.1-flash",
+        "gemini-3.5-flash-lite"
+    ]
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"response_mime_type": "application/json", "temperature": 0.7}
@@ -98,7 +104,7 @@ def generate_lesson_script(lesson_info, persona):
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={GEMINI_KEY}"
         req = urllib.request.Request(url, data=data_bytes, headers={"Content-Type": "application/json"})
         try:
-            with urllib.request.urlopen(req, timeout=35) as resp:
+            with urllib.request.urlopen(req, timeout=45) as resp:
                 res_data = json.loads(resp.read().decode("utf-8"))
                 raw_text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
                 if raw_text.startswith("```json"): raw_text = raw_text[7:]

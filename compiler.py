@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 import json
+import shutil
 import subprocess
 
 def get_duration(file_path):
@@ -17,7 +18,7 @@ def get_duration(file_path):
     except Exception:
         return 0.0
 
-def create_bumper(lesson_num, title, duration=2.5, output_file="bumper.mp4"):
+def create_bumper(lesson_num, title, duration=2.2, output_file="bumper.mp4"):
     safe_title = title.replace("'", "").replace('"', '').replace(":", " -")
     vf = (
         f"drawbox=y=0:color=#0b1f18:width=iw:height=ih:t=fill,"
@@ -32,23 +33,23 @@ def create_bumper(lesson_num, title, duration=2.5, output_file="bumper.mp4"):
     subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return output_file
 
-def compile_compilation(input_dir="archive", output_file="weekly_compilation.mp4", max_videos=10):
-    print("[COMPILER] Searching for produced shorts to compile...")
-    video_files = sorted(glob.glob(os.path.join(input_dir, "*.mp4")))
+def compile_compilation(input_dir="archive", output_file="weekly_compilation.mp4", max_videos=14):
+    print("[COMPILER] Searching for uncompiled shorts...")
+    video_files = sorted([f for f in glob.glob(os.path.join(input_dir, "*.mp4")) if os.path.isfile(f)])
     
     if not video_files:
-        print("[COMPILER] No archived videos found in target folder.")
+        print("[COMPILER] No pending videos found in archive.")
         return
 
     selected = video_files[:max_videos]
-    print(f"[COMPILER] Compiling {len(selected)} lessons into long-form video...")
+    print(f"[COMPILER] Compiling {len(selected)} lessons into weekly long-form video...")
 
     concat_list = []
     chapters = []
     current_time = 0.0
 
     for idx, vid in enumerate(selected, 1):
-        lesson_name = os.path.splitext(os.path.basename(vid))[0]
+        lesson_name = os.path.splitext(os.path.basename(vid))[0].replace("_", " ").title()
         bumper_file = f"temp_bumper_{idx}.mp4"
         create_bumper(idx, lesson_name, duration=2.2, output_file=bumper_file)
 
@@ -63,13 +64,11 @@ def compile_compilation(input_dir="archive", output_file="weekly_compilation.mp4
         concat_list.append(vid)
         current_time += b_dur + v_dur
 
-    # Write concat manifest
     manifest = "concat_list.txt"
     with open(manifest, "w", encoding="utf-8") as f:
         for item in concat_list:
             f.write(f"file '{os.path.abspath(item)}'\n")
 
-    # Render compilation with EBU R128 (-14 LUFS) normalization
     cmd = (
         f'ffmpeg -y -f concat -safe 0 -i {manifest} '
         f'-af "loudnorm=I=-14:LRA=11:TP=-1.5" '
@@ -77,14 +76,18 @@ def compile_compilation(input_dir="archive", output_file="weekly_compilation.mp4
     )
     subprocess.run(cmd, shell=True, check=True)
 
-    # Save chapter markers for YouTube Description
     with open("compilation_chapters.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(chapters))
 
-    print(f"[COMPILER] Compilation generated: {output_file}")
-    print(f"[COMPILER] Chapters exported to compilation_chapters.txt")
+    print(f"[COMPILER] Done: {output_file} ({len(selected)} lessons merged).")
 
-    # Cleanup bumpers
+    # نقل الفيديوهات المدمجة لمجلد فرعي حتى لا تتكرر
+    compiled_folder = os.path.join(input_dir, "compiled")
+    os.makedirs(compiled_folder, exist_ok=True)
+    for vid in selected:
+        shutil.move(vid, os.path.join(compiled_folder, os.path.basename(vid)))
+
+    # تنظيف
     for b in glob.glob("temp_bumper_*.mp4"):
         try: os.remove(b)
         except Exception: pass

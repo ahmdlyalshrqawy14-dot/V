@@ -192,7 +192,7 @@ def generate_graphics_and_cards(data):
     stk = Image.new("RGBA", (520, 160), (0, 0, 0, 0))
     d_stk = ImageDraw.Draw(stk)
     bg_col = "#dc2626" if effect == "shock" else "#059669"
-    d_stk.rounded_rectangle([18, 18, 508, 148], radius=22, fill="#0f172a@150")
+    d_stk.rounded_rectangle([18, 18, 508, 148], radius=22, fill=(15, 23, 42, 150))
     d_stk.rounded_rectangle([10, 10, 500, 140], radius=22, fill=bg_col, outline="#ffffff", width=4)
     joke_txt = shape_text(data.get("joke_text", "حساب عبقري!"))
     d_stk.text((255, 75), joke_txt, font=get_font(28), fill="#ffffff", anchor="mm")

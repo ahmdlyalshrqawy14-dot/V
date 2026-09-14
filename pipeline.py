@@ -26,7 +26,7 @@ FONT_DIR = "fonts"
 FONT_NAME = "Cairo"
 
 # ============================================================
-# 2. Local Typography Setup
+# 2. Local Typography & Asset Safeguards
 # ============================================================
 def ensure_fonts():
     global FONT_NAME
@@ -44,6 +44,15 @@ def ensure_fonts():
             shutil.copyfile(found, target)
         print(f"[FONTS] Local font verified: {found}")
     FONT_NAME = "Cairo"
+
+def ensure_dust_layer():
+    """إنشاء طبقة غبار شفافة تلقائياً إذا لم تكن موجودة لتفادي توقف FFmpeg"""
+    if not os.path.exists("dust.png") or os.path.getsize("dust.png") == 0:
+        subprocess.run(
+            'ffmpeg -y -f lavfi -i color=c=black@0.0:s=1080x1920:d=1 -vframes 1 dust.png',
+            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        print("[ASSETS] Generated fallback dust.png successfully.")
 
 # ============================================================
 # 2.5 Music Manager (Random Popular Tracks @ 25% Volume)
@@ -266,6 +275,7 @@ async def main():
     print("==================================================")
 
     ensure_fonts()
+    ensure_dust_layer()
     audio_engine.generate_sfx()
 
     # Resolve context from active series

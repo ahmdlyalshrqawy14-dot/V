@@ -16,6 +16,10 @@ on:
         default: ''
         type: string
 
+  schedule:
+    # يعمل مرتين يومياً: الساعة 1:00 ظهراً و 7:00 مساءً بتوقيت مصر
+    - cron: '0 10,16 * * *'
+
 permissions:
   contents: write
 
@@ -48,8 +52,8 @@ jobs:
       - name: Run Studio Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          SERIES_NAME: ${{ github.event.inputs.series_name }}
-          LESSON_NUM: ${{ github.event.inputs.lesson_num }}
+          SERIES_NAME: ${{ github.event.inputs.series_name || 'speed_math' }}
+          LESSON_NUM: ${{ github.event.inputs.lesson_num || '' }}
         run: |
           python pipeline.py
 
@@ -65,18 +69,18 @@ jobs:
           fi
           git add series/ archive/
           if ! git diff-index --quiet HEAD --; then
-            git commit -m "Auto-update progress and archive lesson [skip ci]"
+            git commit -m "Auto-archive lesson and advance index [skip ci]"
             git pull --rebase
             git push
           else
-            echo "No changes to commit."
+            echo "No state changes to commit."
           fi
 
       - name: Upload Video Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: video-${{ github.event.inputs.series_name }}-run-${{ github.run_number }}
+          name: video-${{ github.event.inputs.series_name || 'speed_math' }}-run-${{ github.run_number }}
           path: |
             final_video.mp4
             thumbnail.jpg

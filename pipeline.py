@@ -304,15 +304,30 @@ async def build_synchronized_audio(data):
 
         current_time += dur + 0.3  # Add natural 0.3s inter-step pause
 
-    # Merge audio files seamlessly with FFmpeg concat filter
-    filter_inputs = "".join([f"[{i}:a]" for i in range(len(input_files))])
-    concat_cmd = (
-        f'ffmpeg -y '
-        f'-i hook.mp3 -i step1.mp3 -i step2.mp3 -i result.mp3 '
-        f'-filter_complex "{filter_inputs}concat=n=4:v=0:a=1[outa]" '
-        f'-c:a libmp3lame -q:a 2 voice.mp3'
+    # ------------------------------------------------------------
+    # FIX: Normalize every audio input (format/rate/channels) before concat
+    # This prevents ffmpeg exit 234 when edge_tts and gTTS outputs differ
+    # ------------------------------------------------------------
+    n = len(input_files)
+    normalize = ";".join(
+        f"[{i}:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo[a{i}]"
+        for i in range(n)
     )
-    subprocess.run(concat_cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    concat_inputs = "".join(f"[a{i}]" for i in range(n))
+    filter_complex = f'{normalize};{concat_inputs}concat=n={n}:v=0:a=1[outa]'
+
+    inputs_str = " ".join(f"-i {f}" for f in input_files)
+    concat_cmd = (
+        f'ffmpeg -y {inputs_str} '
+        f'-filter_complex "{filter_complex}" '
+        f'-map "[outa]" -c:a libmp3lame -q:a 2 voice.mp3'
+    )
+
+    result = subprocess.run(concat_cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("❌ FFmpeg concat error:\n", result.stderr)
+        raise RuntimeError("Failed to concatenate audio chunks")
+
     total_dur = get_audio_duration("voice.mp3") + 0.5
     timestamps["total"] = round(total_dur, 2)
 

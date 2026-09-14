@@ -1,0 +1,31 @@
+{
+  "series_id": "speed_math",
+  "series_title": "Speed Mental Math Hacks",
+  "lessons": [
+    {
+      "lesson_id": 1,
+      "topic": "Multiply any two digit number by eleven mentally in three seconds",
+      "example": "43 x 11"
+    },
+    {
+      "lesson_id": 2,
+      "topic": "Square any two digit number ending in five instantly",
+      "example": "65 x 65"
+    },
+    {
+      "lesson_id": 3,
+      "topic": "Multiply numbers close to one hundred without long multiplication",
+      "example": "96 x 97"
+    },
+    {
+      "lesson_id": 4,
+      "topic": "Calculate fifteen percent in your head instantly",
+      "example": "15 percent of 84"
+    },
+    {
+      "lesson_id": 5,
+      "topic": "Subtract from one thousand using the all from nine last from ten trick",
+      "example": "1000 - 357"
+    }
+  ]
+}

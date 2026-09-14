@@ -1,0 +1,74 @@
+name: Studio Production Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      series_name:
+        description: 'Target Series'
+        required: true
+        default: 'speed_math'
+        type: choice
+        options:
+          - speed_math
+      lesson_num:
+        description: 'Manual Lesson Number (Leave empty to auto-progress)'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Studio Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SERIES_NAME: ${{ github.event.inputs.series_name }}
+          LESSON_NUM: ${{ github.event.inputs.lesson_num }}
+        run: |
+          python pipeline.py
+
+      - name: Save Progress to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase
+          git add series/
+          git diff-index --quiet HEAD || git commit -m "Auto-update progress after lesson production [skip ci]"
+          git push
+
+      - name: Upload Video Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-${{ github.event.inputs.series_name }}-run-${{ github.run_number }}
+          path: |
+            final_video.mp4
+            thumbnail.jpg
+            details_lesson_*.txt
+          if-no-files-found: warn

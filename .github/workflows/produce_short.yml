@@ -57,10 +57,14 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase
           git add series/
-          git diff-index --quiet HEAD || git commit -m "Auto-update progress after lesson production [skip ci]"
-          git push
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Auto-update progress after lesson production [skip ci]"
+            git pull --rebase
+            git push
+          else
+            echo "No progress state changes to commit."
+          fi
 
       - name: Upload Video Artifacts
         if: always()

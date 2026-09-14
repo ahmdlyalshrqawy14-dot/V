@@ -93,8 +93,8 @@ def prepare_random_bgm(duration=30):
 
     print(f"[AUDIO] Selected Track: {track['name']} (Drop at {track['start']}s)")
 
-    if not os.path.exists(raw_file):
-        headers = {'User-Agent': 'Mozilla/5.0'}
+    if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
+        headers = {'User-Agent': 'MathShortsBot/1.0 (Educational Studio; contact@github.com)'}
         req = urllib.request.Request(track['url'], headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=30) as resp, open(raw_file, 'wb') as f:
@@ -108,6 +108,8 @@ def prepare_random_bgm(duration=30):
         "-ss", str(track['start']),
         "-t", str(duration),
         "-i", raw_file,
+        "-ar", "24000",
+        "-ac", "1",
         "-c:a", "pcm_s16le",
         cut_file
     ]
@@ -236,12 +238,10 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     )
 
     af = (
-        f"[9:a]volume=0.25[bgm_soft]; "
-        f"[1:a]asplit=2[v_main][v_sc]; "
-        f"[bgm_soft][v_sc]sidechaincompress=threshold=0.03:ratio=5:attack=100:release=400[bgm_ducked]; "
-        f"[v_main][bgm_ducked]amix=inputs=2:duration=first[a_voice_bgm]; "
+        f"[1:a]volume=1.0[a_voice]; "
+        f"[9:a]volume=0.25[a_bgm]; "
         f"[8:a]adelay={sfx_delay_ms}|{sfx_delay_ms},volume=0.85[a_sfx]; "
-        f"[a_voice_bgm][a_sfx]amix=inputs=2:duration=first[outa]"
+        f"[a_voice][a_bgm][a_sfx]amix=inputs=3:duration=first:dropout_transition=0:normalize=0[outa]"
     )
 
     cmd = (

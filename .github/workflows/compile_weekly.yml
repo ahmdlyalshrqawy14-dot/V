@@ -1,0 +1,45 @@
+name: Weekly Long-form Compilation
+
+on:
+  workflow_dispatch:
+  schedule:
+    # يعمل تلقائياً كل جمعة الساعة 6 مساءً بتوقيت مصر (UTC 15:00)
+    - cron: '0 15 * * 5'
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Run Compilation Engine
+        run: |
+          python compiler.py
+
+      - name: Upload Compilation Video
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: longform-compilation-run-${{ github.run_number }}
+          path: |
+            weekly_compilation.mp4
+            compilation_chapters.txt
+          if-no-files-found: warn

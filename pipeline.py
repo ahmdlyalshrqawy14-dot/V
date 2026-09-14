@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import shlex
 import shutil
 import random
 import asyncio
@@ -48,9 +49,10 @@ def ensure_fonts():
 def ensure_dust_layer():
     """إنشاء طبقة غبار شفافة تلقائياً إذا لم تكن موجودة لتفادي توقف FFmpeg"""
     if not os.path.exists("dust.png") or os.path.getsize("dust.png") == 0:
+        cmd = 'ffmpeg -y -f lavfi -i color=c=black@0.0:s=1080x1920:d=1 -vframes 1 dust.png'
         subprocess.run(
-            'ffmpeg -y -f lavfi -i color=c=black@0.0:s=1080x1920:d=1 -vframes 1 dust.png',
-            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            shlex.split(cmd),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
         print("[ASSETS] Generated fallback dust.png successfully.")
 
@@ -138,6 +140,22 @@ def prepare_random_bgm(duration=30):
     return False
 
 # ============================================================
+# 2.6 Asset Integrity Validation
+# ============================================================
+def validate_assets(content_data):
+    sfx_file = "boom.wav" if content_data.get("effect_type") == "shock" else "ding.wav"
+    required_files = [
+        "chalkboard.png", "voice.mp3", "t_idle_closed.png", "t_idle_open.png",
+        "t_point_closed.png", "t_point_open.png", "sticker_active.png", "dust.png",
+        sfx_file, "bgm.wav", "master_video.ass"
+    ]
+    missing_or_empty = [f for f in required_files if not os.path.exists(f) or os.path.getsize(f) == 0]
+    if missing_or_empty:
+        print(f"[FATAL] Missing/empty assets: {missing_or_empty}")
+        sys.exit(1)
+    print("[ASSETS] All required files validated ✓")
+
+# ============================================================
 # 3. Gemini Structured Lesson Generation
 # ============================================================
 def generate_lesson_script(lesson_info, persona):
@@ -216,6 +234,12 @@ def generate_lesson_script(lesson_info, persona):
 # 4. Final Video Assembly (FFmpeg Multipass Compositor)
 # ============================================================
 def render_final_composition(content_data, timestamps, persona, output_filename="final_video.mp4"):
+    ass_file = "master_video.ass"
+    if not os.path.exists(ass_file) or os.path.getsize(ass_file) == 0:
+        print("[WARN] master_video.ass missing! Creating empty subtitle file.")
+        with open(ass_file, "w", encoding="utf-8") as f:
+            f.write("[Script Info]\nTitle: Empty\n\n[V4+ Styles]\n\n[Events]\n")
+
     duration = timestamps["total"]
     print(f"[FFMPEG] Starting multi-layer composite render ({duration:.2f}s)...")
 
@@ -241,7 +265,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     stk_fade = f"[6:v]fade=t=in:st={t_res}:d=0.2:alpha=1[stk_f]"
 
     vf = (
-        f"[0:v]crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"
+        f"[0:v]scale=1180:2020,crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"
         "[bg][2:v]overlay=x=630:y=1340[t_base];"
         f"[t_base][3:v]overlay=x=630:y=1340:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x=630:y=1340:enable='{cond_point_closed}'[t_pt_cl];"
@@ -255,10 +279,10 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     )
 
     af = (
-        f"[1:a]volume=1.0[a_voice]; "
-        f"[9:a]volume=0.25[a_bgm]; "
-        f"[8:a]adelay={sfx_delay_ms}|{sfx_delay_ms},volume=0.85[a_sfx]; "
-        f"[a_voice][a_bgm][a_sfx]amix=inputs=3:duration=first:dropout_transition=0:normalize=0[outa]"
+        f"[1:a]volume=1.0,apad[a_voice]; "
+        f"[9:a]volume=0.25,apad[a_bgm]; "
+        f"[8:a]adelay={sfx_delay_ms}|{sfx_delay_ms},volume=0.85,apad[a_sfx]; "
+        f"[a_voice][a_bgm][a_sfx]amix=inputs=3:duration=first:dropout_transition=2:normalize=0[outa]"
     )
 
     cmd = (
@@ -276,11 +300,17 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f'-filter_complex "{vf}; {af}" '
         f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {duration:.2f} {output_filename}'
     )
-    subprocess.run(cmd, shell=True, check=True)
+
+    try:
+        subprocess.run(shlex.split(cmd), check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        print(f"[FFMPEG ERROR] Render failed!\nSTDERR:\n{e.stderr[-2000:]}")
+        sys.exit(1)
 
     # Multi-frame thumbnail generation
     thumb_time = min(max(t_res, 1.0), duration - 0.5)
-    subprocess.run(f'ffmpeg -y -ss {thumb_time:.2f} -i {output_filename} -vframes 1 -q:v 2 thumbnail.jpg', shell=True)
+    thumb_cmd = f'ffmpeg -y -ss {thumb_time:.2f} -i {output_filename} -vframes 1 -q:v 2 thumbnail.jpg'
+    subprocess.run(shlex.split(thumb_cmd), check=True)
     print(f"[FFMPEG] Render complete: {output_filename} + thumbnail.jpg")
 
 # ============================================================
@@ -330,11 +360,13 @@ async def main():
         print("[AUDIO WARN] bgm.wav missing or invalid! Forcing fallback generation.")
         audio_engine.generate_ambient_bgm(timestamps["total"] + 2.5)
         if not os.path.exists("bgm.wav") or os.path.getsize("bgm.wav") < 1000:
+            anull_cmd = f'ffmpeg -y -f lavfi -i anullsrc=r=24000:cl=mono -t {timestamps["total"]+2.5} bgm.wav'
             subprocess.run(
-                f'ffmpeg -y -f lavfi -i anullsrc=r=24000:cl=mono -t {timestamps["total"]+2.5} bgm.wav',
-                shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+                shlex.split(anull_cmd),
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
             )
 
+    validate_assets(content_data)
     render_final_composition(content_data, timestamps, persona)
 
     # Commit progress to disk

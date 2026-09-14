@@ -381,13 +381,18 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
     cond_point_closed = f"({is_pointing}) * (not({is_talking}))"
     cond_point_open = f"({is_pointing}) * ({is_talking})"
 
+    # التلاشي (fade) لازم يتعمل بفلتر fade منفصل قبل overlay
+    # overlay لا يقبل alpha كتعبير رياضي متغير مع الوقت
+    stk_fade = f"[6:v]fade=t=in:st={t_joke_start}:d=0.2:alpha=1[stk_f]"
+
     vf = (
         f"[0:v]crop=w=1080:h=1920:x='(in_w-1080)*(t/{duration:.2f})':y='(in_h-1920)*(t/{duration:.2f})'[bg];"
         "[bg][2:v]overlay=x=630:y=1340[t_base];"
         f"[t_base][3:v]overlay=x=630:y=1340:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x=630:y=1340:enable='{cond_point_closed}'[t_pt_cl];"
         f"[t_pt_cl][5:v]overlay=x=630:y=1340:enable='{cond_point_open}'[v_teacher];"
-        f"[v_teacher][6:v]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})':alpha='min(1,(t-{t_joke_start})/0.2)'[v_stk];"
+        f"{stk_fade};"
+        f"[v_teacher][stk_f]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})'[v_stk];"
         f"[v_stk]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill,"
         "subtitles=master_video.ass:fontsdir=.[outv]"
     )

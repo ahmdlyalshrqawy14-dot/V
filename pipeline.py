@@ -10,6 +10,7 @@ import math
 import struct
 import subprocess
 import edge_tts
+from gtts import gTTS
 import arabic_reshaper
 from bidi.algorithm import get_display
 from PIL import Image, ImageDraw, ImageFont
@@ -170,9 +171,9 @@ def generate_graphics_and_cards(data):
     d_stk.text((250, 75), shape_text(data.get("joke_text", "انتظر المفاجأة!")), font=get_font(30), fill="#ffffff", anchor="mm")
     stk.save("sticker_active.png")
 
-# 7. توليد المحتوى عبر Gemini مع فرض طول الاسكريبت
+# 7. توليد المحتوى عبر Gemini
 def generate_lesson_content():
-    target_words = max(60, int(TARGET_DURATION * 2.3))
+    target_words = max(55, int(TARGET_DURATION * 2.2))
     print(f"⏳ توليد محتوى {LANG.upper()} بطول مستهدف {target_words} كلمة...")
     
     if LANG == "ar":
@@ -180,14 +181,15 @@ def generate_lesson_content():
         أنت صانع محتوى رياضيات تيك توك وريلز مصري مضحك وسريع.
         المطلوب درس عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
         
-        شرط حاسم للمدة: يجب ألا يقل نص spoken_script عن {target_words} كلمة، لكي يستغرق التعليق الصوتي 30 ثانية كاملة.
+        شرط حاسم للمدة: يجب ألا يقل نص spoken_script عن {target_words} كلمة، لكي يستغرق التعليق الصوتي مدة كافية.
+        تنبيه: اكتب نص spoken_script كسرد كلامي طبيعي بدون أي أقواس رياضية معقدة أو معادلات بصيغة LaTeX.
         
         أخرج الرد بصيغة JSON حصرية:
         {{
           "title": "عنوان جذاب مع إيموجي",
           "description": "وصف كامل بالهاشتاجات #رياضيات #شورتس",
           "tags": "رياضيات, قدرات, جبر, شورتس",
-          "spoken_script": "نص الاسكريبت المنطوق بالعامية المصرية ومشكل بالحركات تماماً بطول لا يقل عن {target_words} كلمة تفصيلية وسريعة",
+          "spoken_script": "نص الاسكريبت المنطوق بالعامية المصرية ومشكل بالحركات تماماً بطول حوالي {target_words} كلمة",
           "hook_text": "المسألة أو المعادلة الصادمة",
           "joke_text": "إفيه قصير جداً للاستيكر",
           "step_1": "الحيلة الأولى",
@@ -201,14 +203,15 @@ def generate_lesson_content():
         You are a funny, high-energy viral math Shorts creator.
         Create an entertaining reel about: {SERIES_NAME} - Episode {LESSON_NUM}.
         
-        CRITICAL DURATION RULE: spoken_script MUST contain at least {target_words} words to guarantee a 30-second voiceover.
+        CRITICAL DURATION RULE: spoken_script MUST contain at least {target_words} words.
+        Write spoken_script as clean spoken plain English words (no math symbols like ^, $, sqrt, just spoken words).
         
         Output ONLY valid JSON:
         {{
           "title": "Catchy Title with Emojis",
           "description": "Shorts description with hashtags",
           "tags": "math hacks, algebra, quick tips, shorts",
-          "spoken_script": "Spoken script with AT LEAST {target_words} words. Detailed, humorous and punchy.",
+          "spoken_script": "Spoken plain text script with AT LEAST {target_words} words. Punchy and humorous.",
           "hook_text": "The Problem",
           "joke_text": "Short funny caption",
           "step_1": "Step 1 Hack",
@@ -240,27 +243,30 @@ def generate_lesson_content():
             continue
     raise RuntimeError("فشلت محاولات الاتصال بكافة نماذج Gemini.")
 
-# 8. تسجيل الصوت مع المحاولات المتكررة والبديل الآمن للترجمة
+# 8. توليد الصوت الآمن مع التحويل الاحتياطي لمحرك gTTS
 async def create_voiceover_safe(text, output_file="voice.mp3"):
     print("⏳ فحص النص وتنظيفه وتسجيل التعليق الصوتي...")
-    clean_text = re.sub(r'[^\w\s\d.,!?;:\'\"\-+\u0600-\u06FF]', '', str(text)).strip()
-    if len(clean_text) < 10:
+    
+    # تنظيف النص بالكامل من الرموز والأسطر المزدوجة التي ترفضها خوادم الصوت
+    raw_text = str(text).replace("\n", " ").replace("\r", " ")
+    clean_text = re.sub(r'["\'`*_~<>{}[\]\\/+=^$]', ' ', raw_text)
+    clean_text = " ".join(clean_text.split()).strip()
+    
+    if len(clean_text.split()) < 5:
         clean_text = "Let us solve this math problem quickly and easily!" if LANG != "ar" else "يلا نحل المسألة دي في ثواني وبطريقة سهلة جداً!"
 
-    if LANG == "ar":
-        voices_pool = ["ar-EG-ShakirNeural", "ar-EG-SalmaNeural"]
-    else:
-        voices_pool = ["en-US-ChristopherNeural", "en-US-GuyNeural", "en-US-JennyNeural", "en-US-AriaNeural"]
+    print(f"📝 النص النهائي ({len(clean_text.split())} كلمة): {clean_text[:70]}...")
 
+    voices_pool = ["ar-EG-ShakirNeural", "ar-EG-SalmaNeural"] if LANG == "ar" else ["en-US-ChristopherNeural", "en-US-GuyNeural"]
     words_data = []
-    success = False
-    last_err = None
+    edge_success = False
 
-    for attempt in range(3):
-        chosen_voice = voices_pool[attempt % len(voices_pool)]
-        print(f"🎙️ تجربة تسجيل الصوت ({attempt + 1}/3) عبر: {chosen_voice}")
+    # محاولة التسجيل عبر edge-tts أولاً
+    for attempt in range(2):
+        voice = voices_pool[attempt % len(voices_pool)]
+        print(f"🎙️ محاولة edge-tts ({attempt + 1}/2) عبر: {voice}")
         try:
-            communicate = edge_tts.Communicate(clean_text, chosen_voice)
+            communicate = edge_tts.Communicate(clean_text, voice)
             words_data.clear()
 
             async def _fetch():
@@ -277,22 +283,25 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
                                 "word": chunk["text"]
                             })
 
-            await asyncio.wait_for(_fetch(), timeout=40)
-            if os.path.exists(output_file) and os.path.getsize(output_file) > 1000:
-                print("✓ تم تسجيل واستلام الصوت بنجاح!")
-                success = True
+            await asyncio.wait_for(_fetch(), timeout=25)
+            if os.path.exists(output_file) and os.path.getsize(output_file) > 2000:
+                print("✓ تم التسجيل بنجاح عبر edge-tts!")
+                edge_success = True
                 break
-            else:
-                raise RuntimeError("ملف صوتي فارغ")
         except Exception as e:
-            print(f"⚠️ تعثر الصوت: {e}")
-            last_err = e
-            await asyncio.sleep(2)
+            print(f"⚠️ تعثر edge-tts: {e}")
+            await asyncio.sleep(1)
 
-    if not success:
-        raise RuntimeError(f"فشلت كافة محاولات استخراج الصوت: {last_err}")
+    # التحويل التلقائي لمحرك gTTS الاحتياطي في حال حظر سيرفر مايكروسوفت
+    if not edge_success:
+        print("🔄 تعثر الاتصال بمايكروسوفت، جاري التبديل الفوري لمحرك الصوت البديل (gTTS)...")
+        try:
+            tts = gTTS(text=clean_text, lang="ar" if LANG == "ar" else "en")
+            tts.save(output_file)
+            print("✓ تم إنشاء الصوت بنجاح عبر المحرك البديل!")
+        except Exception as e:
+            raise RuntimeError(f"فشل إنشاء الصوت عبر كافة المحركات: {e}")
 
-    # قياس مدة الصوت الفعلية
     actual_dur = get_audio_duration(output_file)
 
     def format_srt_time(seconds):
@@ -303,8 +312,6 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
         return f"{hrs:02d}:{mins:02d}:{secs:02d},{millis:03d}"
 
     srt_lines = []
-    
-    # إذا نجح WordBoundary نستخدمه، وإذا لم ينجح نقوم بتقسيم النص تلقائياً (Fallback) لمنع انهيار FFmpeg
     if words_data:
         chunk_size = 4
         sub_idx = 1
@@ -317,14 +324,14 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
                 srt_lines.append(f"{sub_idx}\n{start_ts} --> {end_ts}\n{txt}\n")
                 sub_idx += 1
     else:
-        print("⚠️ لم يتم استلام WordBoundary، جاري إنشاء توقيتات الترجمة برمجياً...")
+        # بناء الكابشنز برمجياً في حال استخدام المحرك البديل
         words = clean_text.split()
         chunk_size = 4
         chunks = [" ".join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
         step_dur = actual_dur / max(1, len(chunks))
         for idx, ch in enumerate(chunks):
             s_t = format_srt_time(idx * step_dur)
-            e_t = format_srt_time((idx + 1) * step_dur)
+            e_t = format_srt_time(min(actual_dur, (idx + 1) * step_dur))
             srt_lines.append(f"{idx+1}\n{s_t} --> {e_t}\n{ch}\n")
 
     with open("captions.srt", "w", encoding="utf-8") as f:
@@ -343,7 +350,7 @@ async def create_voiceover_safe(text, output_file="voice.mp3"):
                 curr_end = w["end"]
         speech_intervals.append((curr_start, curr_end))
     else:
-        speech_intervals.append((0.5, actual_dur))
+        speech_intervals.append((0.3, actual_dur))
 
     return speech_intervals, actual_dur
 
@@ -367,7 +374,6 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         speech_cond = f"between(t,0.5,{duration:.2f})"
     mouth_flap_expr = f"({speech_cond}) * between(mod(t,0.28),0,0.14)"
 
-    # التحقق من وجود ملف الترجمة وصلاحيته
     has_sub = os.path.exists("captions.srt") and os.path.getsize("captions.srt") > 15
     sub_filter = ",subtitles=captions.srt:force_style='FontSize=20,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=2,MarginV=190'" if has_sub else ""
 

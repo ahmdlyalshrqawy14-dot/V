@@ -86,39 +86,56 @@ POPULAR_TRACKS = [
 ]
 
 def prepare_random_bgm(duration=30):
-    track = random.choice(POPULAR_TRACKS)
-    raw_ext = "ogg" if track["url"].endswith(".ogg") else "mp3"
-    raw_file = f"temp_{track['name']}.{raw_ext}"
+    tracks = list(POPULAR_TRACKS)
+    random.shuffle(tracks)
     cut_file = "bgm.wav"
 
-    print(f"[AUDIO] Selected Track: {track['name']} (Drop at {track['start']}s)")
+    for track in tracks:
+        raw_ext = "ogg" if track["url"].endswith(".ogg") else "mp3"
+        raw_file = f"temp_{track['name']}.{raw_ext}"
 
-    if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
-        headers = {'User-Agent': 'MathShortsBot/1.0 (Educational Studio; contact@github.com)'}
-        req = urllib.request.Request(track['url'], headers=headers)
+        print(f"[AUDIO] Selected Track: {track['name']} (Drop at {track['start']}s)")
+
+        # التحقق من التحميل السليم وتفادي الروابط التالفة أو المحظورة
+        if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
+            headers = {'User-Agent': 'MathShortsBot/1.0 (Educational Studio; contact@github.com)'}
+            req = urllib.request.Request(track['url'], headers=headers)
+            try:
+                with urllib.request.urlopen(req, timeout=25) as resp, open(raw_file, 'wb') as f:
+                    f.write(resp.read())
+            except Exception as e:
+                print(f"[AUDIO WARN] Download failed for {track['name']}: {e}")
+                continue
+
+        # التأكد من أن الملف المحمل ليس فارغاً
+        if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
+            print(f"[AUDIO WARN] Downloaded file {raw_file} is too small or corrupt.")
+            continue
+
+        # القص الآمن مع وضع -i أولاً لضمان عدم خروج ملف فارغ
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", raw_file,
+            "-ss", str(track['start']),
+            "-t", str(duration),
+            "-ar", "24000",
+            "-ac", "1",
+            "-c:a", "pcm_s16le",
+            cut_file
+        ]
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp, open(raw_file, 'wb') as f:
-                f.write(resp.read())
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         except Exception as e:
-            print(f"[AUDIO WARN] Download failed for {track['name']}: {e}")
-            return False
+            print(f"[AUDIO WARN] FFmpeg cut failed for {track['name']}: {e}")
+            continue
 
-    cmd = [
-        "ffmpeg", "-y",
-        "-ss", str(track['start']),
-        "-t", str(duration),
-        "-i", raw_file,
-        "-ar", "24000",
-        "-ac", "1",
-        "-c:a", "pcm_s16le",
-        cut_file
-    ]
-    try:
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        return True
-    except Exception as e:
-        print(f"[AUDIO WARN] FFmpeg cut failed: {e}")
-        return False
+        # التأكد أن الناتج سليم ويحتوي على بيانات صوتية حقيقية
+        if os.path.exists(cut_file) and os.path.getsize(cut_file) > 10000:
+            print(f"[AUDIO] bgm.wav ready using {track['name']} ({os.path.getsize(cut_file)} bytes)")
+            return True
+
+    print("[AUDIO WARN] All online BGM tracks failed or yielded empty files.")
+    return False
 
 # ============================================================
 # 3. Gemini Structured Lesson Generation
@@ -305,7 +322,18 @@ async def main():
     # Download and prepare random popular BGM (drop cut)
     bgm_ready = prepare_random_bgm(timestamps["total"] + 2.5)
     if not bgm_ready:
+        print("[AUDIO] Popular BGM unavailable, generating ambient fallback...")
         audio_engine.generate_ambient_bgm(timestamps["total"] + 2.5)
+
+    # التحقق النهائي من وجود ملف صوتي سليم قبل الرندر
+    if not os.path.exists("bgm.wav") or os.path.getsize("bgm.wav") < 5000:
+        print("[AUDIO WARN] bgm.wav missing or invalid! Forcing fallback generation.")
+        audio_engine.generate_ambient_bgm(timestamps["total"] + 2.5)
+        if not os.path.exists("bgm.wav") or os.path.getsize("bgm.wav") < 1000:
+            subprocess.run(
+                f'ffmpeg -y -f lavfi -i anullsrc=r=24000:cl=mono -t {timestamps["total"]+2.5} bgm.wav',
+                shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
 
     render_final_composition(content_data, timestamps, persona)
 

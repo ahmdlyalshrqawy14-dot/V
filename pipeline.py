@@ -39,7 +39,7 @@ def get_font(size):
         for f in os.listdir("fonts"):
             if f.lower().endswith(".ttf"):
                 candidates.insert(0, os.path.join("fonts", f))
-                
+
     for path in candidates:
         if os.path.exists(path):
             try:
@@ -80,7 +80,7 @@ def generate_ambient_bgm(duration, output_file="bgm.wav"):
     print("🎵 فحص وتجهيز موسيقى الخلفية (BGM)...")
     if os.path.exists(output_file):
         return output_file
-        
+
     sample_rate = 24000
     total_samples = int(duration * sample_rate)
     chords = [
@@ -89,7 +89,7 @@ def generate_ambient_bgm(duration, output_file="bgm.wav"):
         [87.31,  110.00, 130.81, 164.81],
         [98.00,  123.47, 146.83, 174.61],
     ]
-    
+
     with wave.open(output_file, "w") as f:
         f.setnchannels(1); f.setsampwidth(2); f.setframerate(sample_rate)
         data = []
@@ -129,7 +129,7 @@ def generate_graphics_and_cards(data):
     d.rectangle([160, 1895, 195, 1905], fill="#ffffff")
     d.rectangle([210, 1895, 245, 1905], fill="#fde047")
     d.rectangle([260, 1895, 295, 1905], fill="#67e8f9")
-    
+
     font_title = get_font(48)
     d.text((570, 150), shape_text(SERIES_NAME), font=font_title, fill="#fef08a", anchor="mm")
     board.save("chalkboard.png")
@@ -137,29 +137,29 @@ def generate_graphics_and_cards(data):
     def draw_character(mouth_open=False, is_pointing=False):
         img = Image.new("RGBA", (450, 480), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
-        
+
         if is_pointing:
             dr.line([(180, 320), (60, 160)], fill="#1d4ed8", width=26)
             dr.ellipse([(45, 140), (75, 170)], fill="#fed7aa")
             dr.line([(60, 150), (40, 120)], fill="#fed7aa", width=8)
-        
+
         dr.rectangle([170, 290, 330, 480], fill="#1d4ed8")
         dr.polygon([(250, 290), (230, 350), (250, 410), (270, 350)], fill="#b91c1c")
-        
+
         dr.ellipse([180, 120, 320, 275], fill="#fed7aa")
         dr.chord([180, 100, 320, 200], 180, 360, fill="#3b2219")
-        
+
         dr.rectangle([195, 165, 240, 195], outline="#0f172a", width=4)
         dr.rectangle([260, 165, 305, 195], outline="#0f172a", width=4)
         dr.line([240, 180, 260, 180], fill="#0f172a", width=4)
         dr.ellipse([212, 175, 222, 185], fill="#0f172a")
         dr.ellipse([277, 175, 287, 185], fill="#0f172a")
-        
+
         if mouth_open:
             dr.ellipse([235, 225, 265, 250], fill="#881337")
         else:
             dr.line([235, 235, 265, 235], fill="#881337", width=4)
-            
+
         return img
 
     draw_character(mouth_open=False, is_pointing=False).save("t_idle_closed.png")
@@ -173,7 +173,7 @@ def generate_graphics_and_cards(data):
         font = get_font(font_size)
         display_str = f"{prefix} {text}".strip() if prefix else str(text).strip()
         shaped = shape_text(display_str)
-        
+
         if bg_box:
             bbox = dr.textbbox((540, y_pos), shaped, font=font, anchor="mm")
             pad_x, pad_y = 35, 18
@@ -202,12 +202,12 @@ def generate_graphics_and_cards(data):
 def generate_lesson_content():
     target_words = max(55, int(TARGET_DURATION * 2.2))
     print(f"⏳ توليد المحتوى التعليمي عبر Gemini ({LANG.upper()})...")
-    
+
     if LANG == "ar":
         prompt = f"""
         أنت صانع محتوى رياضيات تيك توك وريلز مصري احترافي وممتع.
         المطلوب: شرح حيلة رياضية سريعة ومفيدة عن: {SERIES_NAME} - حلقة {LESSON_NUM}.
-        
+
         شروط الجودة البصرية:
         - ممنوع خلط الرموز الإنجليزية مع الكلمات العربية في نفس السطر.
         - hook_text: المسألة أو الفكرة باختصار (مثال: "ضرب أي رقم في 11 ذهنياً").
@@ -216,7 +216,7 @@ def generate_lesson_content():
         - result_text: الناتج النهائي المباشر (مثال: "الناتج النهائي = 385 🎉").
         - joke_text: إفيه أو تشجيع قصير للاستيكر (أقل من 5 كلمات).
         - spoken_script: سيناريو بالعامية المصرية الودودة بطول حوالي {target_words} كلمة، مشكول بالحركات تماماً لسلامة النطق الصوتي وبدون رموز لاتينية.
-        
+
         أخرج الرد بصيغة JSON حصرية:
         {{
           "title": "عنوان جذاب للشورتس",
@@ -264,11 +264,11 @@ def generate_lesson_content():
 # 9. تسجيل الصوت مع المحرك الاحتياطي
 async def create_voiceover_safe(text, output_file="voice.mp3"):
     print("⏳ فحص النص وتنظيفه وتسجيل الصوت...")
-    
+
     raw_text = str(text).replace("\n", " ").replace("\r", " ")
     clean_text = re.sub(r'["\'`*_~<>{}[\]\\/+=^$]', ' ', raw_text)
     clean_text = " ".join(clean_text.split()).strip()
-    
+
     if len(clean_text.split()) < 5:
         clean_text = "يلا نحل المسألة دي في ثواني وبطريقة سهلة جداً!" if LANG == "ar" else "Let us solve this math problem quickly and easily!"
 
@@ -385,18 +385,22 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         speech_cond = " + ".join([f"between(t,{s:.2f},{e:.2f})" for s, e in speech_intervals])
     else:
         speech_cond = f"between(t,0.5,{duration:.2f})"
-        
+
     is_talking = f"({speech_cond}) * between(mod(t,0.28),0,0.14)"
     is_pointing = f"(between(t,{t_s1},{t_s1+2.8}) + between(t,{t_s2},{t_s2+2.8}))"
-    
+
     cond_idle_open = f"(not({is_pointing})) * ({is_talking})"
     cond_point_closed = f"({is_pointing}) * (not({is_talking}))"
     cond_point_open = f"({is_pointing}) * ({is_talking})"
 
-    def make_slide_fade(t_start):
-        alpha_expr = f"min(1,max(0,(t-{t_start})/0.35))"
+    # ملاحظة: overlay لا يدعم alpha كتعبير حسابي، لذلك التلاشي (fade)
+    # بيتعمل بفلتر fade منفصل على الصورة قبل الدمج بالـ overlay
+    def slide_overlay(src_label, out_label, t_start, prev_label):
+        fade_label = f"{src_label.replace(':', '_')}_f"
         y_expr = f"-25*max(0,1-(t-{t_start})/0.35)"
-        return f"overlay=x=0:y='{y_expr}':enable='between(t,{t_start},{duration:.2f})':alpha='{alpha_expr}'"
+        fade_line = f"[{src_label}]fade=t=in:st={t_start}:d=0.35:alpha=1[{fade_label}]"
+        overlay_line = f"[{prev_label}][{fade_label}]overlay=x=0:y='{y_expr}':enable='between(t,{t_start},{duration:.2f})'[{out_label}]"
+        return fade_line, overlay_line
 
     has_sub = os.path.exists("captions.srt") and os.path.getsize("captions.srt") > 15
     sub_filter = (
@@ -406,17 +410,24 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         "MarginV=140,Alignment=2'"
     ) if has_sub else ""
 
+    stk_fade = f"[6:v]fade=t=in:st={t_joke_start}:d=0.25:alpha=1[stk_f]"
+    hook_fade, hook_ov = slide_overlay("7:v", "v_h", t_hook, "v_stk")
+    s1_fade, s1_ov = slide_overlay("8:v", "v_s1", t_s1, "v_h")
+    s2_fade, s2_ov = slide_overlay("9:v", "v_s2", t_s2, "v_s1")
+    res_fade, res_ov = slide_overlay("10:v", "v_res", t_res, "v_s2")
+
     vf = (
         f"[0:v]crop=w=1080:h=1920:x='(in_w-1080)*(t/{duration:.2f})':y='(in_h-1920)*(t/{duration:.2f})'[bg];"
         "[bg][2:v]overlay=x=630:y=1340[t_base];"
         f"[t_base][3:v]overlay=x=630:y=1340:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x=630:y=1340:enable='{cond_point_closed}'[t_pt_cl];"
         f"[t_pt_cl][5:v]overlay=x=630:y=1340:enable='{cond_point_open}'[v_teacher];"
-        f"[v_teacher][6:v]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})':alpha='min(1,(t-{t_joke_start})/0.25)'[v_stk];"
-        f"[v_stk][7:v]{make_slide_fade(t_hook)}[v_h];"
-        f"[v_h][8:v]{make_slide_fade(t_s1)}[v_s1];"
-        f"[v_s1][9:v]{make_slide_fade(t_s2)}[v_s2];"
-        f"[v_s2][10:v]{make_slide_fade(t_res)}[v_res];"
+        f"{stk_fade};"
+        f"[v_teacher][stk_f]overlay=x=80:y=1120:enable='between(t,{t_joke_start},{t_joke_end})'[v_stk];"
+        f"{hook_fade};{hook_ov};"
+        f"{s1_fade};{s1_ov};"
+        f"{s2_fade};{s2_ov};"
+        f"{res_fade};{res_ov};"
         f"[v_res]drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill"
         f"{sub_filter}[outv]"
     )
@@ -449,7 +460,7 @@ def build_video_with_ffmpeg(data, duration, speech_intervals):
         f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {duration:.2f} final_video.mp4'
     )
     subprocess.run(cmd, shell=True, check=True)
-    
+
     thumb_time = min(2.0, max(0.5, duration / 4))
     subprocess.run(f'ffmpeg -y -ss {thumb_time:.2f} -i final_video.mp4 -vframes 1 -q:v 2 thumbnail.jpg', shell=True)
     print("✓ اكتمل إنتاج الفيديو بنجاح تام.")
@@ -459,7 +470,7 @@ async def main():
     generate_sfx()
     data = generate_lesson_content()
     generate_graphics_and_cards(data)
-    
+
     txt_filename = f"بيانات_{LANG}_درس_{LESSON_NUM}.txt"
     with open(txt_filename, "w", encoding="utf-8") as f:
         f.write(f"العنوان:\n{data.get('title', '')}\n\n")
@@ -469,7 +480,7 @@ async def main():
     spoken_script = data.get("spoken_script", "يلا نحل المسألة دي في ثواني وبطريقة سهلة جداً!")
     speech_intervals, actual_duration = await create_voiceover_safe(spoken_script)
     print(f"⏱️ مدة الصوت المعتمدة: {actual_duration:.2f} ثانية")
-    
+
     generate_ambient_bgm(actual_duration + 3)
     build_video_with_ffmpeg(data, actual_duration, speech_intervals)
     print("🎉 انتهى خط الإنتاج بالكامل بمستوى بصري احترافي!")

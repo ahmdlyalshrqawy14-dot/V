@@ -31,6 +31,13 @@ GOLD_HEX = "#FFD700"
 FRAME_THICKNESS = 6
 FPS = 25
 
+# Teacher micro-behavior constants
+BLINK_INTERVAL = 3.5
+BLINK_DURATION = 0.12
+
+# Extra hold time at the very end so the last card is readable longer
+TAIL_PAD = 0.6
+
 # ============================================================
 # 2. Local Typography & Asset Safeguards
 # ============================================================
@@ -165,8 +172,9 @@ def validate_assets(content_data):
     sfx_file = "boom.wav" if content_data.get("effect_type") == "shock" else "ding.wav"
     required_files = [
         "chalkboard.png", "voice.mp3", "t_idle_closed.png", "t_idle_open.png",
-        "t_point_closed.png", "t_point_open.png", "sticker_active.png", "dust.png",
-        "watermark.png", sfx_file, "bgm.wav", "master_video.ass"
+        "t_point_closed.png", "t_point_open.png", "t_thinking.png", "t_blink.png",
+        "sticker_active.png", "dust.png", "watermark.png",
+        sfx_file, "bgm.wav", "master_video.ass"
     ]
     missing_or_empty = [f for f in required_files if not os.path.exists(f) or os.path.getsize(f) == 0]
     if missing_or_empty:
@@ -259,10 +267,15 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         with open(ass_file, "w", encoding="utf-8") as f:
             f.write("[Script Info]\nTitle: Empty\n\n[V4+ Styles]\n\n[Events]\n")
 
+    # 'duration' drives all speech-synced pacing (camera, bars, sfx timing).
+    # 'render_duration' is the actual output length, padded so the last
+    # card stays on screen a bit longer after the voice/sfx finish.
     duration = timestamps["total"]
-    print(f"[FFMPEG] Starting multi-layer composite render ({duration:.2f}s)...")
+    render_duration = duration + TAIL_PAD
+    print(f"[FFMPEG] Starting multi-layer composite render ({render_duration:.2f}s, tail pad +{TAIL_PAD}s)...")
 
     sfx_file = "boom.wav" if content_data.get("effect_type") == "shock" else "ding.wav"
+    t_hook = timestamps.get("hook", 0.4)
     t_s1 = timestamps["step1"]
     t_s2 = timestamps["step2"]
     t_res = timestamps["result"]
@@ -271,16 +284,18 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     # ---- Teacher sprite timeline conditions ----
     is_pointing = f"(between(t,{t_s1},{t_s2}) + between(t,{t_s2},{t_res}))"
     is_talking = "between(mod(t,0.28),0,0.14)"
+    is_thinking = f"lt(t,{t_hook})"
 
     cond_idle_open = f"(not({is_pointing})) * ({is_talking})"
     cond_point_closed = f"({is_pointing}) * (not({is_talking}))"
     cond_point_open = f"({is_pointing}) * ({is_talking})"
+    cond_blink = f"(not({is_pointing})) * (not({is_thinking})) * between(mod(t,{BLINK_INTERVAL}),0,{BLINK_DURATION})"
 
-    # ---- Teacher position: moved to LEFT side ----
+    # ---- Teacher position: LEFT side ----
     teacher_x = 80
     teacher_y = 1340
 
-    # ---- Camera: eased pan (ease-in-out) instead of linear + micro shake at reveal ----
+    # ---- Camera: eased pan (ease-in-out) + micro shake at reveal ----
     progress = f"min(t/{duration:.2f},1)"
     ease = f"((1-cos(PI*{progress}))/2)"
     shake_window = f"between(t,{t_res},{t_res+0.3})"
@@ -291,7 +306,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     pan_y = f"max(0,min(90,70*{ease}+2*sin(2*PI*t*0.8+1)+{shake_y}))"
 
     # ---- Fast zoom-out intro (first ~1s) via zoompan ----
-    zoom_frames = FPS  # ~1 second worth of frames
+    zoom_frames = FPS
     zoom_expr = f"if(lte(on,{zoom_frames}),1.15-0.15*on/{zoom_frames},1)"
 
     # ---- Tilt at reveal moment ----
@@ -303,7 +318,6 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f"iw*(1+0.18*exp(-6*max(t-{t_res},0))*sin(25*max(t-{t_res},0))"
         f"+0.03*sin(2*PI*max(t-{t_res},0)*1.5))"
     )
-    # sticker moved to the RIGHT side to balance the teacher on the left
     sticker_x = 560
     sticker_y = 1120
 
@@ -312,12 +326,15 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f"[0:v]scale=1400:2400,zoompan=z='{zoom_expr}':d=1:s=1180x2020:fps={FPS},"
         f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg_panned];"
         f"[bg_panned]rotate=a='{tilt_angle}':ow=iw:oh=ih:c=none[bg];"
-        # teacher layers on the left
+        # teacher base + talking/pointing states (left side)
         f"[bg][2:v]overlay=x={teacher_x}:y={teacher_y}[t_base];"
         f"[t_base][3:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_point_closed}'[t_pt_cl];"
-        f"[t_pt_cl][5:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_point_open}'[v_teacher];"
-        # sticker with spring + pulse, moved right
+        f"[t_pt_cl][5:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_point_open}'[t_pt_op];"
+        # thinking pose (pre-hook) + blink (periodic, on top of everything else)
+        f"[t_pt_op][11:v]overlay=x={teacher_x}:y={teacher_y}:enable='{is_thinking}'[t_think];"
+        f"[t_think][12:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_blink}'[v_teacher];"
+        # sticker with spring + pulse, right side
         f"[6:v]scale=w='{sticker_scale_expr}':h=-1:eval=frame[stk_sized];"
         f"[stk_sized]fade=t=in:st={t_res}:d=0.2:alpha=1[stk_f];"
         f"[v_teacher][stk_f]overlay=x={sticker_x}:y={sticker_y}:enable='between(t,{t_res},{t_res+2.6})'[v_stk];"
@@ -330,8 +347,8 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         "colorbalance=rs=-0.05:gs=0.01:bs=0.08:rm=-0.03:gm=0.01:bm=0.06,"
         "vignette=PI/5,"
         "noise=alls=6:allf=t,"
-        # gold progress bar
-        f"drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color={GOLD_HEX}:t=fill,"
+        # gold progress bar (clamped so it never overflows during tail pad)
+        f"drawbox=x=80:y=1800:w=(iw-160)*min(1\\,t/{duration:.2f}):h=8:color={GOLD_HEX}:t=fill,"
         # thin gold frame border (constant, luxury branding)
         f"drawbox=x=0:y=0:w=iw:h=ih:color={GOLD_HEX}@0.55:t={FRAME_THICKNESS},"
         "subtitles=master_video.ass:fontsdir=fonts[outv]"
@@ -346,19 +363,21 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
 
     cmd = (
         f'ffmpeg -y '
-        f'-loop 1 -t {duration:.2f} -i chalkboard.png '
+        f'-loop 1 -t {render_duration:.2f} -i chalkboard.png '
         f'-i voice.mp3 '
-        f'-loop 1 -t {duration:.2f} -i t_idle_closed.png '
-        f'-loop 1 -t {duration:.2f} -i t_idle_open.png '
-        f'-loop 1 -t {duration:.2f} -i t_point_closed.png '
-        f'-loop 1 -t {duration:.2f} -i t_point_open.png '
-        f'-loop 1 -t {duration:.2f} -i sticker_active.png '
-        f'-loop 1 -t {duration:.2f} -i dust.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_idle_closed.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_idle_open.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_point_closed.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_point_open.png '
+        f'-loop 1 -t {render_duration:.2f} -i sticker_active.png '
+        f'-loop 1 -t {render_duration:.2f} -i dust.png '
         f'-i {sfx_file} '
         f'-i bgm.wav '
-        f'-loop 1 -t {duration:.2f} -i watermark.png '
+        f'-loop 1 -t {render_duration:.2f} -i watermark.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_thinking.png '
+        f'-loop 1 -t {render_duration:.2f} -i t_blink.png '
         f'-filter_complex "{vf}; {af}" '
-        f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {duration:.2f} {output_filename}'
+        f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {render_duration:.2f} {output_filename}'
     )
 
     try:
@@ -368,7 +387,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         sys.exit(1)
 
     # Multi-frame thumbnail generation
-    thumb_time = min(max(t_res, 1.0), duration - 0.5)
+    thumb_time = min(max(t_res, 1.0), render_duration - 0.5)
     thumb_cmd = f'ffmpeg -y -ss {thumb_time:.2f} -i {output_filename} -vframes 1 -q:v 2 thumbnail.jpg'
     subprocess.run(shlex.split(thumb_cmd), check=True)
     print(f"[FFMPEG] Render complete: {output_filename} + thumbnail.jpg")

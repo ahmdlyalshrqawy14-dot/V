@@ -17,9 +17,8 @@ on:
         type: string
 
   schedule:
-    # يعمل مرتين يومياً بتوقيت UTC
-    # 5:00 UTC = 8:00 صباحاً بتوقيت مصر (صيفي UTC+3)
-    # 11:00 UTC = 2:00 ظهراً بتوقيت مصر (صيفي UTC+3)
+    # 5:00 UTC = 8:00 صباحاً بتوقيت مصر
+    # 11:00 UTC = 2:00 ظهراً بتوقيت مصر
     - cron: '0 5,11 * * *'
 
 permissions:
@@ -59,6 +58,40 @@ jobs:
         run: |
           python pipeline.py
 
+      - name: Send Video and Metadata to Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          META_FILE=$(ls details_lesson_*.txt 2>/dev/null | head -n 1)
+
+          # 1. إرسال نص الوصف والعنوان لنسخه بسهولة
+          if [ -n "$META_FILE" ]; then
+            MSG_CONTENT=$(cat "$META_FILE")
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+              -d "chat_id=${CHAT_ID}" \
+              -d "text=${MSG_CONTENT}"
+          fi
+
+          # 2. إرسال الصورة المصغرة (Thumbnail)
+          if [ -f "thumbnail.jpg" ]; then
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" \
+              -F "chat_id=${CHAT_ID}" \
+              -F "photo=@thumbnail.jpg" \
+              -F "caption=🖼 الصورة المصغرة جاهزة"
+          fi
+
+          # 3. إرسال فيديو الشورتس كفيديو قابل للتشغيل والتحميل المباشر
+          if [ -f "final_video.mp4" ]; then
+            echo "[TELEGRAM] Sending final video..."
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendVideo" \
+              -F "chat_id=${CHAT_ID}" \
+              -F "video=@final_video.mp4" \
+              -F "supports_streaming=true" \
+              -F "caption=🎬 حلقة جديدة جاهزة للنشر!"
+            echo "[TELEGRAM] Delivery complete ✓"
+          fi
+
       - name: Save Progress and Archive Video
         run: |
           git config --global user.name "github-actions[bot]"
@@ -77,14 +110,3 @@ jobs:
           else
             echo "No state changes to commit."
           fi
-
-      - name: Upload Video Artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: video-${{ github.event.inputs.series_name || 'speed_math' }}-run-${{ github.run_number }}
-          path: |
-            final_video.mp4
-            thumbnail.jpg
-            details_lesson_*.txt
-          if-no-files-found: warn

@@ -43,11 +43,10 @@ jobs:
           # 1. إرسال قائمة الفصول (Chapters) لنسخها مباشرة في وصف يوتيوب
           if [ -f "compilation_chapters.txt" ]; then
             CHAPTERS=$(cat compilation_chapters.txt | head -c 4000)
+            TEXT="📑 فصول الفيديو المجمع (انسخها في وصف يوتيوب):"$'\n\n'"${CHAPTERS}"
             curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
               -d "chat_id=${CHAT_ID}" \
-              --data-urlencode "text=📑 فصول الفيديو المجمع (انسخها في وصف يوتيوب):
-
-${CHAPTERS}"
+              --data-urlencode "text=${TEXT}"
           fi
 
           # 2. فحص حجم الفيديو وإرساله عبر تليجرام

@@ -33,7 +33,8 @@ FPS = 25
 # Character Micro-Behaviors
 BLINK_INTERVAL = 3.5
 BLINK_DURATION = 0.12
-TAIL_PAD = 0.6
+# حل المشكلة 9: زيادة وقت النهاية لمنع قفل الفيديو فجأة واختفاء العناصر وقت الـCTA
+TAIL_PAD = 1.8
 
 # Teacher Coordinate Anchors
 TEACHER_X = 80
@@ -154,6 +155,7 @@ def generate_lesson_script(lesson_info, persona):
     teacher_name = persona.get("name", "Professor")
 
     print(f"[GEMINI] Generating lesson script for '{topic}'...")
+    # حل المشاكل: (6) أرقام مرئية، (13) تقليل الكلمات لمنع الاستعجال، (20) ترقيم الخطوة 3، (21) منع تكرار الهوك
     prompt = f"""
     You are {teacher_name}, an elite viral math educator on TikTok and YouTube Shorts.
     Create an ultra-retaining 25 to 30-second math hack.
@@ -163,12 +165,16 @@ def generate_lesson_script(lesson_info, persona):
     - Problem Example: {example}
 
     SCRIPTING RULES:
-    1. Hook (spoken_hook): Immediate challenge or question. No fluff, no greetings (18-24 words).
-    2. Step 1 (spoken_step1): First calculation action (18-24 words).
-    3. Step 2 (spoken_step2): Second action and equation calculation (18-24 words).
-    4. Result (spoken_result): Big reveal and call to follow (15-20 words).
+    1. Hook (spoken_hook): Immediate challenge or question. No fluff, no greetings (10-14 words).
+    2. Step 1 (spoken_step1): First calculation action (10-14 words).
+    3. Step 2 (spoken_step2): Second action and equation calculation (10-14 words).
+    4. Result (spoken_result): Big reveal and call to follow (8-12 words).
     5. Write out all spoken numbers as plain English words (e.g., 'forty-three', 'eleven', 'plus').
     6. Absolutely NO LaTeX or raw math syntax in spoken fields.
+    7. Topic vs Hook: 'title' is the general category name. 'hook_text' MUST be the exact problem challenge (e.g., '{example} in 3 Seconds') and must NOT repeat the wording of 'title'.
+    8. Visual Steps: 'step_1' and 'step_2' must show actual math calculation numbers (e.g., '1. 50 + 2 -> 25 + 2 = 27'), NOT long descriptive text.
+    9. Step Numbering: 'result_text' MUST start with '3. Final Answer = ' to maintain sequence.
+    10. Do NOT use the pipe symbol '|' anywhere.
 
     Output strictly valid JSON with this exact schema:
     {{
@@ -177,11 +183,11 @@ def generate_lesson_script(lesson_info, persona):
       "tags": "math, shorts, math tricks, mental math, quick calculation",
       "hook_text": "Short Problem Title (e.g. 43 × 11 in 3 Seconds)",
       "spoken_hook": "Spoken hook text here.",
-      "step_1": "1. First visual hack rule",
+      "step_1": "1. First visual calculation rule",
       "spoken_step1": "Spoken step 1 text here.",
-      "step_2": "2. Equation calculation applied",
+      "step_2": "2. Second visual calculation applied",
       "spoken_step2": "Spoken step 2 text here.",
-      "result_text": "Final Answer = Result 🎉",
+      "result_text": "3. Final Answer = Result 🎉",
       "spoken_result": "Spoken result text here."
     }}
     """
@@ -211,6 +217,21 @@ def generate_lesson_script(lesson_info, persona):
                 if raw_text.endswith("```"): raw_text = raw_text[:-3]
                 parsed = json.loads(raw_text.strip())
                 if "spoken_hook" in parsed and "step_1" in parsed:
+                    # حل المشكلة 2: حذف حرف | الزائد المسبب للمربعات
+                    for k, v in parsed.items():
+                        if isinstance(v, str):
+                            parsed[k] = v.replace("|", "").strip()
+
+                    # حل المشكلة 7: منع بقاء نصوص الخطوات فارغة
+                    if not parsed.get("step_1"): parsed["step_1"] = "1. First step"
+                    if not parsed.get("step_2"): parsed["step_2"] = "2. Second step"
+
+                    # حل المشكلة 20: التأكد من أن النتيجة تبدأ برقم 3
+                    res_str = parsed.get("result_text", "")
+                    if not res_str.startswith("3."):
+                        clean_res = res_str.lstrip("1234567890. ")
+                        parsed["result_text"] = f"3. {clean_res}"
+
                     return parsed
         except Exception as e:
             print(f"[WARN] Model {model_name} attempt failed: {e}")
@@ -221,7 +242,7 @@ def generate_lesson_script(lesson_info, persona):
 # ============================================================
 # 6. Compositor & FFmpeg Master Render
 # ============================================================
-def render_final_composition(content_data, timestamps, persona, output_filename="final_video.mp4"):
+def render_final_composition(content_data, timestamps, words_data, persona, output_filename="final_video.mp4"):
     duration = timestamps["total"]
     render_duration = duration + TAIL_PAD
     print(f"[FFMPEG] Starting master render ({render_duration:.2f}s | Audio sync duration: {duration:.2f}s)...")
@@ -231,9 +252,27 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     t_s2 = timestamps["step2"]
     t_res = timestamps["result"]
 
+    # حل المشكلة 4: بناء الـ Lip-sync الحقيقي بالاعتماد على فترات نطق الكلمات الفعلية
+    if words_data:
+        intervals = []
+        c_start = words_data[0]["start"]
+        c_end = words_data[0]["end"]
+        for w in words_data[1:]:
+            if w["start"] - c_end < 0.2:
+                c_end = w["end"]
+            else:
+                intervals.append((round(c_start, 2), round(c_end, 2)))
+                c_start = w["start"]
+                c_end = w["end"]
+        intervals.append((round(c_start, 2), round(c_end, 2)))
+
+        speaking_active = "+".join([f"between(t\\,{s}\\,{e})" for s, e in intervals])
+        is_talking = f"({speaking_active})*between(mod(t,0.28),0,0.14)"
+    else:
+        is_talking = "between(mod(t,0.28),0,0.14)"
+
     # Sprite timelines
     is_pointing = f"(between(t,{t_s1},{t_s2})+between(t,{t_s2},{t_res}))"
-    is_talking = "between(mod(t,0.28),0,0.14)"
     is_thinking = f"lt(t,{t_hook})"
 
     cond_idle_open = f"(not({is_pointing}))*({is_talking})"
@@ -253,12 +292,11 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
 
     zoom_frames = FPS
     zoom_expr = f"if(lte(on,{zoom_frames}),1.15-0.15*on/{zoom_frames},1)"
-    tilt_angle = f"if(between(t,{t_res},{t_res+0.3}),(3*PI/180)*sin(2*PI*(t-{t_res})*10),0)"
 
+    # حل المشكلة 1: إزالة rotate=a='{tilt_angle}' لتثبيت الإطار ومنع دورانه وميلانه
     vf = (
         f"[0:v]scale=1400:2400,zoompan=z='{zoom_expr}':d=1:s=1180x2020:fps={FPS},"
-        f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg_panned];"
-        f"[bg_panned]rotate=a='{tilt_angle}':ow=iw:oh=ih:c=none[bg];"
+        f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"
         f"[bg][2:v]overlay=x={TEACHER_X}:y={TEACHER_Y}[t_base];"
         f"[t_base][3:v]overlay=x={TEACHER_X}:y={TEACHER_Y}:enable='{cond_idle_open}'[t_id_op];"
         f"[t_id_op][4:v]overlay=x={TEACHER_X}:y={TEACHER_Y}:enable='{cond_point_closed}'[t_pt_cl];"
@@ -359,7 +397,8 @@ async def main():
         )
 
     validate_assets()
-    render_final_composition(content_data, timestamps, persona)
+    # حل المشكلة 4: تمرير words_data لتفعيل المزامنة الشفوية الحقيقية
+    render_final_composition(content_data, timestamps, words_data, persona)
 
     series_manager.mark_lesson_completed(ctx)
     print("[SUCCESS] Production pipeline finished successfully.")

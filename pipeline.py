@@ -342,11 +342,10 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f"[v_stk][7:v]overlay=x='-mod(t*16,1080)':y=0:format=auto[v_dust];"
         # watermark (always visible, corner)
         f"[v_dust][10:v]overlay=x=40:y=40[v_wm];"
-        # cinematic color grade + vignette + grain
+        # cinematic color grade + vignette
         "[v_wm]eq=contrast=1.04:saturation=1.10:gamma=1.02,"
         "colorbalance=rs=-0.05:gs=0.01:bs=0.08:rm=-0.03:gm=0.01:bm=0.06,"
         "vignette=PI/5,"
-        "noise=alls=6:allf=t,"
         # gold progress bar (clamped so it never overflows during tail pad)
         f"drawbox=x=80:y=1800:w=(iw-160)*min(1\\,t/{duration:.2f}):h=8:color={GOLD_HEX}:t=fill,"
         # thin gold frame border (constant, luxury branding)
@@ -377,7 +376,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f'-loop 1 -t {render_duration:.2f} -i t_thinking.png '
         f'-loop 1 -t {render_duration:.2f} -i t_blink.png '
         f'-filter_complex "{vf}; {af}" '
-        f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {render_duration:.2f} {output_filename}'
+        f'-map "[outv]" -map "[outa]" -c:v libx264 -preset veryfast -crf 22 -c:a aac -t {render_duration:.2f} {output_filename}'
     )
 
     try:

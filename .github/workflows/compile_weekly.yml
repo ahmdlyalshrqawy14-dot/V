@@ -3,8 +3,9 @@ name: Weekly Long-form Compilation
 on:
   workflow_dispatch:
   schedule:
-    # يعمل تلقائياً كل جمعة الساعة 11:00 مساءً بتوقيت مصر (20:00 UTC)
-    - cron: '0 20 * * 5'
+    # يعمل تلقائياً كل جمعة الساعة 15:00 UTC
+    # بتوقيت مصر: 5:00 مساءً (شتاء) / 6:00 مساءً (صيف)
+    - cron: '0 15 * * 5'
 
 permissions:
   contents: write

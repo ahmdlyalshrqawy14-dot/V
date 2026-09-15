@@ -60,20 +60,28 @@ jobs:
 
       - name: Send Video and Metadata to Telegram
         env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RAW_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          RAW_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          META_FILE=$(ls details_lesson_*.txt 2>/dev/null | head -n 1)
+          # 1. تنظيف التوكن والآي دي تلقائياً من أي مسافات أو أسطر منسوخة بالخطأ
+          BOT_TOKEN=$(echo "$RAW_BOT_TOKEN" | grep -o -E '[0-9]+:[a-zA-Z0-9_-]+' | head -n 1)
+          CHAT_ID=$(echo "$RAW_CHAT_ID" | grep -o -E '[0-9]+' | head -n 1)
 
-          # 1. إرسال نص الوصف والعنوان لنسخه بسهولة
-          if [ -n "$META_FILE" ]; then
-            MSG_CONTENT=$(cat "$META_FILE")
-            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-              -d "chat_id=${CHAT_ID}" \
-              -d "text=${MSG_CONTENT}"
+          if [ -z "$BOT_TOKEN" ] || [ -z "$CHAT_ID" ]; then
+            echo "[ERROR] Invalid or missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID"
+            exit 1
           fi
 
-          # 2. إرسال الصورة المصغرة (Thumbnail)
+          META_FILE=$(ls details_lesson_*.txt 2>/dev/null | head -n 1)
+
+          # 2. إرسال نص الوصف والعنوان مع تشفير آمن للأسطر والرموز
+          if [ -n "$META_FILE" ] && [ -f "$META_FILE" ]; then
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+              -d "chat_id=${CHAT_ID}" \
+              --data-urlencode "text@${META_FILE}"
+          fi
+
+          # 3. إرسال الصورة المصغرة
           if [ -f "thumbnail.jpg" ]; then
             curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" \
               -F "chat_id=${CHAT_ID}" \
@@ -81,7 +89,7 @@ jobs:
               -F "caption=🖼 الصورة المصغرة جاهزة"
           fi
 
-          # 3. إرسال فيديو الشورتس كفيديو قابل للتشغيل والتحميل المباشر
+          # 4. إرسال فيديو الشورتس
           if [ -f "final_video.mp4" ]; then
             echo "[TELEGRAM] Sending final video..."
             curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendVideo" \

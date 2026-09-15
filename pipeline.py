@@ -26,6 +26,11 @@ MANUAL_LESSON = os.environ.get("LESSON_NUM", None)
 FONT_DIR = "fonts"
 FONT_NAME = "Cairo"
 
+# Branding / look constants
+GOLD_HEX = "#FFD700"
+FRAME_THICKNESS = 6
+FPS = 25
+
 # ============================================================
 # 2. Local Typography & Asset Safeguards
 # ============================================================
@@ -55,6 +60,24 @@ def ensure_dust_layer():
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
         print("[ASSETS] Generated fallback dust.png successfully.")
+
+def ensure_watermark():
+    """
+    إنشاء واترمارك افتراضي شفاف لو مفيش واترمارك مخصص موجود.
+    لو عايز شعارك الخاص، حط ملف watermark.png (شفاف) في نفس المجلد وهيتستخدم تلقائياً.
+    """
+    if not os.path.exists("watermark.png") or os.path.getsize("watermark.png") == 0:
+        cmd = (
+            'ffmpeg -y -f lavfi -i color=c=black@0.0:s=300x120 '
+            f'-vf "drawtext=text=\'MATH HACKS\':fontcolor={GOLD_HEX}:fontsize=34:'
+            'fontfile=fonts/Cairo-Bold.ttf:x=10:y=40:alpha=0.55" '
+            '-vframes 1 watermark.png'
+        )
+        subprocess.run(
+            shlex.split(cmd),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        print("[ASSETS] Generated fallback watermark.png successfully.")
 
 # ============================================================
 # 2.5 Music Manager (Random Popular Tracks @ 25% Volume)
@@ -98,7 +121,6 @@ def prepare_random_bgm(duration=30):
 
         print(f"[AUDIO] Selected Track: {track['name']} (Drop at {track['start']}s)")
 
-        # التحقق من التحميل السليم وتفادي الروابط التالفة أو المحظورة
         if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
             headers = {'User-Agent': 'MathShortsBot/1.0 (Educational Studio; contact@github.com)'}
             req = urllib.request.Request(track['url'], headers=headers)
@@ -109,12 +131,10 @@ def prepare_random_bgm(duration=30):
                 print(f"[AUDIO WARN] Download failed for {track['name']}: {e}")
                 continue
 
-        # التأكد من أن الملف المحمل ليس فارغاً
         if not os.path.exists(raw_file) or os.path.getsize(raw_file) < 50000:
             print(f"[AUDIO WARN] Downloaded file {raw_file} is too small or corrupt.")
             continue
 
-        # القص الآمن مع وضع -i أولاً لضمان عدم خروج ملف فارغ
         cmd = [
             "ffmpeg", "-y",
             "-i", raw_file,
@@ -131,7 +151,6 @@ def prepare_random_bgm(duration=30):
             print(f"[AUDIO WARN] FFmpeg cut failed for {track['name']}: {e}")
             continue
 
-        # التأكد أن الناتج سليم ويحتوي على بيانات صوتية حقيقية
         if os.path.exists(cut_file) and os.path.getsize(cut_file) > 10000:
             print(f"[AUDIO] bgm.wav ready using {track['name']} ({os.path.getsize(cut_file)} bytes)")
             return True
@@ -147,7 +166,7 @@ def validate_assets(content_data):
     required_files = [
         "chalkboard.png", "voice.mp3", "t_idle_closed.png", "t_idle_open.png",
         "t_point_closed.png", "t_point_open.png", "sticker_active.png", "dust.png",
-        sfx_file, "bgm.wav", "master_video.ass"
+        "watermark.png", sfx_file, "bgm.wav", "master_video.ass"
     ]
     missing_or_empty = [f for f in required_files if not os.path.exists(f) or os.path.getsize(f) == 0]
     if missing_or_empty:
@@ -249,7 +268,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     t_res = timestamps["result"]
     sfx_delay_ms = int(t_res * 1000)
 
-    # Teacher sprite timeline conditions
+    # ---- Teacher sprite timeline conditions ----
     is_pointing = f"(between(t,{t_s1},{t_s2}) + between(t,{t_s2},{t_res}))"
     is_talking = "between(mod(t,0.28),0,0.14)"
 
@@ -257,24 +276,64 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
     cond_point_closed = f"({is_pointing}) * (not({is_talking}))"
     cond_point_open = f"({is_pointing}) * ({is_talking})"
 
-    # Fluid Ken Burns zoom & micro-camera motion
-    pan_x = f"max(0,min(70,(50)*(t/{duration:.2f})+2*sin(2*PI*t*1.2)))"
-    pan_y = f"max(0,min(90,(70)*(t/{duration:.2f})+2*sin(2*PI*t*0.8+1)))"
+    # ---- Teacher position: moved to LEFT side ----
+    teacher_x = 80
+    teacher_y = 1340
 
-    # Sticker fade-in transition
-    stk_fade = f"[6:v]fade=t=in:st={t_res}:d=0.2:alpha=1[stk_f]"
+    # ---- Camera: eased pan (ease-in-out) instead of linear + micro shake at reveal ----
+    progress = f"min(t/{duration:.2f},1)"
+    ease = f"((1-cos(PI*{progress}))/2)"
+    shake_window = f"between(t,{t_res},{t_res+0.3})"
+    shake_x = f"(6*sin(60*t)*{shake_window})"
+    shake_y = f"(4*cos(55*t)*{shake_window})"
+
+    pan_x = f"max(0,min(70,70*{ease}+2*sin(2*PI*t*1.2)+{shake_x}))"
+    pan_y = f"max(0,min(90,70*{ease}+2*sin(2*PI*t*0.8+1)+{shake_y}))"
+
+    # ---- Fast zoom-out intro (first ~1s) via zoompan ----
+    zoom_frames = FPS  # ~1 second worth of frames
+    zoom_expr = f"if(lte(on,{zoom_frames}),1.15-0.15*on/{zoom_frames},1)"
+
+    # ---- Tilt at reveal moment ----
+    tilt_window_end = t_res + 0.3
+    tilt_angle = f"if(between(t,{t_res},{tilt_window_end}),(3*PI/180)*sin(2*PI*(t-{t_res})*10),0)"
+
+    # ---- Sticker: spring entrance + continuous gentle pulse ----
+    sticker_scale_expr = (
+        f"iw*(1+0.18*exp(-6*max(t-{t_res},0))*sin(25*max(t-{t_res},0))"
+        f"+0.03*sin(2*PI*max(t-{t_res},0)*1.5))"
+    )
+    # sticker moved to the RIGHT side to balance the teacher on the left
+    sticker_x = 560
+    sticker_y = 1120
 
     vf = (
-        f"[0:v]scale=1180:2020,crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"
-        "[bg][2:v]overlay=x=630:y=1340[t_base];"
-        f"[t_base][3:v]overlay=x=630:y=1340:enable='{cond_idle_open}'[t_id_op];"
-        f"[t_id_op][4:v]overlay=x=630:y=1340:enable='{cond_point_closed}'[t_pt_cl];"
-        f"[t_pt_cl][5:v]overlay=x=630:y=1340:enable='{cond_point_open}'[v_teacher];"
-        f"{stk_fade};"
-        f"[v_teacher][stk_f]overlay=x=80:y=1120:enable='between(t,{t_res},{t_res+2.6})'[v_stk];"
+        # background zoom-out intro + eased pan
+        f"[0:v]scale=1400:2400,zoompan=z='{zoom_expr}':d=1:s=1180x2020:fps={FPS},"
+        f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg_panned];"
+        f"[bg_panned]rotate=a='{tilt_angle}':ow=iw:oh=ih:c=none[bg];"
+        # teacher layers on the left
+        f"[bg][2:v]overlay=x={teacher_x}:y={teacher_y}[t_base];"
+        f"[t_base][3:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_idle_open}'[t_id_op];"
+        f"[t_id_op][4:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_point_closed}'[t_pt_cl];"
+        f"[t_pt_cl][5:v]overlay=x={teacher_x}:y={teacher_y}:enable='{cond_point_open}'[v_teacher];"
+        # sticker with spring + pulse, moved right
+        f"[6:v]scale=w='{sticker_scale_expr}':h=-1:eval=frame[stk_sized];"
+        f"[stk_sized]fade=t=in:st={t_res}:d=0.2:alpha=1[stk_f];"
+        f"[v_teacher][stk_f]overlay=x={sticker_x}:y={sticker_y}:enable='between(t,{t_res},{t_res+2.6})'[v_stk];"
+        # dust scroll
         f"[v_stk][7:v]overlay=x='-mod(t*16,1080)':y=0:format=auto[v_dust];"
-        "[v_dust]eq=contrast=1.04:saturation=1.10,"
-        f"drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color=#facc15:t=fill,"
+        # watermark (always visible, corner)
+        f"[v_dust][10:v]overlay=x=40:y=40[v_wm];"
+        # cinematic color grade + vignette + grain
+        "[v_wm]eq=contrast=1.04:saturation=1.10:gamma=1.02,"
+        "colorbalance=rs=-0.05:gs=0.01:bs=0.08:rm=-0.03:gm=0.01:bm=0.06,"
+        "vignette=PI/5,"
+        "noise=alls=6:allf=t,"
+        # gold progress bar
+        f"drawbox=x=80:y=1800:w=(iw-160)*t/{duration:.2f}:h=8:color={GOLD_HEX}:t=fill,"
+        # thin gold frame border (constant, luxury branding)
+        f"drawbox=x=0:y=0:w=iw:h=ih:color={GOLD_HEX}@0.55:t={FRAME_THICKNESS},"
         "subtitles=master_video.ass:fontsdir=fonts[outv]"
     )
 
@@ -297,6 +356,7 @@ def render_final_composition(content_data, timestamps, persona, output_filename=
         f'-loop 1 -t {duration:.2f} -i dust.png '
         f'-i {sfx_file} '
         f'-i bgm.wav '
+        f'-loop 1 -t {duration:.2f} -i watermark.png '
         f'-filter_complex "{vf}; {af}" '
         f'-map "[outv]" -map "[outa]" -c:v libx264 -preset ultrafast -crf 22 -c:a aac -t {duration:.2f} {output_filename}'
     )
@@ -323,6 +383,7 @@ async def main():
 
     ensure_fonts()
     ensure_dust_layer()
+    ensure_watermark()
     audio_engine.generate_sfx()
 
     # Resolve context from active series
@@ -348,7 +409,7 @@ async def main():
     # Synthesize audio, build typography, and render
     timestamps, words_data = await audio_engine.build_complete_voiceover(content_data, persona)
     ass_engine.generate_master_ass(content_data, timestamps, words_data, persona, font_name=FONT_NAME)
-    
+
     # Download and prepare random popular BGM (drop cut)
     bgm_ready = prepare_random_bgm(timestamps["total"] + 2.5)
     if not bgm_ready:

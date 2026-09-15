@@ -11,24 +11,22 @@ def hex_to_rgb(hex_str):
 # 1. Sleek Modern Chalkboard Canvas (YouTube Shorts Safe Layout)
 # ============================================================
 def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
-    print("[GRAPHICS] Rendering YouTube Shorts-optimized chalkboard canvas (1180x2040)...")
+    print("[GRAPHICS] Rendering clean chalkboard canvas without visual clutter (1180x2040)...")
     
     # 2x supersampling for ultra-clean anti-aliased edges
     sw, sh = 1180 * 2, 2040 * 2
-    canvas = Image.new("RGBA", (sw, sh), "#110e0c")
+    canvas = Image.new("RGBA", (sw, sh), "#0d0b0a")
     draw = ImageDraw.Draw(canvas)
 
     top_color = hex_to_rgb(theme.get("board_top", "#10231d"))
     bottom_color = hex_to_rgb(theme.get("board_bottom", "#081310"))
 
-    # Premium Walnut outer frame
-    draw.rounded_rectangle([30, 50, sw - 30, sh - 50], radius=36, fill="#231710", outline="#3a271b", width=6)
+    # حل المشكلة 18: دمج إطار الخشب والحدود بدون خطوط صفراء وبنية متلاصقة تسبب زحاماً بصرياً
+    # إطار خارجي فخم من خشب الجوز الموحد
+    draw.rounded_rectangle([36, 56, sw - 36, sh - 56], radius=32, fill="#1c130d", outline="#2b1c13", width=8)
     
-    # Subtle inner gold-trimmed chamfer
-    draw.rounded_rectangle([70, 90, sw - 70, sh - 90], radius=28, outline="#b8860b", width=4)
-    
-    # Matte Slate Canvas Surface
-    gx0, gy0, gx1, gy1 = 80, 100, sw - 80, sh - 100
+    # سطح اللوح الحجري (Matte Slate Surface)
+    gx0, gy0, gx1, gy1 = 64, 84, sw - 64, sh - 84
     slate_h = gy1 - gy0
     for y in range(0, slate_h, 2):
         ratio = y / max(1, slate_h)
@@ -37,19 +35,19 @@ def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
         b = int(top_color[2] + (bottom_color[2] - top_color[2]) * ratio)
         draw.line([(gx0, gy0 + y), (gx1, gy0 + y)], fill=(r, g, b), width=2)
 
-    # Floating chalk ledge positioned at YouTube Shorts safe boundary (Y ≈ 1440px on 1920 canvas)
-    # This prevents chalks from being buried under the Shorts subscribe button & title
+    # حافة داخلية خافتة ورفيعة جداً (Inlay) تفصل السطح عن الخشب بدون تضارب
+    draw.rounded_rectangle([gx0, gy0, gx1, gy1], radius=20, outline="#162e26", width=3)
+
+    # رف الطباشير مع مراعاة منطقة الأمان (Safe Boundary Y ≈ 1440px)
     ledge_y = int(1440 * 2)
     ledge_left, ledge_right = 160, sw - 160
     
-    # Ledge Drop-shadow
+    # ظل الرف
     draw.rounded_rectangle([ledge_left + 8, ledge_y + 12, ledge_right - 8, ledge_y + 44], radius=10, fill="#05070a")
-    # Ledge shelf body
-    draw.rounded_rectangle([ledge_left, ledge_y, ledge_right, ledge_y + 36], radius=10, fill="#2b1a13", outline="#4a2e22", width=4)
-    # Metallic top rail inset
-    draw.rounded_rectangle([ledge_left + 16, ledge_y + 6, ledge_right - 16, ledge_y + 12], radius=4, fill="#b8860b")
+    # جسم الرف بدون خط ذهبي متزاحم تحته
+    draw.rounded_rectangle([ledge_left, ledge_y, ledge_right, ledge_y + 32], radius=8, fill="#2b1a13", outline="#3d2419", width=3)
 
-    # Pastel chalk pieces
+    # قطع الطباشير
     chalk_w = 64
     offsets = [120, 210, 300]
     chalks = [
@@ -59,11 +57,9 @@ def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
     ]
 
     for offset, color in chalks:
-        # mirror_ledge keeps chalks to the right half so they don't collide with the teacher on the left
         x_pos = (ledge_right - chalk_w - offset) if mirror_ledge else (ledge_left + offset)
-        draw.rounded_rectangle([x_pos, ledge_y - 14, x_pos + chalk_w, ledge_y + 6], radius=6, fill=color, outline="#1e293b", width=2)
+        draw.rounded_rectangle([x_pos, ledge_y - 14, x_pos + chalk_w, ledge_y + 4], radius=6, fill=color, outline="#1e293b", width=2)
 
-    # Scale down with Lanczos filter for razor-sharp vector output
     final_board = canvas.resize((1180, 2040), Image.Resampling.LANCZOS)
     final_board.save(filename)
 
@@ -71,7 +67,7 @@ def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
 # 2. Modern 2D Vector Character Sprites (Safe & Direction-Aware)
 # ============================================================
 def render_teacher_poses(persona):
-    print(f"[GRAPHICS] Rendering 2026 vector character set for: {persona['name']}...")
+    print(f"[GRAPHICS] Rendering vector character set with calibrated pointer for: {persona['name']}...")
     avatar = persona.get("avatar", {})
     suit_color = avatar.get("suit_color", "#1e3a8a")
     tie_color = avatar.get("tie_color", "#b91c1c")
@@ -81,59 +77,57 @@ def render_teacher_poses(persona):
     skin_shadow = "#f59e0b"
 
     def draw_character(mouth_open=False, is_pointing=False, eyes_closed=False, thinking=False):
-        # 2x internal canvas (960x1040) downsampled to 480x520
         cw, ch = 960, 1040
         img = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
 
-        # 1. Pointing Arm with Modern Telescopic Pointer
-        # Points UP and RIGHT toward the center chalkboard math problem
+        # حل المشكلة 5: تصحيح زاوية المؤشر والذراع ليشير مباشرة نحو وسط اللوح والمعادلة
         if is_pointing:
-            dr.line([(620, 680), (820, 420)], fill=suit_color, width=54)
-            dr.ellipse([(790, 390), (850, 450)], fill=skin_tone)
-            # Telescopic steel pointer with glowing gold tip
-            dr.line([(820, 420), (920, 140)], fill="#e2e8f0", width=10)
-            dr.line([(890, 220), (920, 140)], fill="#ffd700", width=12)
-            dr.ellipse([(908, 126), (932, 154)], fill="#ffd700")
+            # زاوية الذراع الطبيعية نحو وسط الشاشة
+            dr.line([(600, 690), (790, 520)], fill=suit_color, width=54)
+            dr.ellipse([(760, 490), (820, 550)], fill=skin_tone)
+            # المؤشر التلسكوبي ممتد بزاوية ~35 درجة نحو وسط اللوح (وليس لأعلى نحو السقف)
+            dr.line([(790, 520), (945, 340)], fill="#e2e8f0", width=10)
+            dr.line([(915, 375), (945, 340)], fill="#ffd700", width=12)
+            dr.ellipse([(933, 328), (957, 352)], fill="#ffd700")
 
-        # 2. Thinking Arm (Pensive chin rest)
+        # ذراع التفكير
         if thinking and not is_pointing:
             dr.line([(570, 720), (610, 480)], fill=suit_color, width=54)
             dr.ellipse([(580, 440), (640, 500)], fill=skin_tone)
             dr.rounded_rectangle([595, 425, 620, 465], radius=6, fill=skin_tone)
 
-        # 3. Modern Tailored Torso (Blazer & Shoulders)
+        # الجذع والبدلة
         dr.rounded_rectangle([350, 600, 730, 1040], radius=50, fill=suit_color)
         
-        # Inner white crisp shirt
+        # القميص الأبيض ورابطة العنق
         dr.polygon([(500, 600), (580, 600), (540, 740)], fill="#f8fafc")
-        # Modern slim tie
         dr.polygon([(532, 630), (548, 630), (554, 820), (540, 850), (526, 820)], fill=tie_color)
         
-        # Blazer lapels
+        # ياقات البدلة
         dr.polygon([(390, 600), (490, 750), (470, 820), (380, 660)], fill="#111827")
         dr.polygon([(690, 600), (590, 750), (610, 820), (700, 660)], fill="#111827")
 
-        # 4. Neck with depth shadow
+        # الرقبة
         dr.rectangle([500, 480, 580, 610], fill=skin_shadow)
         dr.rectangle([508, 480, 572, 600], fill=skin_tone)
 
-        # 5. Stylized Head & Jaw
+        # الرأس والفك
         dr.rounded_rectangle([400, 240, 680, 550], radius=85, fill=skin_tone)
-        # Ears
+        # الأذنان
         dr.ellipse([(380, 360), (416, 420)], fill=skin_tone)
         dr.ellipse([(664, 360), (700, 420)], fill=skin_tone)
 
-        # 6. Modern Sleek Hair
+        # الشعر
         dr.rounded_rectangle([390, 200, 690, 340], radius=50, fill=hair_color)
         dr.polygon([(390, 310), (430, 360), (420, 300)], fill=hair_color)
 
-        # 7. Eyebrows (Expressive)
+        # الحواجب
         brow_y = 330 if not thinking else 315
         dr.line([(450, brow_y), (505, brow_y + (6 if thinking else 0))], fill=hair_color, width=7)
         dr.line([(575, brow_y - (8 if thinking else 0)), (630, brow_y)], fill=hair_color, width=7)
 
-        # 8. Modern Acetate Glasses (Customizable style)
+        # النظارات
         if glasses_style == "cateye":
             dr.polygon([(435, 345), (525, 360), (510, 420), (445, 410)], outline="#0f172a", width=8)
             dr.polygon([(645, 345), (555, 360), (570, 420), (635, 410)], outline="#0f172a", width=8)
@@ -147,29 +141,27 @@ def render_teacher_poses(persona):
             dr.rounded_rectangle([560, 345, 640, 420], radius=24, outline="#0f172a", width=8)
             dr.line([(520, 380), (560, 380)], fill="#0f172a", width=8)
 
-        # 9. Eyes & Catchlights
+        # العيون وبريق النظر نحو اللوح
         if eyes_closed:
             dr.line([(460, 382), (500, 382)], fill="#0f172a", width=6)
             dr.line([(580, 382), (620, 382)], fill="#0f172a", width=6)
         else:
             py_off = -6 if thinking else 0
-            # Pupils looking slightly toward board/center
             dr.ellipse([(465, 368 + py_off), (495, 398 + py_off)], fill="#0f172a")
             dr.ellipse([(585, 368 + py_off), (615, 398 + py_off)], fill="#0f172a")
-            # Alive catchlight reflection
             dr.ellipse([(472, 372 + py_off), (480, 380 + py_off)], fill="#ffffff")
             dr.ellipse([(592, 372 + py_off), (600, 380 + py_off)], fill="#ffffff")
 
-        # 10. Expressive Mouth
+        # الفم وحركة الكلام (تمهيد المشكلة 4 للـ Lip-sync)
         if mouth_open:
-            dr.rounded_rectangle([515, 460, 565, 500], radius=16, fill="#7f1d1d")
-            dr.rounded_rectangle([523, 462, 557, 474], radius=6, fill="#ffffff")  # Upper teeth
+            dr.rounded_rectangle([514, 458, 566, 502], radius=16, fill="#6b1111")
+            dr.rounded_rectangle([522, 460, 558, 474], radius=6, fill="#ffffff")  # أسنان علوية واضحة
         else:
-            dr.line([(518, 476), (562, 476)], fill="#991b1b", width=6)
+            dr.line([(516, 476), (564, 476)], fill="#881313", width=7)
 
-        # Downsample with Lanczos for a crisp vector aesthetic
         return img.resize((480, 520), Image.Resampling.LANCZOS)
 
+    # حفظ الوضعيات للاستخدام في Lip-sync ومحرك التجميع
     draw_character(mouth_open=False, is_pointing=False).save("t_idle_closed.png")
     draw_character(mouth_open=True, is_pointing=False).save("t_idle_open.png")
     draw_character(mouth_open=False, is_pointing=True).save("t_point_closed.png")

@@ -8,7 +8,7 @@ def hex_to_rgb(hex_str):
         hex_clean = "".join([c * 2 for c in hex_clean])
     return tuple(int(hex_clean[i:i + 2], 16) for i in (0, 2, 4))
 
-def render_board(theme, filename="chalkboard.png"):
+def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
     print("[GRAPHICS] Rendering theme-tailored chalkboard canvas (1180x2040)...")
     board = Image.new("RGBA", (1180, 2040), "#2a1810")
     draw = ImageDraw.Draw(board)
@@ -35,17 +35,28 @@ def render_board(theme, filename="chalkboard.png"):
     # Inner chalk slate outline
     draw.rectangle([gx0, gy0, gx1, gy1], outline="#d1d5db", width=2)
 
-    # Bottom wooden chalk ledge
-    draw.rectangle([90, 1920, 1090, 1946], fill="#5c2e14", outline="#2b1407", width=2)
+    # Bottom wooden chalk ledge (spans full width regardless of mirroring)
+    ledge_left, ledge_right = 90, 1090
+    draw.rectangle([ledge_left, 1920, ledge_right, 1946], fill="#5c2e14", outline="#2b1407", width=2)
 
     # Resting chalk pieces (White, Yellow, Cyan)
+    # Original layout sat near the LEFT edge of the ledge (offsets from ledge_left).
+    chalk_width = 38
+    offsets_from_left = [70, 120, 170]  # matches original x=160,210,260 (ledge_left=90)
     chalks = [
-        (160, "#ffffff"),
-        (210, "#fde047"),
-        (260, "#67e8f9")
+        (offsets_from_left[0], "#ffffff"),
+        (offsets_from_left[1], "#fde047"),
+        (offsets_from_left[2], "#67e8f9"),
     ]
-    for x_pos, chalk_col in chalks:
-        draw.rounded_rectangle([x_pos, 1913, x_pos + 38, 1924], radius=3, fill=chalk_col)
+
+    for offset, chalk_col in chalks:
+        if mirror_ledge:
+            # Reflect: same distance from the RIGHT edge instead of the left edge.
+            # This moves the chalk set to where the teacher used to stand.
+            x_pos = ledge_right - chalk_width - offset
+        else:
+            x_pos = ledge_left + offset
+        draw.rounded_rectangle([x_pos, 1913, x_pos + chalk_width, 1924], radius=3, fill=chalk_col)
 
     board.save(filename)
 
@@ -57,20 +68,25 @@ def render_teacher_poses(persona):
     hair_color = avatar.get("hair_color", "#3b2219")
     glasses_style = avatar.get("glasses", "round")
 
-    def draw_character(mouth_open=False, is_pointing=False):
+    def draw_character(mouth_open=False, is_pointing=False, eyes_closed=False, thinking=False):
         img = Image.new("RGBA", (480, 520), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
 
         # Pointing arm with wooden pointer stick
         if is_pointing:
-            # Arm
             dr.line([(200, 340), (70, 200)], fill=suit_color, width=28)
-            # Hand
             dr.ellipse([(55, 185), (85, 215)], fill="#fed7aa")
-            # Wooden pointer stick extending upward onto board
             dr.line([(70, 200), (20, 60)], fill="#d97706", width=7)
-            # Metallic/glowing pointer tip
             dr.ellipse([(14, 52), (26, 68)], fill="#fbbf24")
+
+        # Thinking pose: hand resting near the chin, arm folded upward
+        if thinking and not is_pointing:
+            # Forearm rising toward the chin
+            dr.line([(280, 340), (300, 230)], fill=suit_color, width=28)
+            # Hand near chin
+            dr.ellipse([(285, 210), (315, 240)], fill="#fed7aa")
+            # A couple of fingers curled near the chin for detail
+            dr.line([(295, 220), (300, 205)], fill="#fed7aa", width=10)
 
         # Body torso / Suit jacket
         dr.rectangle([180, 310, 350, 510], fill=suit_color)
@@ -98,9 +114,14 @@ def render_teacher_poses(persona):
             dr.rectangle([275, 180, 320, 210], outline="#0f172a", width=4)
             dr.line([255, 195, 275, 195], fill="#0f172a", width=4)
 
-        # Eyes pupils
-        dr.ellipse([228, 188, 238, 198], fill="#0f172a")
-        dr.ellipse([292, 188, 302, 198], fill="#0f172a")
+        # Eyes: blink = thin closed line, open = pupils (looking up slightly if thinking)
+        if eyes_closed:
+            dr.line([228, 193, 238, 193], fill="#0f172a", width=3)
+            dr.line([292, 193, 302, 193], fill="#0f172a", width=3)
+        else:
+            pupil_y_offset = -4 if thinking else 0
+            dr.ellipse([228, 188 + pupil_y_offset, 238, 198 + pupil_y_offset], fill="#0f172a")
+            dr.ellipse([292, 188 + pupil_y_offset, 302, 198 + pupil_y_offset], fill="#0f172a")
 
         # Mouth (Dynamic speaking state)
         if mouth_open:
@@ -115,14 +136,18 @@ def render_teacher_poses(persona):
     draw_character(mouth_open=False, is_pointing=True).save("t_point_closed.png")
     draw_character(mouth_open=True, is_pointing=True).save("t_point_open.png")
 
+    # New: thinking pose (used right before the solution begins)
+    draw_character(mouth_open=False, is_pointing=False, thinking=True).save("t_thinking.png")
+
+    # New: blink frame (brief overlay on top of idle-closed timing to simulate a blink)
+    draw_character(mouth_open=False, is_pointing=False, eyes_closed=True).save("t_blink.png")
+
 def render_reaction_sticker(effect_type="shock", filename="sticker_active.png"):
     stk = Image.new("RGBA", (520, 160), (0, 0, 0, 0))
     d_stk = ImageDraw.Draw(stk)
     bg_color = "#dc2626" if effect_type == "shock" else "#059669"
 
-    # Soft ambient drop shadow
     d_stk.rounded_rectangle([18, 18, 508, 148], radius=22, fill=(15, 23, 42, 160))
-    # Raised surface card
     d_stk.rounded_rectangle([10, 10, 500, 140], radius=22, fill=bg_color, outline="#ffffff", width=4)
     stk.save(filename)
 
@@ -139,7 +164,6 @@ def render_dust_layer(lesson_seed=1, filename="dust.png"):
         alpha = random.randint(20, 65)
         dr.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(255, 255, 255, alpha))
 
-    # Join 2 identical tiles side-by-side for seamless horizontal scrolling
     dust = Image.new("RGBA", (tile_w * 2, h), (0, 0, 0, 0))
     dust.paste(tile, (0, 0))
     dust.paste(tile, (tile_w, 0))
@@ -149,8 +173,8 @@ def build_all_graphics(persona, content_data, lesson_num=1):
     theme = persona.get("theme", {})
     effect_type = content_data.get("effect_type", "shock")
 
-    render_board(theme)
+    render_board(theme, mirror_ledge=True)
     render_teacher_poses(persona)
     render_reaction_sticker(effect_type)
     render_dust_layer(lesson_seed=lesson_num)
-    print("[GRAPHICS] All visual layers compiled successfully.")
+    print("[GRAPHICS] All visual layers compiled successfully (mirrored ledge + thinking/blink sprites).")

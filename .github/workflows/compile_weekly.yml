@@ -37,19 +37,28 @@ jobs:
 
       - name: Send Compilation to Telegram
         env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RAW_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          RAW_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          # 1. إرسال قائمة الفصول (Chapters) لنسخها مباشرة في وصف يوتيوب
-          if [ -f "compilation_chapters.txt" ]; then
-            CHAPTERS=$(cat compilation_chapters.txt | head -c 4000)
-            TEXT="📑 فصول الفيديو المجمع (انسخها في وصف يوتيوب):"$'\n\n'"${CHAPTERS}"
-            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-              -d "chat_id=${CHAT_ID}" \
-              --data-urlencode "text=${TEXT}"
+          # 1. تنظيف التوكن والآي دي تلقائياً من أي مسافات أو أسطر زائدة
+          BOT_TOKEN=$(echo "$RAW_BOT_TOKEN" | grep -o -E '[0-9]+:[a-zA-Z0-9_-]+' | head -n 1)
+          CHAT_ID=$(echo "$RAW_CHAT_ID" | grep -o -E '[0-9]+' | head -n 1)
+
+          if [ -z "$BOT_TOKEN" ] || [ -z "$CHAT_ID" ]; then
+            echo "[ERROR] Invalid or missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID"
+            exit 1
           fi
 
-          # 2. فحص حجم الفيديو وإرساله عبر تليجرام
+          # 2. إرسال قائمة الفصول (Chapters) لوصف يوتيوب بتشفير آمن
+          if [ -f "compilation_chapters.txt" ]; then
+            CHAPTERS=$(head -c 3500 compilation_chapters.txt)
+            MESSAGE=$(printf '📑 فصول الفيديو المجمع (انسخها في وصف يوتيوب):\n\n%s' "$CHAPTERS")
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+              -d "chat_id=${CHAT_ID}" \
+              --data-urlencode "text=${MESSAGE}"
+          fi
+
+          # 3. فحص حجم الفيديو وإرساله عبر تليجرام بأمان
           if [ -f "weekly_compilation.mp4" ]; then
             FILE_SIZE=$(stat -c%s "weekly_compilation.mp4" 2>/dev/null || stat -f%z "weekly_compilation.mp4")
 
@@ -66,7 +75,7 @@ jobs:
               echo "[WARN] Video size exceeds Telegram 50MB limit."
               curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
                 -d "chat_id=${CHAT_ID}" \
-                -d "text=⚠️ تم تجهيز الفيديو الأسبوعي بنجاح، لكن حجمه تجاوز 50MB (الحد الأقصى المسموح لبوتات تليجرام). تم حفظه كملف كامل في قسم الـ Artifacts في GitHub لتنزيله بأعلى دقة."
+                --data-urlencode "text=⚠️ تم تجهيز الفيديو الأسبوعي بنجاح، لكن حجمه تجاوز 50MB (الحد الأقصى المسموح لبوتات تليجرام). تم حفظه كملف كامل في قسم الـ Artifacts في GitHub لتنزيله بأعلى دقة."
             fi
           fi
 

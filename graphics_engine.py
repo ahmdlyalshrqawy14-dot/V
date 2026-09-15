@@ -1,5 +1,4 @@
 import os
-import random
 from PIL import Image, ImageDraw
 
 def hex_to_rgb(hex_str):
@@ -8,173 +7,181 @@ def hex_to_rgb(hex_str):
         hex_clean = "".join([c * 2 for c in hex_clean])
     return tuple(int(hex_clean[i:i + 2], 16) for i in (0, 2, 4))
 
+# ============================================================
+# 1. Sleek Modern Chalkboard Canvas (YouTube Shorts Safe Layout)
+# ============================================================
 def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
-    print("[GRAPHICS] Rendering theme-tailored chalkboard canvas (1180x2040)...")
-    board = Image.new("RGBA", (1180, 2040), "#2a1810")
-    draw = ImageDraw.Draw(board)
+    print("[GRAPHICS] Rendering YouTube Shorts-optimized chalkboard canvas (1180x2040)...")
+    
+    # 2x supersampling for ultra-clean anti-aliased edges
+    sw, sh = 1180 * 2, 2040 * 2
+    canvas = Image.new("RGBA", (sw, sh), "#110e0c")
+    draw = ImageDraw.Draw(canvas)
 
-    border_outer = theme.get("border_outer", "#3c2211")
-    border_inner = theme.get("border_inner", "#1f120a")
-    top_color = hex_to_rgb(theme.get("board_top", "#16382c"))
-    bottom_color = hex_to_rgb(theme.get("board_bottom", "#0b1f18"))
+    top_color = hex_to_rgb(theme.get("board_top", "#10231d"))
+    bottom_color = hex_to_rgb(theme.get("board_bottom", "#081310"))
 
-    # Outer wooden framing
-    draw.rectangle([20, 35, 1160, 2005], fill=border_outer)
-    draw.rectangle([45, 60, 1135, 1980], fill=border_inner)
-
-    # Vertical gradient chalkboard slate
-    gx0, gy0, gx1, gy1 = 55, 70, 1125, 1960
-    slate_height = gy1 - gy0
-    for y in range(slate_height):
-        ratio = y / max(1, slate_height)
+    # Premium Walnut outer frame
+    draw.rounded_rectangle([30, 50, sw - 30, sh - 50], radius=36, fill="#231710", outline="#3a271b", width=6)
+    
+    # Subtle inner gold-trimmed chamfer
+    draw.rounded_rectangle([70, 90, sw - 70, sh - 90], radius=28, outline="#b8860b", width=4)
+    
+    # Matte Slate Canvas Surface
+    gx0, gy0, gx1, gy1 = 80, 100, sw - 80, sh - 100
+    slate_h = gy1 - gy0
+    for y in range(0, slate_h, 2):
+        ratio = y / max(1, slate_h)
         r = int(top_color[0] + (bottom_color[0] - top_color[0]) * ratio)
         g = int(top_color[1] + (bottom_color[1] - top_color[1]) * ratio)
         b = int(top_color[2] + (bottom_color[2] - top_color[2]) * ratio)
-        draw.line([(gx0, gy0 + y), (gx1, gy0 + y)], fill=(r, g, b))
+        draw.line([(gx0, gy0 + y), (gx1, gy0 + y)], fill=(r, g, b), width=2)
 
-    # Inner chalk slate outline
-    draw.rectangle([gx0, gy0, gx1, gy1], outline="#d1d5db", width=2)
+    # Floating chalk ledge positioned at YouTube Shorts safe boundary (Y ≈ 1440px on 1920 canvas)
+    # This prevents chalks from being buried under the Shorts subscribe button & title
+    ledge_y = int(1440 * 2)
+    ledge_left, ledge_right = 160, sw - 160
+    
+    # Ledge Drop-shadow
+    draw.rounded_rectangle([ledge_left + 8, ledge_y + 12, ledge_right - 8, ledge_y + 44], radius=10, fill="#05070a")
+    # Ledge shelf body
+    draw.rounded_rectangle([ledge_left, ledge_y, ledge_right, ledge_y + 36], radius=10, fill="#2b1a13", outline="#4a2e22", width=4)
+    # Metallic top rail inset
+    draw.rounded_rectangle([ledge_left + 16, ledge_y + 6, ledge_right - 16, ledge_y + 12], radius=4, fill="#b8860b")
 
-    # Bottom wooden chalk ledge (spans full width regardless of mirroring)
-    ledge_left, ledge_right = 90, 1090
-    draw.rectangle([ledge_left, 1920, ledge_right, 1946], fill="#5c2e14", outline="#2b1407", width=2)
-
-    # Resting chalk pieces (White, Yellow, Cyan)
-    # Original layout sat near the LEFT edge of the ledge (offsets from ledge_left).
-    chalk_width = 38
-    offsets_from_left = [70, 120, 170]  # matches original x=160,210,260 (ledge_left=90)
+    # Pastel chalk pieces
+    chalk_w = 64
+    offsets = [120, 210, 300]
     chalks = [
-        (offsets_from_left[0], "#ffffff"),
-        (offsets_from_left[1], "#fde047"),
-        (offsets_from_left[2], "#67e8f9"),
+        (offsets[0], "#f8fafc"),  # Pure White
+        (offsets[1], "#fef08a"),  # Pastel Gold
+        (offsets[2], "#67e8f9")   # Pastel Cyan
     ]
 
-    for offset, chalk_col in chalks:
-        if mirror_ledge:
-            # Reflect: same distance from the RIGHT edge instead of the left edge.
-            # This moves the chalk set to where the teacher used to stand.
-            x_pos = ledge_right - chalk_width - offset
-        else:
-            x_pos = ledge_left + offset
-        draw.rounded_rectangle([x_pos, 1913, x_pos + chalk_width, 1924], radius=3, fill=chalk_col)
+    for offset, color in chalks:
+        # mirror_ledge keeps chalks to the right half so they don't collide with the teacher on the left
+        x_pos = (ledge_right - chalk_w - offset) if mirror_ledge else (ledge_left + offset)
+        draw.rounded_rectangle([x_pos, ledge_y - 14, x_pos + chalk_w, ledge_y + 6], radius=6, fill=color, outline="#1e293b", width=2)
 
-    board.save(filename)
+    # Scale down with Lanczos filter for razor-sharp vector output
+    final_board = canvas.resize((1180, 2040), Image.Resampling.LANCZOS)
+    final_board.save(filename)
 
+# ============================================================
+# 2. Modern 2D Vector Character Sprites (Safe & Direction-Aware)
+# ============================================================
 def render_teacher_poses(persona):
-    print(f"[GRAPHICS] Generating teacher sprite set for: {persona['name']}...")
+    print(f"[GRAPHICS] Rendering 2026 vector character set for: {persona['name']}...")
     avatar = persona.get("avatar", {})
     suit_color = avatar.get("suit_color", "#1e3a8a")
     tie_color = avatar.get("tie_color", "#b91c1c")
-    hair_color = avatar.get("hair_color", "#3b2219")
+    hair_color = avatar.get("hair_color", "#26150f")
     glasses_style = avatar.get("glasses", "round")
+    skin_tone = "#fcd34d"
+    skin_shadow = "#f59e0b"
 
     def draw_character(mouth_open=False, is_pointing=False, eyes_closed=False, thinking=False):
-        img = Image.new("RGBA", (480, 520), (0, 0, 0, 0))
+        # 2x internal canvas (960x1040) downsampled to 480x520
+        cw, ch = 960, 1040
+        img = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
 
-        # Pointing arm with wooden pointer stick
+        # 1. Pointing Arm with Modern Telescopic Pointer
+        # Points UP and RIGHT toward the center chalkboard math problem
         if is_pointing:
-            dr.line([(200, 340), (70, 200)], fill=suit_color, width=28)
-            dr.ellipse([(55, 185), (85, 215)], fill="#fed7aa")
-            dr.line([(70, 200), (20, 60)], fill="#d97706", width=7)
-            dr.ellipse([(14, 52), (26, 68)], fill="#fbbf24")
+            dr.line([(620, 680), (820, 420)], fill=suit_color, width=54)
+            dr.ellipse([(790, 390), (850, 450)], fill=skin_tone)
+            # Telescopic steel pointer with glowing gold tip
+            dr.line([(820, 420), (920, 140)], fill="#e2e8f0", width=10)
+            dr.line([(890, 220), (920, 140)], fill="#ffd700", width=12)
+            dr.ellipse([(908, 126), (932, 154)], fill="#ffd700")
 
-        # Thinking pose: hand resting near the chin, arm folded upward
+        # 2. Thinking Arm (Pensive chin rest)
         if thinking and not is_pointing:
-            # Forearm rising toward the chin
-            dr.line([(280, 340), (300, 230)], fill=suit_color, width=28)
-            # Hand near chin
-            dr.ellipse([(285, 210), (315, 240)], fill="#fed7aa")
-            # A couple of fingers curled near the chin for detail
-            dr.line([(295, 220), (300, 205)], fill="#fed7aa", width=10)
+            dr.line([(570, 720), (610, 480)], fill=suit_color, width=54)
+            dr.ellipse([(580, 440), (640, 500)], fill=skin_tone)
+            dr.rounded_rectangle([595, 425, 620, 465], radius=6, fill=skin_tone)
 
-        # Body torso / Suit jacket
-        dr.rectangle([180, 310, 350, 510], fill=suit_color)
+        # 3. Modern Tailored Torso (Blazer & Shoulders)
+        dr.rounded_rectangle([350, 600, 730, 1040], radius=50, fill=suit_color)
+        
+        # Inner white crisp shirt
+        dr.polygon([(500, 600), (580, 600), (540, 740)], fill="#f8fafc")
+        # Modern slim tie
+        dr.polygon([(532, 630), (548, 630), (554, 820), (540, 850), (526, 820)], fill=tie_color)
+        
+        # Blazer lapels
+        dr.polygon([(390, 600), (490, 750), (470, 820), (380, 660)], fill="#111827")
+        dr.polygon([(690, 600), (590, 750), (610, 820), (700, 660)], fill="#111827")
 
-        # Shirt collar / Tie
-        dr.polygon([(265, 310), (245, 370), (265, 430), (285, 370)], fill=tie_color)
+        # 4. Neck with depth shadow
+        dr.rectangle([500, 480, 580, 610], fill=skin_shadow)
+        dr.rectangle([508, 480, 572, 600], fill=skin_tone)
 
-        # Head / Skin
-        dr.ellipse([190, 130, 340, 290], fill="#fed7aa")
+        # 5. Stylized Head & Jaw
+        dr.rounded_rectangle([400, 240, 680, 550], radius=85, fill=skin_tone)
+        # Ears
+        dr.ellipse([(380, 360), (416, 420)], fill=skin_tone)
+        dr.ellipse([(664, 360), (700, 420)], fill=skin_tone)
 
-        # Hair
-        dr.chord([188, 110, 342, 215], 180, 360, fill=hair_color)
+        # 6. Modern Sleek Hair
+        dr.rounded_rectangle([390, 200, 690, 340], radius=50, fill=hair_color)
+        dr.polygon([(390, 310), (430, 360), (420, 300)], fill=hair_color)
 
-        # Eyewear Rendering
-        if glasses_style == "round":
-            dr.ellipse([210, 175, 255, 215], outline="#0f172a", width=4)
-            dr.ellipse([275, 175, 320, 215], outline="#0f172a", width=4)
-            dr.line([255, 195, 275, 195], fill="#0f172a", width=4)
-        elif glasses_style == "cateye":
-            dr.polygon([(205, 175), (255, 185), (245, 215), (210, 210)], outline="#0f172a", width=4)
-            dr.polygon([(325, 175), (275, 185), (285, 215), (320, 210)], outline="#0f172a", width=4)
-            dr.line([255, 190, 275, 190], fill="#0f172a", width=4)
-        else:  # Square / Minimal
-            dr.rectangle([210, 180, 255, 210], outline="#0f172a", width=4)
-            dr.rectangle([275, 180, 320, 210], outline="#0f172a", width=4)
-            dr.line([255, 195, 275, 195], fill="#0f172a", width=4)
+        # 7. Eyebrows (Expressive)
+        brow_y = 330 if not thinking else 315
+        dr.line([(450, brow_y), (505, brow_y + (6 if thinking else 0))], fill=hair_color, width=7)
+        dr.line([(575, brow_y - (8 if thinking else 0)), (630, brow_y)], fill=hair_color, width=7)
 
-        # Eyes: blink = thin closed line, open = pupils (looking up slightly if thinking)
+        # 8. Modern Acetate Glasses (Customizable style)
+        if glasses_style == "cateye":
+            dr.polygon([(435, 345), (525, 360), (510, 420), (445, 410)], outline="#0f172a", width=8)
+            dr.polygon([(645, 345), (555, 360), (570, 420), (635, 410)], outline="#0f172a", width=8)
+            dr.line([(520, 375), (560, 375)], fill="#0f172a", width=8)
+        elif glasses_style == "square":
+            dr.rounded_rectangle([440, 350, 520, 415], radius=8, outline="#0f172a", width=8)
+            dr.rounded_rectangle([560, 350, 640, 415], radius=8, outline="#0f172a", width=8)
+            dr.line([(520, 380), (560, 380)], fill="#0f172a", width=8)
+        else:  # Round
+            dr.rounded_rectangle([440, 345, 520, 420], radius=24, outline="#0f172a", width=8)
+            dr.rounded_rectangle([560, 345, 640, 420], radius=24, outline="#0f172a", width=8)
+            dr.line([(520, 380), (560, 380)], fill="#0f172a", width=8)
+
+        # 9. Eyes & Catchlights
         if eyes_closed:
-            dr.line([228, 193, 238, 193], fill="#0f172a", width=3)
-            dr.line([292, 193, 302, 193], fill="#0f172a", width=3)
+            dr.line([(460, 382), (500, 382)], fill="#0f172a", width=6)
+            dr.line([(580, 382), (620, 382)], fill="#0f172a", width=6)
         else:
-            pupil_y_offset = -4 if thinking else 0
-            dr.ellipse([228, 188 + pupil_y_offset, 238, 198 + pupil_y_offset], fill="#0f172a")
-            dr.ellipse([292, 188 + pupil_y_offset, 302, 198 + pupil_y_offset], fill="#0f172a")
+            py_off = -6 if thinking else 0
+            # Pupils looking slightly toward board/center
+            dr.ellipse([(465, 368 + py_off), (495, 398 + py_off)], fill="#0f172a")
+            dr.ellipse([(585, 368 + py_off), (615, 398 + py_off)], fill="#0f172a")
+            # Alive catchlight reflection
+            dr.ellipse([(472, 372 + py_off), (480, 380 + py_off)], fill="#ffffff")
+            dr.ellipse([(592, 372 + py_off), (600, 380 + py_off)], fill="#ffffff")
 
-        # Mouth (Dynamic speaking state)
+        # 10. Expressive Mouth
         if mouth_open:
-            dr.ellipse([250, 240, 280, 268], fill="#881337")
+            dr.rounded_rectangle([515, 460, 565, 500], radius=16, fill="#7f1d1d")
+            dr.rounded_rectangle([523, 462, 557, 474], radius=6, fill="#ffffff")  # Upper teeth
         else:
-            dr.line([250, 252, 280, 252], fill="#881337", width=4)
+            dr.line([(518, 476), (562, 476)], fill="#991b1b", width=6)
 
-        return img
+        # Downsample with Lanczos for a crisp vector aesthetic
+        return img.resize((480, 520), Image.Resampling.LANCZOS)
 
     draw_character(mouth_open=False, is_pointing=False).save("t_idle_closed.png")
     draw_character(mouth_open=True, is_pointing=False).save("t_idle_open.png")
     draw_character(mouth_open=False, is_pointing=True).save("t_point_closed.png")
     draw_character(mouth_open=True, is_pointing=True).save("t_point_open.png")
-
-    # New: thinking pose (used right before the solution begins)
     draw_character(mouth_open=False, is_pointing=False, thinking=True).save("t_thinking.png")
-
-    # New: blink frame (brief overlay on top of idle-closed timing to simulate a blink)
     draw_character(mouth_open=False, is_pointing=False, eyes_closed=True).save("t_blink.png")
 
-def render_reaction_sticker(effect_type="shock", filename="sticker_active.png"):
-    stk = Image.new("RGBA", (520, 160), (0, 0, 0, 0))
-    d_stk = ImageDraw.Draw(stk)
-    bg_color = "#dc2626" if effect_type == "shock" else "#059669"
-
-    d_stk.rounded_rectangle([18, 18, 508, 148], radius=22, fill=(15, 23, 42, 160))
-    d_stk.rounded_rectangle([10, 10, 500, 140], radius=22, fill=bg_color, outline="#ffffff", width=4)
-    stk.save(filename)
-
-def render_dust_layer(lesson_seed=1, filename="dust.png"):
-    tile_w, h = 1080, 1920
-    tile = Image.new("RGBA", (tile_w, h), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(tile)
-    random.seed(int(lesson_seed) if str(lesson_seed).isdigit() else 1)
-
-    for _ in range(55):
-        x = random.randint(0, tile_w)
-        y = random.randint(0, h)
-        radius = random.randint(1, 3)
-        alpha = random.randint(20, 65)
-        dr.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(255, 255, 255, alpha))
-
-    dust = Image.new("RGBA", (tile_w * 2, h), (0, 0, 0, 0))
-    dust.paste(tile, (0, 0))
-    dust.paste(tile, (tile_w, 0))
-    dust.save(filename)
-
+# ============================================================
+# 3. Master Visual Engine Entry Point
+# ============================================================
 def build_all_graphics(persona, content_data, lesson_num=1):
     theme = persona.get("theme", {})
-    effect_type = content_data.get("effect_type", "shock")
-
     render_board(theme, mirror_ledge=True)
     render_teacher_poses(persona)
-    render_reaction_sticker(effect_type)
-    render_dust_layer(lesson_seed=lesson_num)
-    print("[GRAPHICS] All visual layers compiled successfully (mirrored ledge + thinking/blink sprites).")
+    print("[GRAPHICS] 2026 YouTube Shorts graphics suite compiled successfully.")

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # يعمل تلقائياً كل جمعة الساعة 15:00 UTC
-    # بتوقيت مصر: 5:00 مساءً (شتاء) / 6:00 مساءً (صيف)
+    # بتوقيت مصر: 6:00 مساءً
     - cron: '0 15 * * 5'
 
 permissions:
@@ -35,6 +35,42 @@ jobs:
         run: |
           python compiler.py
 
+      - name: Send Compilation to Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # 1. إرسال قائمة الفصول (Chapters) لنسخها مباشرة في وصف يوتيوب
+          if [ -f "compilation_chapters.txt" ]; then
+            CHAPTERS=$(cat compilation_chapters.txt | head -c 4000)
+            curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+              -d "chat_id=${CHAT_ID}" \
+              --data-urlencode "text=📑 فصول الفيديو المجمع (انسخها في وصف يوتيوب):
+
+${CHAPTERS}"
+          fi
+
+          # 2. فحص حجم الفيديو وإرساله عبر تليجرام
+          if [ -f "weekly_compilation.mp4" ]; then
+            FILE_SIZE=$(stat -c%s "weekly_compilation.mp4" 2>/dev/null || stat -f%z "weekly_compilation.mp4")
+
+            # حد بوتات تليجرام الأقصى للإرسال هو 50 ميجابايت
+            if [ "$FILE_SIZE" -le 50000000 ]; then
+              echo "[TELEGRAM] Sending weekly compilation video..."
+              curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendVideo" \
+                -F "chat_id=${CHAT_ID}" \
+                -F "video=@weekly_compilation.mp4" \
+                -F "supports_streaming=true" \
+                -F "caption=🎥 الفيديو الأسبوعي المجمع جاهز (16:9 السينمائي)"
+              echo "[TELEGRAM] Video delivered ✓"
+            else
+              echo "[WARN] Video size exceeds Telegram 50MB limit."
+              curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+                -d "chat_id=${CHAT_ID}" \
+                -d "text=⚠️ تم تجهيز الفيديو الأسبوعي بنجاح، لكن حجمه تجاوز 50MB (الحد الأقصى المسموح لبوتات تليجرام). تم حفظه كملف كامل في قسم الـ Artifacts في GitHub لتنزيله بأعلى دقة."
+            fi
+          fi
+
       - name: Save Archive State to Repo
         run: |
           git config --global user.name "github-actions[bot]"
@@ -48,7 +84,7 @@ jobs:
             echo "No file state changes to commit."
           fi
 
-      - name: Upload Compilation Video
+      - name: Upload Compilation Video Backup
         if: always()
         uses: actions/upload-artifact@v4
         with:

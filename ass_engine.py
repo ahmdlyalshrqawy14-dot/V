@@ -12,8 +12,8 @@ def hex_to_ass_color(hex_str, alpha="00"):
 def escape_ass(text):
     if not text:
         return ""
-    # حل المشكلة 2: حذف حرف | المسبب للمربعات
-    clean = str(text).replace("|", "").replace("\\", "").replace("{", "(").replace("}", ")")
+    # حل المشاكل 2 و4: حذف | وحذف ! لمنع خطأ المضروب الرياضي
+    clean = str(text).replace("|", "").replace("!", "").replace("\\", "").replace("{", "(").replace("}", ")")
     return clean.replace("\n", " ").replace("\r", "").strip()
 
 def to_ass_time(sec):
@@ -32,12 +32,11 @@ def to_ass_time(sec):
 # ============================================================
 GOLD_ASS = "&H0000D7FF"
 
-# حل المشكلة 19: تعديل marginr إلى 240 لإبقاء تأثير المسح والظهور داخل منطقة الأمان
 def build_typewriter_clip(marginv, fontsize, playresx=1080, marginl=80, marginr=240, reveal_ms=500):
     x1 = marginl
     x2_full = playresx - marginr
     y1 = marginv
-    line_h = int(fontsize * 1.5)
+    line_h = int(fontsize * 1.6)
     y2 = marginv + line_h
     return f"\\clip({x1},{y1},{x1},{y2})\\t(0,{reveal_ms},\\clip({x1},{y1},{x2_full},{y2}))"
 
@@ -67,7 +66,6 @@ def generate_master_ass(content_data, timestamps, words_data, persona, font_name
 
     theme = persona.get("theme", {})
     colors = theme.get("chalk_colors", {})
-    teacher_tag = persona.get("name", "Math Hacks")
 
     c_hook = hex_to_ass_color(colors.get("hook", "#ffffff"))
     c_step1 = hex_to_ass_color(colors.get("step1", "#fde047"))
@@ -83,7 +81,7 @@ def generate_master_ass(content_data, timestamps, words_data, persona, font_name
     t_res = timestamps.get("result", total_duration * 0.75)
 
     # Styles:
-    # حل المشكلة 19: تعديل MarginR لجميع الستايلات إلى 240 بكسل لحمايتها من أزرار تيك توك وريلز
+    # حل المشاكل: (2) تكبير الخطوط، (22) تناسق التباعد، (35) استبدال الصندوق المصمت بإطار أنيق، (41) إضافة Spacing: 2 لمنع التصاق الحروف، (1 و33) رفع الترجمة لـ MarginV: 700
     ass_header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -93,32 +91,29 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Title,{font_name},44,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,2,8,80,240,200,1
-Style: Watermark,{font_name},38,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,80,240,250,1
-Style: Hook,{font_name},48,{c_hook},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,380,1
-Style: Step1,{font_name},44,{c_step1},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,580,1
-Style: Step2,{font_name},44,{c_step2},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,780,1
-Style: Result,{font_name},52,{c_res},{GOLD_ASS},&H00064E3B,&H00064E3B,-1,0,0,0,100,100,0,0,3,16,0,8,80,240,980,1
-Style: Captions,{font_name},44,&H0000E5FF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,1,4,2,2,80,240,650,1
+Style: Title,{font_name},50,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,1,0,1,0,2,8,80,240,160,1
+Style: Hook,{font_name},56,{c_hook},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,1,0,1,0,3,8,80,240,320,1
+Style: Step1,{font_name},54,{c_step1},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,1,0,1,0,3,8,80,240,480,1
+Style: Step2,{font_name},54,{c_step2},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,1,0,1,0,3,8,80,240,640,1
+Style: Result,{font_name},60,{c_res},{GOLD_ASS},&H00064E3B,&H00000000,-1,0,0,0,100,100,1,0,1,3,2,8,80,240,800,1
+Style: Captions,{font_name},52,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,2,0,1,3,2,2,80,240,700,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     events = []
 
-    # Persistent header & teacher branding
+    # حل المشكلة 14 و32: إلغاء طبقة اسم المعلم (Watermark) لتنظيف الجزء العلوي من الشاشة ومنع التكدس
     events.append(f"Dialogue: 0,{to_ass_time(0.0)},{dur_str},Title,,0,0,0,,{escape_ass(content_data.get('title', 'Quick Math Hack'))}")
-    events.append(f"Dialogue: 0,{to_ass_time(0.0)},{dur_str},Watermark,,0,0,0,,{escape_ass(teacher_tag)}")
 
-    # Chalkboard step cards
+    # حل المشكلة 22: بطاقات متسلسلة بتوزيع رأسي موحد تماماً (فارق 160 بكسل)
     card_specs = [
-        (t_hook, "Hook", 380, 48, content_data.get('hook_text', '')),
-        (t_s1, "Step1", 580, 44, content_data.get('step_1', '')),
-        (t_s2, "Step2", 780, 44, content_data.get('step_2', '')),
+        (t_hook, "Hook", 320, 56, content_data.get('hook_text', '')),
+        (t_s1, "Step1", 480, 54, content_data.get('step_1', '')),
+        (t_s2, "Step2", 640, 54, content_data.get('step_2', '')),
     ]
     for t_start, style_name, marginv, fontsize, text in card_specs:
         clean_text = escape_ass(text)
-        # حل المشكلة 7: منع رسم عناصر فارغة
         if clean_text:
             typewriter = build_typewriter_clip(marginv, fontsize, reveal_ms=500)
             pulse = build_rhythmic_pulse(start_ms=550, cycles=4, period_ms=280, amp=5)
@@ -127,9 +122,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
     # Final result reveal card
     clean_res = escape_ass(content_data.get('result_text', ''))
-    # حل المشكلة 7: منع رسم صندوق النتيجة (Chip) فارغاً إذا لم يتوفر نص
     if clean_res:
-        res_typewriter = build_typewriter_clip(980, 52, reveal_ms=400)
+        res_typewriter = build_typewriter_clip(800, 60, reveal_ms=400)
         res_glow = build_reveal_glow(start_ms=0, peak_ms=240, end_ms=850, base_blur=1, peak_blur=6)
         res_bounce = (
             r"\t(0,140,\fscx120\fscy120)"
@@ -141,25 +135,38 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         result_fx = f"{{\\fad(160,0){res_typewriter}{res_glow}{res_bounce}{res_pulse}}}"
         events.append(f"Dialogue: 1,{to_ass_time(t_res)},{dur_str},Result,,0,0,0,,{result_fx}{clean_res}")
 
-    # حل المشكلة 8: منع تداخل التوقيت لمنع الجليتش عند ثانية 6.5
+    # حل المشاكل: (5 و40) إبراز حركي لكل كلمة (Karaoke Highlight)، (37 و38) تقطيع متزن ومنع التكدس
     if words_data:
         chunk_size = 3
-        caption_pulse = r"\t(0,80,\fscx105\fscy105)\t(80,160,\fscx100\fscy100)"
         for i in range(0, len(words_data), chunk_size):
             chunk = words_data[i:i + chunk_size]
-            start_sec = chunk[0]["start"]
-            end_sec = chunk[-1]["end"] + 0.10
-            
-            if i + chunk_size < len(words_data):
-                next_start = words_data[i + chunk_size]["start"]
-                if end_sec > next_start:
-                    end_sec = max(start_sec + 0.05, next_start - 0.01)
+            chunk_len = len(chunk)
+            for j in range(chunk_len):
+                w_start = chunk[j]["start"]
+                if j < chunk_len - 1:
+                    w_end = chunk[j + 1]["start"]
+                else:
+                    w_end = chunk[j]["end"] + 0.10
+                    if i + chunk_size < len(words_data):
+                        w_end = min(w_end, words_data[i + chunk_size]["start"])
 
-            s_t = to_ass_time(start_sec)
-            e_t = to_ass_time(end_sec)
-            caption_text = escape_ass(" ".join(w["word"] for w in chunk))
-            if caption_text:
-                events.append(f"Dialogue: 2,{s_t},{e_t},Captions,,0,0,0,,{{{caption_pulse}}}{caption_text}")
+                if w_end <= w_start:
+                    w_end = w_start + 0.15
+
+                # إبراز الكلمة المنطوقة حالياً باللون الذهبي وتكبيرها قليلاً مع بقاء بقية الكلمات بيضاء
+                parts = []
+                for k, w_obj in enumerate(chunk):
+                    w_text = escape_ass(w_obj["word"])
+                    if k == j:
+                        parts.append(f"{{\\c&H0000D7FF\\fscx108\\fscy108}}{w_text}{{\\c&H00FFFFFF\\fscx100\\fscy100}}")
+                    else:
+                        parts.append(f"{{\\c&H00FFFFFF\\fscx100\\fscy100}}{w_text}")
+
+                s_t = to_ass_time(w_start)
+                e_t = to_ass_time(w_end)
+                line_text = " ".join(parts)
+                if line_text:
+                    events.append(f"Dialogue: 2,{s_t},{e_t},Captions,,0,0,0,,{line_text}")
 
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(ass_header + "\n".join(events))

@@ -2,6 +2,7 @@ import os
 import re
 import asyncio
 import subprocess
+import functools
 import edge_tts
 
 SAMPLE_RATE = 44100
@@ -20,12 +21,20 @@ def get_audio_duration(file_path):
     except Exception:
         return 2.0
 
+@functools.lru_cache(maxsize=1)
+def _has_rubberband_filter():
+    try:
+        res = subprocess.run(["ffmpeg", "-filters"], capture_output=True, text=True, timeout=10)
+        return "rubberband" in res.stdout
+    except Exception:
+        return False
+
 async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="-10%"):
     # تنظيف الرموز الخاصة مع الإبقاء على علامات الترقيم الطبيعية للحفاظ على نبرة الإلقاء
     clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|!]', ' ', str(text))
     clean = " ".join(clean.split()).strip()
     words = []
-    
+
     for attempt in range(3):
         try:
             comm = edge_tts.Communicate(clean, voice_model, rate=rate)
@@ -54,20 +63,37 @@ async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="-10%"):
 def apply_vocal_dsp(input_path, output_path, dsp_config):
     pitch_semitones = float(dsp_config.get("pitch_shift", 0.0))
     chest_gain = float(dsp_config.get("chest_eq_gain", 3.0))
-    # حل مشكلة الحدة القاتلة: قراءة قيمة presence من الشخصية مباشرة (قيم سالبة تكسر الحدة)
     presence_gain = float(dsp_config.get("presence_eq_gain", -3.0))
 
     pitch_ratio = 2.0 ** (pitch_semitones / 12.0)
-    resample_rate = int(SAMPLE_RATE * pitch_ratio)
 
-    filters = [
-        f"asetrate={resample_rate}",
-        f"aresample={SAMPLE_RATE}",
-        f"atempo={1.0 / pitch_ratio:.4f}",
+    # --- تصحيح جوهري: الحفاظ على الفورمانت (بصمة الصوت) عند تغيير النغمة ---
+    if abs(pitch_semitones) > 0.001 and _has_rubberband_filter():
+        pitch_filter = f"rubberband=pitch={pitch_ratio:.6f}:formant=preserved:pitchq=quality"
+    elif abs(pitch_semitones) > 0.001:
+        # شبكة أمان: لو rubberband مش متاح في بيئة التشغيل
+        resample_rate = int(SAMPLE_RATE * pitch_ratio)
+        pitch_filter = (
+            f"asetrate={resample_rate},aresample={SAMPLE_RATE},"
+            f"atempo={1.0 / pitch_ratio:.4f}"
+        )
+    else:
+        pitch_filter = None
+
+    filters = []
+    if pitch_filter:
+        filters.append(pitch_filter)
+
+    filters += [
         "highpass=f=80",
-        f"equalizer=f=200:t=q:w=1.2:g={chest_gain}",
-        f"equalizer=f=3500:t=q:w=1.8:g={presence_gain}",
-        "compand=attacks=0.02:decays=0.15:points=-80/-80|-35/-18|-10/-8|0/-3:gain=1.0"
+        # EQ بشكل shelf بدل peaking الحاد: صوت أنعم وأطبع، بدون رنين معدني
+        f"bass=g={chest_gain}:f=220:w=0.6",
+        f"treble=g={presence_gain}:f=3200:w=0.6",
+        # de-esser بسيط لتفادي صفير الحروف الصفيرية لو رفعنا الـ presence
+        "deesser=i=0.35:m=0.5:f=0.5:s=o",
+        "compand=attacks=0.02:decays=0.15:points=-80/-80|-35/-18|-10/-8|0/-3:gain=1.0",
+        # تطبيع صوتي بمعيار الشورتس/تيك توك (-14 LUFS)
+        "loudnorm=I=-14:TP=-1.5:LRA=11"
     ]
 
     cmd = [
@@ -87,14 +113,12 @@ async def build_complete_voiceover(content_data, persona):
     voice_model = voice_config.get("model", "en-GB-RyanNeural")
     dsp_config = voice_config.get("dsp", {})
 
-    # سرعة متزنة ومريحة تسمح بظهور نبرة ولهجة كل معلم دون مط الفونيمات
-    SPEECH_RATE = "-25%"
-
+    # سرعات متغيرة حسب طبيعة كل جزء لإيقاع أنسب لفيديوهات الشورتس
     sections = [
-        ("hook", content_data.get("spoken_hook", ""), SPEECH_RATE),
-        ("step1", content_data.get("spoken_step1", ""), SPEECH_RATE),
-        ("step2", content_data.get("spoken_step2", ""), SPEECH_RATE),
-        ("result", content_data.get("spoken_result", ""), SPEECH_RATE)
+        ("hook",   content_data.get("spoken_hook", ""),   "-8%"),
+        ("step1",  content_data.get("spoken_step1", ""),  "-18%"),
+        ("step2",  content_data.get("spoken_step2", ""),  "-18%"),
+        ("result", content_data.get("spoken_result", ""), "-12%")
     ]
 
     all_words = []
@@ -102,8 +126,8 @@ async def build_complete_voiceover(content_data, persona):
     current_time = 0.35
     processed_files = []
 
-    # فاصل الصمت المعرفي بين الخطوات (0.8 ثانية)
-    pause_duration = 0.8
+    # فاصل قصير بين الأجزاء يناسب إيقاع الشورتس السريع
+    pause_duration = 0.45
     silence_file = "silence_pause.mp3"
     subprocess.run(
         ["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SAMPLE_RATE}:cl=mono", "-t", str(pause_duration), "-c:a", "libmp3lame", silence_file],
@@ -120,7 +144,6 @@ async def build_complete_voiceover(content_data, persona):
         apply_vocal_dsp(raw_file, dsp_file, dsp_config)
         dsp_dur = get_audio_duration(dsp_file)
 
-        # حل المشكلة 2 من التقرير (Rescaling): مزامنة توقيتات الكلمات مع مدة الصوت بعد الـ DSP
         time_scale = (dsp_dur / raw_dur) if raw_dur > 0 else 1.0
 
         processed_files.append(dsp_file)
@@ -154,12 +177,11 @@ async def build_complete_voiceover(content_data, persona):
         input_args.extend(["-i", f])
 
     n = len(concat_inputs)
-    concat_filter = f"".join([f"[{j}:a]" for j in range(n)]) + f"concat=n={n}:v=0:a=1[v_raw];"
-    
+    concat_filter = "".join([f"[{j}:a]" for j in range(n)]) + f"concat=n={n}:v=0:a=1[v_raw];"
+
     total_dur = current_time
     fade_start = max(0.1, round(total_dur - 0.25, 2))
 
-    # ترتيب الفلاتر السليم: الفيد أوت أولاً ثم الـ limiter مع روم نويز متزن (OBS #4 و #10)
     final_audio_filter = (
         f"{concat_filter}"
         f"anoisesrc=d={total_dur + 0.2}:c=pink:r={SAMPLE_RATE}:a=0.002,lowpass=f=1200[room];"
@@ -189,3 +211,31 @@ async def build_complete_voiceover(content_data, persona):
     print(f"[AUDIO] Voiceover synthesized successfully ({timestamps['total']:.2f}s).")
 
     return timestamps, all_words
+
+def generate_ambient_bgm(duration):
+    """
+    بديل احتياطي لو فشل تحميل موسيقى الخلفية من الإنترنت.
+    بيولّد سرير صوتي هادئ (ambient pad) بدل الصمت الكامل، بمدة مطابقة للمطلوب.
+    """
+    print(f"[AUDIO] Generating fallback ambient BGM ({duration:.2f}s)...")
+    filter_chain = (
+        f"anoisesrc=d={duration:.2f}:c=pink:r={SAMPLE_RATE}:a=0.02,"
+        "lowpass=f=800,highpass=f=150,"
+        "afade=t=in:st=0:d=1.0,"
+        f"afade=t=out:st={max(0.5, duration - 1.0):.2f}:d=1.0"
+    )
+    cmd = [
+        "ffmpeg", "-y",
+        "-filter_complex", filter_chain,
+        "-ac", "2",
+        "-ar", str(SAMPLE_RATE),
+        "-c:a", "pcm_s16le",
+        "bgm.wav"
+    ]
+    try:
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        print("[AUDIO] Ambient BGM fallback ready: bgm.wav")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"[AUDIO WARN] Ambient BGM generation failed: {e}")
+        return False

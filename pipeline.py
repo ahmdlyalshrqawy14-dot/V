@@ -27,14 +27,14 @@ FONT_NAME = "Cairo"
 
 # Branding & Visual Scaffolding
 GOLD_HEX = "#FFD700"
-FRAME_THICKNESS = 6
 FPS = 25
 
-# Character Micro-Behaviors
-BLINK_INTERVAL = 3.5
-BLINK_DURATION = 0.12
-# حل المشكلة 9: زيادة وقت النهاية لمنع قفل الفيديو فجأة واختفاء العناصر وقت الـCTA
-TAIL_PAD = 1.8
+# Character Micro-Behaviors (حل المشكلة 16: ضبط معدل ومدّة الرمش)
+BLINK_INTERVAL = 2.8
+BLINK_DURATION = 0.16
+
+# حل المشاكل 3 و25 و31 و44: تقليص وقت النهاية لمنع الصمت والوقت الميت بعد انتهاء الإلقاء
+TAIL_PAD = 0.3
 
 # Teacher Coordinate Anchors
 TEACHER_X = 80
@@ -155,26 +155,27 @@ def generate_lesson_script(lesson_info, persona):
     teacher_name = persona.get("name", "Professor")
 
     print(f"[GEMINI] Generating lesson script for '{topic}'...")
-    # حل المشاكل: (6) أرقام مرئية، (13) تقليل الكلمات لمنع الاستعجال، (20) ترقيم الخطوة 3، (21) منع تكرار الهوك
+    # حل المشاكل: (4) منع المضروب، (8 و19) صياغة وتعميم القاعدة، (10 و28) خطاف سريع، (12) تحدي الجمهور بالتعليقات، (34) منع تكدس المعادلات
     prompt = f"""
     You are {teacher_name}, an elite viral math educator on TikTok and YouTube Shorts.
-    Create an ultra-retaining 25 to 30-second math hack.
+    Create an ultra-retaining 20 to 25-second math hack.
 
     LESSON FOCUS:
     - Topic: {topic}
     - Problem Example: {example}
 
     SCRIPTING RULES:
-    1. Hook (spoken_hook): Immediate challenge or question. No fluff, no greetings (10-14 words).
-    2. Step 1 (spoken_step1): First calculation action (10-14 words).
-    3. Step 2 (spoken_step2): Second action and equation calculation (10-14 words).
-    4. Result (spoken_result): Big reveal and call to follow (8-12 words).
+    1. Hook (spoken_hook): Immediate punchy challenge or question under 8-10 words. No fluff or greetings (e.g. 'Can you square 31 in 3 seconds?').
+    2. Step 1 (spoken_step1): Reveal the general mental formula or base calculation clearly (8-12 words).
+    3. Step 2 (spoken_step2): Execute the next quick mental step (8-12 words).
+    4. Result (spoken_result): Big reveal followed by an interactive challenge question asking viewers to solve a similar number in the comments (10-14 words).
     5. Write out all spoken numbers as plain English words (e.g., 'forty-three', 'eleven', 'plus').
     6. Absolutely NO LaTeX or raw math syntax in spoken fields.
     7. Topic vs Hook: 'title' is the general category name. 'hook_text' MUST be the exact problem challenge (e.g., '{example} in 3 Seconds') and must NOT repeat the wording of 'title'.
-    8. Visual Steps: 'step_1' and 'step_2' must show actual math calculation numbers (e.g., '1. 50 + 2 -> 25 + 2 = 27'), NOT long descriptive text.
+    8. Visual Steps: 'step_1' and 'step_2' must show actual math calculation numbers (e.g., '1. 30² = 900'), NOT long descriptive text or overcrowded multi-step lines. Keep them clean and bite-sized.
     9. Step Numbering: 'result_text' MUST start with '3. Final Answer = ' to maintain sequence.
     10. Do NOT use the pipe symbol '|' anywhere.
+    11. CRITICAL: NEVER include exclamation marks '!' anywhere in equations or results (prevents confusing 961 as 961 factorial).
 
     Output strictly valid JSON with this exact schema:
     {{
@@ -187,8 +188,8 @@ def generate_lesson_script(lesson_info, persona):
       "spoken_step1": "Spoken step 1 text here.",
       "step_2": "2. Second visual calculation applied",
       "spoken_step2": "Spoken step 2 text here.",
-      "result_text": "3. Final Answer = Result 🎉",
-      "spoken_result": "Spoken result text here."
+      "result_text": "3. Final Answer = Result",
+      "spoken_result": "Spoken result text and comment challenge here."
     }}
     """
 
@@ -217,10 +218,10 @@ def generate_lesson_script(lesson_info, persona):
                 if raw_text.endswith("```"): raw_text = raw_text[:-3]
                 parsed = json.loads(raw_text.strip())
                 if "spoken_hook" in parsed and "step_1" in parsed:
-                    # حل المشكلة 2: حذف حرف | الزائد المسبب للمربعات
+                    # حل المشكلة 2 و4: حذف | وعلامات التعجب لمنع خطأ المضروب
                     for k, v in parsed.items():
                         if isinstance(v, str):
-                            parsed[k] = v.replace("|", "").strip()
+                            parsed[k] = v.replace("|", "").replace("!", "").strip()
 
                     # حل المشكلة 7: منع بقاء نصوص الخطوات فارغة
                     if not parsed.get("step_1"): parsed["step_1"] = "1. First step"
@@ -252,7 +253,7 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     t_s2 = timestamps["step2"]
     t_res = timestamps["result"]
 
-    # حل المشكلة 4: بناء الـ Lip-sync الحقيقي بالاعتماد على فترات نطق الكلمات الفعلية
+    # Lip-sync
     if words_data:
         intervals = []
         c_start = words_data[0]["start"]
@@ -278,7 +279,8 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     cond_idle_open = f"(not({is_pointing}))*({is_talking})"
     cond_point_closed = f"({is_pointing})*(not({is_talking}))"
     cond_point_open = f"({is_pointing})*({is_talking})"
-    cond_blink = f"(not({is_pointing}))*(not({is_thinking}))*between(mod(t,{BLINK_INTERVAL}),0,{BLINK_DURATION})"
+    # حل المشكلة 16: جعل المعلم يرمش بانتظام وبشكل طبيعي حتى أثناء الإشارة والشرح
+    cond_blink = f"between(mod(t,{BLINK_INTERVAL}),0,{BLINK_DURATION})"
 
     # Dynamic camera movements
     progress = f"min(t/{duration:.2f},1)"
@@ -290,10 +292,11 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     pan_x = f"max(0,min(70,70*{ease}+2*sin(2*PI*t*1.2)+{shake_x}))"
     pan_y = f"max(0,min(90,70*{ease}+2*sin(2*PI*t*0.8+1)+{shake_y}))"
 
-    zoom_frames = FPS
-    zoom_expr = f"if(lte(on,{zoom_frames}),1.15-0.15*on/{zoom_frames},1)"
+    # حل المشكلة 17: زووم ديناميكي حركي في البداية وعند إعلان النتيجة بدلاً من الثبات الكامل
+    zoom_expr = f"if(lt(t,{t_hook}),1.08,if(between(t,{t_res},{t_res+1.5}),1.06,1.0))"
 
-    # حل المشكلة 1: إزالة rotate=a='{tilt_angle}' لتثبيت الإطار ومنع دورانه وميلانه
+    # حل المشكلة 1 و33: رفع شريط التقدم لـ y=1740 لحمايته من أزرار المنصة السفلية
+    # حل المشكلة 21: حذف drawbox الخاص بالإطار المحيط الخارجي تماماً
     vf = (
         f"[0:v]scale=1400:2400,zoompan=z='{zoom_expr}':d=1:s=1180x2020:fps={FPS},"
         f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"
@@ -306,8 +309,7 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
         "[v_teacher]eq=contrast=1.04:saturation=1.10:gamma=1.02,"
         "colorbalance=rs=-0.05:gs=0.01:bs=0.08:rm=-0.03:gm=0.01:bm=0.06,"
         "vignette=PI/5,"
-        f"drawbox=x=80:y=1800:w=(iw-160)*min(1\\,t/{duration:.2f}):h=8:color={GOLD_HEX}:t=fill,"
-        f"drawbox=x=0:y=0:w=iw:h=ih:color={GOLD_HEX}@0.55:t={FRAME_THICKNESS},"
+        f"drawbox=x=80:y=1740:w=(iw-160)*min(1\\,t/{duration:.2f}):h=8:color={GOLD_HEX}:t=fill,"
         "subtitles=master_video.ass:fontsdir=fonts[outv]"
     )
 
@@ -397,7 +399,6 @@ async def main():
         )
 
     validate_assets()
-    # حل المشكلة 4: تمرير words_data لتفعيل المزامنة الشفوية الحقيقية
     render_final_composition(content_data, timestamps, words_data, persona)
 
     series_manager.mark_lesson_completed(ctx)

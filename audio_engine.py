@@ -29,6 +29,22 @@ def _has_rubberband_filter():
     except Exception:
         return False
 
+def _get_native_sample_rate(file_path):
+    # تصحيح الثغرة: نقرأ معدل العينة الحقيقي للملف بدل افتراض 44100
+    # (edge-tts بيخرج الصوت افتراضيًا بمعدل 24kHz، مش 44100)
+    cmd = [
+        "ffprobe", "-v", "error",
+        "-select_streams", "a:0",
+        "-show_entries", "stream=sample_rate",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        file_path
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    try:
+        return int(res.stdout.strip())
+    except Exception:
+        return SAMPLE_RATE  # قيمة احتياطية أخيرة لو فشلت القراءة
+
 async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="-10%"):
     # تنظيف الرموز الخاصة مع الإبقاء على علامات الترقيم الطبيعية للحفاظ على نبرة الإلقاء
     clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|!]', ' ', str(text))
@@ -72,7 +88,9 @@ def apply_vocal_dsp(input_path, output_path, dsp_config):
         pitch_filter = f"rubberband=pitch={pitch_ratio:.6f}:formant=preserved:pitchq=quality"
     elif abs(pitch_semitones) > 0.001:
         # شبكة أمان: لو rubberband مش متاح في بيئة التشغيل
-        resample_rate = int(SAMPLE_RATE * pitch_ratio)
+        # تصحيح الثغرة: نستخدم معدل العينة الحقيقي للملف المدخل، مش رقم ثابت مفترض
+        native_rate = _get_native_sample_rate(input_path)
+        resample_rate = int(native_rate * pitch_ratio)
         pitch_filter = (
             f"asetrate={resample_rate},aresample={SAMPLE_RATE},"
             f"atempo={1.0 / pitch_ratio:.4f}"

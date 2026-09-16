@@ -20,7 +20,8 @@ def get_audio_duration(file_path):
     except Exception:
         return 2.0
 
-async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="+0%"):
+async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="-10%"):
+    # تنظيف الرموز الخاصة مع الإبقاء على علامات الترقيم الطبيعية للحفاظ على نبرة الإلقاء
     clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|!]', ' ', str(text))
     clean = " ".join(clean.split()).strip()
     words = []
@@ -52,7 +53,9 @@ async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="+0%"):
 
 def apply_vocal_dsp(input_path, output_path, dsp_config):
     pitch_semitones = float(dsp_config.get("pitch_shift", 0.0))
-    chest_gain = float(dsp_config.get("chest_eq_gain", 2.5))
+    chest_gain = float(dsp_config.get("chest_eq_gain", 3.0))
+    # حل مشكلة الحدة القاتلة: قراءة قيمة presence من الشخصية مباشرة (قيم سالبة تكسر الحدة)
+    presence_gain = float(dsp_config.get("presence_eq_gain", -3.0))
 
     pitch_ratio = 2.0 ** (pitch_semitones / 12.0)
     resample_rate = int(SAMPLE_RATE * pitch_ratio)
@@ -62,9 +65,9 @@ def apply_vocal_dsp(input_path, output_path, dsp_config):
         f"aresample={SAMPLE_RATE}",
         f"atempo={1.0 / pitch_ratio:.4f}",
         "highpass=f=80",
-        f"equalizer=f=180:t=q:w=1.2:g={chest_gain}",
-        "equalizer=f=3200:t=q:w=1.5:g=2.8",
-        "compand=attacks=0.02:decays=0.15:points=-80/-80|-35/-18|-10/-8|0/-3:gain=1.5"
+        f"equalizer=f=200:t=q:w=1.2:g={chest_gain}",
+        f"equalizer=f=3500:t=q:w=1.8:g={presence_gain}",
+        "compand=attacks=0.02:decays=0.15:points=-80/-80|-35/-18|-10/-8|0/-3:gain=1.0"
     ]
 
     cmd = [
@@ -73,7 +76,7 @@ def apply_vocal_dsp(input_path, output_path, dsp_config):
         "-af", ",".join(filters),
         "-ar", str(SAMPLE_RATE),
         "-c:a", "libmp3lame",
-        "-q:a", "2",
+        "-q:a", "3",
         output_path
     ]
     subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
@@ -84,8 +87,8 @@ async def build_complete_voiceover(content_data, persona):
     voice_model = voice_config.get("model", "en-GB-RyanNeural")
     dsp_config = voice_config.get("dsp", {})
 
-    # إبطاء سرعة الصوت بنسبة 50%
-    SPEECH_RATE = "-30%"
+    # سرعة متزنة ومريحة تسمح بظهور نبرة ولهجة كل معلم دون مط الفونيمات
+    SPEECH_RATE = "-10%"
 
     sections = [
         ("hook", content_data.get("spoken_hook", ""), SPEECH_RATE),
@@ -99,8 +102,8 @@ async def build_complete_voiceover(content_data, persona):
     current_time = 0.35
     processed_files = []
 
-    # ضبط فاصل الصمت على ثانية كاملة (1.0s)
-    pause_duration = 1.0
+    # فاصل الصمت المعرفي بين الخطوات (0.8 ثانية)
+    pause_duration = 0.8
     silence_file = "silence_pause.mp3"
     subprocess.run(
         ["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SAMPLE_RATE}:cl=mono", "-t", str(pause_duration), "-c:a", "libmp3lame", silence_file],
@@ -115,7 +118,10 @@ async def build_complete_voiceover(content_data, persona):
 
         words, raw_dur, clean_txt = await synthesize_raw_chunk(script_text, voice_model, raw_file, rate=rate_val)
         apply_vocal_dsp(raw_file, dsp_file, dsp_config)
-        dur = get_audio_duration(dsp_file)
+        dsp_dur = get_audio_duration(dsp_file)
+
+        # حل المشكلة 2 من التقرير (Rescaling): مزامنة توقيتات الكلمات مع مدة الصوت بعد الـ DSP
+        time_scale = (dsp_dur / raw_dur) if raw_dur > 0 else 1.0
 
         processed_files.append(dsp_file)
         concat_inputs.append(dsp_file)
@@ -124,13 +130,13 @@ async def build_complete_voiceover(content_data, persona):
         if words:
             for w in words:
                 all_words.append({
-                    "start": round(w["start"] + current_time, 2),
-                    "end": round(w["end"] + current_time, 2),
+                    "start": round((w["start"] * time_scale) + current_time, 2),
+                    "end": round((w["end"] * time_scale) + current_time, 2),
                     "word": w["word"]
                 })
         else:
             w_list = clean_txt.split()
-            step_dur = dur / max(1, len(w_list))
+            step_dur = dsp_dur / max(1, len(w_list))
             for idx, wrd in enumerate(w_list):
                 all_words.append({
                     "start": round(current_time + (idx * step_dur), 2),
@@ -138,7 +144,7 @@ async def build_complete_voiceover(content_data, persona):
                     "word": wrd
                 })
 
-        current_time += dur
+        current_time += dsp_dur
         if i < len(sections) - 1:
             concat_inputs.append(silence_file)
             current_time += pause_duration
@@ -151,13 +157,14 @@ async def build_complete_voiceover(content_data, persona):
     concat_filter = f"".join([f"[{j}:a]" for j in range(n)]) + f"concat=n={n}:v=0:a=1[v_raw];"
     
     total_dur = current_time
-    fade_start = max(0.1, round(total_dur - 0.3, 2))
+    fade_start = max(0.1, round(total_dur - 0.25, 2))
 
+    # ترتيب الفلاتر السليم: الفيد أوت أولاً ثم الـ limiter مع روم نويز متزن (OBS #4 و #10)
     final_audio_filter = (
         f"{concat_filter}"
-        f"anoisesrc=d={total_dur + 0.2}:c=pink:r={SAMPLE_RATE}:a=0.0008,lowpass=f=1200[room];"
+        f"anoisesrc=d={total_dur + 0.2}:c=pink:r={SAMPLE_RATE}:a=0.002,lowpass=f=1200[room];"
         f"[v_raw][room]amix=inputs=2:duration=first:dropout_transition=0[mixed];"
-        f"[mixed]alimiter=limit=-1.5dB,afade=t=out:st={fade_start}:d=0.3[outa]"
+        f"[mixed]afade=t=out:st={fade_start}:d=0.25,alimiter=limit=-1.5dB[outa]"
     )
 
     concat_cmd = [
@@ -166,7 +173,7 @@ async def build_complete_voiceover(content_data, persona):
         "-filter_complex", final_audio_filter,
         "-map", "[outa]",
         "-c:a", "libmp3lame",
-        "-q:a", "2",
+        "-q:a", "3",
         "voice.mp3"
     ]
     subprocess.run(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)

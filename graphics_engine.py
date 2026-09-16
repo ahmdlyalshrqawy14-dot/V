@@ -18,13 +18,12 @@ def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
     canvas = Image.new("RGBA", (sw, sh), "#110e0c")
     draw = ImageDraw.Draw(canvas)
 
-    top_color = hex_to_rgb(theme.get("board_top", "#10231d"))
-    bottom_color = hex_to_rgb(theme.get("board_bottom", "#081310"))
+    # حل المشكلة 6 و15: تحسين تباين وتشبع ألوان السبورة لتكون حية وجذابة
+    top_color = hex_to_rgb(theme.get("board_top", "#133127"))
+    bottom_color = hex_to_rgb(theme.get("board_bottom", "#0a1b15"))
 
     # Premium Walnut outer frame
     draw.rounded_rectangle([30, 50, sw - 30, sh - 50], radius=36, fill="#231710", outline="#3a271b", width=6)
-    
-    # حل المشكلة 18: حذف الخط الذهبي [70, 90] المتزاحم بصرياً مع إطار اللوح البني [30, 50]
     
     # Matte Slate Canvas Surface
     gx0, gy0, gx1, gy1 = 80, 100, sw - 80, sh - 100
@@ -36,9 +35,10 @@ def render_board(theme, filename="chalkboard.png", mirror_ledge=True):
         b = int(top_color[2] + (bottom_color[2] - top_color[2]) * ratio)
         draw.line([(gx0, gy0 + y), (gx1, gy0 + y)], fill=(r, g, b), width=2)
 
-    # Floating chalk ledge positioned at YouTube Shorts safe boundary (Y ≈ 1440px on 1920 canvas)
+    # حل المشكلة 18: تقصير المسند ليبدأ بعد موقع المعلم (يمين الشاشة) لمنع قطعه لعنق أو كتف المعلم
     ledge_y = int(1440 * 2)
-    ledge_left, ledge_right = 160, sw - 160
+    ledge_left = int(580 * 2) if mirror_ledge else 160
+    ledge_right = sw - 160 if mirror_ledge else int(sw - 580 * 2)
     
     # Ledge Drop-shadow
     draw.rounded_rectangle([ledge_left + 8, ledge_y + 12, ledge_right - 8, ledge_y + 44], radius=10, fill="#05070a")
@@ -82,14 +82,13 @@ def render_teacher_poses(persona):
         dr = ImageDraw.Draw(img)
 
         # 1. Pointing Arm with Modern Telescopic Pointer
-        # حل المشكلة 5: توجيه العصا والمؤشر بدقة نحو نص الحساب في منتصف اللوح بدلاً من الفراغ العلوي
+        # حل المشكلة 11 و36: توجيه زاوية العصا والمؤشر للأعلى نحو نصوص الحسابات بدلاً من الفراغ
         if is_pointing:
-            dr.line([(600, 680), (780, 500)], fill=suit_color, width=54)
-            dr.ellipse([(750, 470), (810, 530)], fill=skin_tone)
-            # المؤشر يمتد أفقياً باتجاه معادلة الخطوات
-            dr.line([(780, 500), (940, 340)], fill="#e2e8f0", width=10)
-            dr.line([(900, 380), (940, 340)], fill="#ffd700", width=12)
-            dr.ellipse([(928, 328), (952, 352)], fill="#ffd700")
+            dr.line([(580, 640), (740, 480)], fill=suit_color, width=54)
+            dr.ellipse([(710, 450), (770, 510)], fill=skin_tone)
+            dr.line([(740, 480), (910, 160)], fill="#e2e8f0", width=10)
+            dr.line([(860, 240), (910, 160)], fill="#ffd700", width=12)
+            dr.ellipse([(898, 148), (922, 172)], fill="#ffd700")
 
         # 2. Thinking Arm (Pensive chin rest)
         if thinking and not is_pointing:
@@ -153,12 +152,12 @@ def render_teacher_poses(persona):
             dr.ellipse([(472, 372 + py_off), (480, 380 + py_off)], fill="#ffffff")
             dr.ellipse([(592, 372 + py_off), (600, 380 + py_off)], fill="#ffffff")
 
-        # 10. Expressive Mouth
+        # 10. Expressive Mouth (حل المشكلة 23: مظهر أكثر انسيابية وراحة للفم)
         if mouth_open:
-            dr.rounded_rectangle([515, 460, 565, 500], radius=16, fill="#7f1d1d")
-            dr.rounded_rectangle([523, 462, 557, 474], radius=6, fill="#ffffff")
+            dr.rounded_rectangle([514, 458, 566, 498], radius=14, fill="#7f1d1d")
+            dr.rounded_rectangle([522, 460, 558, 472], radius=4, fill="#ffffff")
         else:
-            dr.line([(518, 476), (562, 476)], fill="#991b1b", width=6)
+            dr.rounded_rectangle([518, 474, 562, 480], radius=3, fill="#991b1b")
 
         return img.resize((480, 520), Image.Resampling.LANCZOS)
 

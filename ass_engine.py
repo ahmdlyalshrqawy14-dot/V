@@ -32,8 +32,8 @@ def to_ass_time(sec):
 # ============================================================
 GOLD_ASS = "&H0000D7FF"
 
-# كل دوال المساعدة بقيمها الأصلية دون تعديل
-def build_typewriter_clip(marginv, fontsize, playresx=1080, marginl=80, marginr=160, reveal_ms=500):
+# حل المشكلة 19: تعديل marginr إلى 240 لإبقاء تأثير المسح والظهور داخل منطقة الأمان
+def build_typewriter_clip(marginv, fontsize, playresx=1080, marginl=80, marginr=240, reveal_ms=500):
     x1 = marginl
     x2_full = playresx - marginr
     y1 = marginv
@@ -83,9 +83,7 @@ def generate_master_ass(content_data, timestamps, words_data, persona, font_name
     t_res = timestamps.get("result", total_duration * 0.75)
 
     # Styles:
-    # حل المشكلة 17: تكبير حجم خط اسم المعلم في Watermark من 22 إلى 38 مع Bold
-    # حل المشكلة 16: تغيير لون الكابشنز للأصفر الساطع مع Outline سميك لزيادة التباين
-    # حل المشكلة 3: إعادة توزيع MarginV للبطاقات (380, 580, 780, 980) لمنع التكدس وملء الفراغ الأوسط
+    # حل المشكلة 19: تعديل MarginR لجميع الستايلات إلى 240 بكسل لحمايتها من أزرار تيك توك وريلز
     ass_header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
@@ -95,13 +93,13 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Title,{font_name},44,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,2,8,80,160,200,1
-Style: Watermark,{font_name},38,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,80,160,250,1
-Style: Hook,{font_name},48,{c_hook},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,160,380,1
-Style: Step1,{font_name},44,{c_step1},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,160,580,1
-Style: Step2,{font_name},44,{c_step2},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,160,780,1
-Style: Result,{font_name},52,{c_res},{GOLD_ASS},&H00064E3B,&H00064E3B,-1,0,0,0,100,100,0,0,3,16,0,8,80,160,980,1
-Style: Captions,{font_name},44,&H0000E5FF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,1,4,2,2,80,160,650,1
+Style: Title,{font_name},44,&H008AE0FE,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,2,8,80,240,200,1
+Style: Watermark,{font_name},38,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,7,80,240,250,1
+Style: Hook,{font_name},48,{c_hook},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,380,1
+Style: Step1,{font_name},44,{c_step1},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,580,1
+Style: Step2,{font_name},44,{c_step2},&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,3,8,80,240,780,1
+Style: Result,{font_name},52,{c_res},{GOLD_ASS},&H00064E3B,&H00064E3B,-1,0,0,0,100,100,0,0,3,16,0,8,80,240,980,1
+Style: Captions,{font_name},44,&H0000E5FF,&H000000FF,&H00000000,&HA0000000,-1,0,0,0,100,100,0,0,1,4,2,2,80,240,650,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -119,23 +117,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         (t_s2, "Step2", 780, 44, content_data.get('step_2', '')),
     ]
     for t_start, style_name, marginv, fontsize, text in card_specs:
-        typewriter = build_typewriter_clip(marginv, fontsize, reveal_ms=500)
-        pulse = build_rhythmic_pulse(start_ms=550, cycles=4, period_ms=280, amp=5)
-        fx = f"{{\\fad(180,0){typewriter}{pulse}}}"
-        events.append(f"Dialogue: 1,{to_ass_time(t_start)},{dur_str},{style_name},,0,0,0,,{fx}{escape_ass(text)}")
+        clean_text = escape_ass(text)
+        # حل المشكلة 7: منع رسم عناصر فارغة
+        if clean_text:
+            typewriter = build_typewriter_clip(marginv, fontsize, reveal_ms=500)
+            pulse = build_rhythmic_pulse(start_ms=550, cycles=4, period_ms=280, amp=5)
+            fx = f"{{\\fad(180,0){typewriter}{pulse}}}"
+            events.append(f"Dialogue: 1,{to_ass_time(t_start)},{dur_str},{style_name},,0,0,0,,{fx}{clean_text}")
 
     # Final result reveal card
-    res_typewriter = build_typewriter_clip(980, 52, reveal_ms=400)
-    res_glow = build_reveal_glow(start_ms=0, peak_ms=240, end_ms=850, base_blur=1, peak_blur=6)
-    res_bounce = (
-        r"\t(0,140,\fscx120\fscy120)"
-        r"\t(140,280,\fscx96\fscy96)"
-        r"\t(280,400,\fscx106\fscy106)"
-        r"\t(400,520,\fscx100\fscy100)"
-    )
-    res_pulse = build_rhythmic_pulse(start_ms=700, cycles=3, period_ms=300, amp=4)
-    result_fx = f"{{\\fad(160,0){res_typewriter}{res_glow}{res_bounce}{res_pulse}}}"
-    events.append(f"Dialogue: 1,{to_ass_time(t_res)},{dur_str},Result,,0,0,0,,{result_fx}{escape_ass(content_data.get('result_text', ''))}")
+    clean_res = escape_ass(content_data.get('result_text', ''))
+    # حل المشكلة 7: منع رسم صندوق النتيجة (Chip) فارغاً إذا لم يتوفر نص
+    if clean_res:
+        res_typewriter = build_typewriter_clip(980, 52, reveal_ms=400)
+        res_glow = build_reveal_glow(start_ms=0, peak_ms=240, end_ms=850, base_blur=1, peak_blur=6)
+        res_bounce = (
+            r"\t(0,140,\fscx120\fscy120)"
+            r"\t(140,280,\fscx96\fscy96)"
+            r"\t(280,400,\fscx106\fscy106)"
+            r"\t(400,520,\fscx100\fscy100)"
+        )
+        res_pulse = build_rhythmic_pulse(start_ms=700, cycles=3, period_ms=300, amp=4)
+        result_fx = f"{{\\fad(160,0){res_typewriter}{res_glow}{res_bounce}{res_pulse}}}"
+        events.append(f"Dialogue: 1,{to_ass_time(t_res)},{dur_str},Result,,0,0,0,,{result_fx}{clean_res}")
 
     # حل المشكلة 8: منع تداخل التوقيت لمنع الجليتش عند ثانية 6.5
     if words_data:
@@ -146,7 +150,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             start_sec = chunk[0]["start"]
             end_sec = chunk[-1]["end"] + 0.10
             
-            # قيد يمنع أي تداخل زمني مع المقطع التالي
             if i + chunk_size < len(words_data):
                 next_start = words_data[i + chunk_size]["start"]
                 if end_sec > next_start:

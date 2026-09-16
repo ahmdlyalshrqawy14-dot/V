@@ -71,16 +71,6 @@ POPULAR_TRACKS = [
         "url": "https://archive.org/download/elektronomia-sky-high-ncs-release_202403/Elektronomia%20-%20Sky%20High%20%5BNCS%20Release%5D.mp3"
     },
     {
-        "name": "advertime",
-        "start": 0,
-        "url": "https://archive.org/download/happy-background-music/Advertime.mp3"
-    },
-    {
-        "name": "city_sunshine",
-        "start": 0,
-        "url": "https://archive.org/download/happy-background-music/City%20Sunshine.mp3"
-    },
-    {
         "name": "invincible_deaf_kev",
         "start": 50,
         "url": "https://archive.org/download/deaf-kev-invincible-ncs-release/DEAF%20KEV%20-%20Invincible%20%5BNCS%20Release%5D.mp3"
@@ -322,7 +312,7 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
 
     af = (
         "[1:a]volume=1.0[a_voice]; "
-        "[8:a]volume=0.25[a_bgm]; "
+        "[8:a]volume=0.38[a_bgm]; "
         "[a_voice][a_bgm]amix=inputs=2:duration=longest:dropout_transition=2:normalize=0[outa]"
     )
 

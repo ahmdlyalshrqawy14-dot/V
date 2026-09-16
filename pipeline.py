@@ -155,7 +155,7 @@ def generate_lesson_script(lesson_info, persona):
     teacher_name = persona.get("name", "Professor")
 
     print(f"[GEMINI] Generating lesson script for '{topic}'...")
-        prompt = f"""
+    prompt = f"""
     You are {teacher_name}, an elite viral math educator on TikTok and YouTube Shorts.
     Create an ultra-retaining 25 to 30-second complete math hack breakdown.
 
@@ -198,7 +198,6 @@ def generate_lesson_script(lesson_info, persona):
     }}
     """
 
-
     models = [
         "gemini-3.8-flash",
         "gemini-3.7-flash",
@@ -219,17 +218,22 @@ def generate_lesson_script(lesson_info, persona):
             with urllib.request.urlopen(req, timeout=45) as resp:
                 res_data = json.loads(resp.read().decode("utf-8"))
                 raw_text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                if raw_text.startswith("```json"): raw_text = raw_text[7:]
-                if raw_text.startswith("```"): raw_text = raw_text[3:]
-                if raw_text.endswith("```"): raw_text = raw_text[:-3]
+                if raw_text.startswith("```json"):
+                    raw_text = raw_text[7:]
+                if raw_text.startswith("```"):
+                    raw_text = raw_text[3:]
+                if raw_text.endswith("```"):
+                    raw_text = raw_text[:-3]
                 parsed = json.loads(raw_text.strip())
                 if "spoken_hook" in parsed and "step_1" in parsed:
                     for k, v in parsed.items():
                         if isinstance(v, str):
                             parsed[k] = v.replace("|", "").replace("!", "").strip()
 
-                    if not parsed.get("step_1"): parsed["step_1"] = "1. First step"
-                    if not parsed.get("step_2"): parsed["step_2"] = "2. Second step"
+                    if not parsed.get("step_1"):
+                        parsed["step_1"] = "1. First step"
+                    if not parsed.get("step_2"):
+                        parsed["step_2"] = "2. Second step"
 
                     res_str = parsed.get("result_text", "")
                     if not res_str.startswith("3."):

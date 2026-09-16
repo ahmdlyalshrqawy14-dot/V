@@ -88,7 +88,7 @@ async def build_complete_voiceover(content_data, persona):
     dsp_config = voice_config.get("dsp", {})
 
     # سرعة متزنة ومريحة تسمح بظهور نبرة ولهجة كل معلم دون مط الفونيمات
-    SPEECH_RATE = "-10%"
+    SPEECH_RATE = "-25%"
 
     sections = [
         ("hook", content_data.get("spoken_hook", ""), SPEECH_RATE),

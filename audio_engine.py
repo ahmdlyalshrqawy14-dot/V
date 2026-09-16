@@ -20,16 +20,15 @@ def get_audio_duration(file_path):
     except Exception:
         return 2.0
 
-async def synthesize_raw_chunk(text, voice_model, raw_output_path):
-    # حل المشكلة 2: حذف حرف | الزائد المسبب للمربعات مع علامات التنسيق
-    clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|]', ' ', str(text))
+# حل المشاكل: (4) حذف ! لمنع خطأ المضروب، (7 و26 و28 و42) دعم سرعات متغيرة لكل مقطع
+async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="+0%"):
+    clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|!]', ' ', str(text))
     clean = " ".join(clean.split()).strip()
     words = []
     
     for attempt in range(3):
         try:
-            # حل المشكلة 14: تبطيء صوت الـ TTS بنسبة -11%
-            comm = edge_tts.Communicate(clean, voice_model, rate="-11%")
+            comm = edge_tts.Communicate(clean, voice_model, rate=rate)
             with open(raw_output_path, "wb") as f:
                 async for chunk in comm.stream():
                     if chunk["type"] == "audio":
@@ -52,11 +51,10 @@ async def synthesize_raw_chunk(text, voice_model, raw_output_path):
     dur = get_audio_duration(raw_output_path)
     return words, dur, clean
 
+# حل المشكلة 24: هندسة صوتية احترافية مع فلترة الترددات الخفيضة وإبراز نقاء ودفء الصوت
 def apply_vocal_dsp(input_path, output_path, dsp_config):
-    # القيم الأصلية بالكامل دون أي تعديل
     pitch_semitones = float(dsp_config.get("pitch_shift", 0.0))
-    chest_gain = float(dsp_config.get("chest_eq_gain", 3.0))
-    presence_gain = float(dsp_config.get("presence_eq_gain", -3.0))
+    chest_gain = float(dsp_config.get("chest_eq_gain", 2.5))
 
     pitch_ratio = 2.0 ** (pitch_semitones / 12.0)
     resample_rate = int(SAMPLE_RATE * pitch_ratio)
@@ -65,9 +63,10 @@ def apply_vocal_dsp(input_path, output_path, dsp_config):
         f"asetrate={resample_rate}",
         f"aresample={SAMPLE_RATE}",
         f"atempo={1.0 / pitch_ratio:.4f}",
-        f"equalizer=f=160:t=q:w=1.4:g={chest_gain}",
-        f"equalizer=f=8000:t=q:w=2.0:g={presence_gain}",
-        "compand=attacks=0.02:decays=0.2:points=-80/-80|-35/-20|-10/-10|0/-5:gain=2"
+        "highpass=f=80",
+        f"equalizer=f=180:t=q:w=1.2:g={chest_gain}",
+        "equalizer=f=3200:t=q:w=1.5:g=2.8",
+        "compand=attacks=0.02:decays=0.15:points=-80/-80|-35/-18|-10/-8|0/-3:gain=1.5"
     ]
 
     cmd = [
@@ -87,11 +86,12 @@ async def build_complete_voiceover(content_data, persona):
     voice_model = voice_config.get("model", "en-GB-RyanNeural")
     dsp_config = voice_config.get("dsp", {})
 
+    # حل المشاكل: (10 و28) خطاف سريع ومحفز، (39 و42) خطوات متزنة وواضحة، (26) نتيجة مفعمة بالحماس
     sections = [
-        ("hook", content_data.get("spoken_hook", "")),
-        ("step1", content_data.get("spoken_step1", "")),
-        ("step2", content_data.get("spoken_step2", "")),
-        ("result", content_data.get("spoken_result", ""))
+        ("hook", content_data.get("spoken_hook", ""), "+3%"),
+        ("step1", content_data.get("spoken_step1", ""), "-2%"),
+        ("step2", content_data.get("spoken_step2", ""), "-2%"),
+        ("result", content_data.get("spoken_result", ""), "+2%")
     ]
 
     all_words = []
@@ -99,20 +99,21 @@ async def build_complete_voiceover(content_data, persona):
     current_time = 0.35
     processed_files = []
 
-    # توليد ملف صمت حقيقي لمنع ترحيل الترجمة
+    # حل المشاكل 29 و43: فاصل معرفي متزن (0.75 ثانية) يتيح للمشاهد استيعاب الحسابات ذهنياً
+    pause_duration = 0.75
     silence_file = "silence_pause.mp3"
     subprocess.run(
-        ["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SAMPLE_RATE}:cl=mono", "-t", "0.85", "-c:a", "libmp3lame", silence_file],
+        ["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SAMPLE_RATE}:cl=mono", "-t", str(pause_duration), "-c:a", "libmp3lame", silence_file],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True
     )
 
     concat_inputs = []
 
-    for i, (key, script_text) in enumerate(sections):
+    for i, (key, script_text, rate_val) in enumerate(sections):
         raw_file = f"raw_{key}.mp3"
         dsp_file = f"dsp_{key}.mp3"
 
-        words, raw_dur, clean_txt = await synthesize_raw_chunk(script_text, voice_model, raw_file)
+        words, raw_dur, clean_txt = await synthesize_raw_chunk(script_text, voice_model, raw_file, rate=rate_val)
         apply_vocal_dsp(raw_file, dsp_file, dsp_config)
         dur = get_audio_duration(dsp_file)
 
@@ -137,11 +138,10 @@ async def build_complete_voiceover(content_data, persona):
                     "word": wrd
                 })
 
-        # حل المشكلة 15: زيادة الفاصل بين الخطوات من 0.25 ثانية إلى 0.85 ثانية
         current_time += dur
         if i < len(sections) - 1:
             concat_inputs.append(silence_file)
-            current_time += 0.85
+            current_time += pause_duration
 
     input_args = []
     for f in concat_inputs:
@@ -151,14 +151,14 @@ async def build_complete_voiceover(content_data, persona):
     concat_filter = f"".join([f"[{j}:a]" for j in range(n)]) + f"concat=n={n}:v=0:a=1[v_raw];"
     
     total_dur = current_time
-    fade_start = max(0.1, round(total_dur - 0.7, 2))
+    # حل المشاكل 25 و31: تلاشٍ ناعم وقصير يمنع الانقطاع المبتور دون إهدار وقت ميت
+    fade_start = max(0.1, round(total_dur - 0.3, 2))
 
-    # حل المشاكل: (12) دمج Room tone خافت، (11) منع وصول الصوت لـ 0dB، (10) عمل Fade out
     final_audio_filter = (
         f"{concat_filter}"
-        f"anoisesrc=d={total_dur + 0.5}:c=pink:r={SAMPLE_RATE}:a=0.0008,lowpass=f=1200[room];"
+        f"anoisesrc=d={total_dur + 0.2}:c=pink:r={SAMPLE_RATE}:a=0.0008,lowpass=f=1200[room];"
         f"[v_raw][room]amix=inputs=2:duration=first:dropout_transition=0[mixed];"
-        f"[mixed]alimiter=limit=-1.5dB,afade=t=out:st={fade_start}:d=0.7[outa]"
+        f"[mixed]alimiter=limit=-1.5dB,afade=t=out:st={fade_start}:d=0.3[outa]"
     )
 
     concat_cmd = [
@@ -179,7 +179,8 @@ async def build_complete_voiceover(content_data, persona):
         if os.path.exists(raw_f): os.remove(raw_f)
     if os.path.exists(silence_file): os.remove(silence_file)
 
-    total_dur = get_audio_duration("voice.mp3") + 0.4
+    # حل المشاكل 3 و31 و44: إزالة الوقت الميت في نهاية ملف الصوت
+    total_dur = get_audio_duration("voice.mp3") + 0.05
     timestamps["total"] = round(total_dur, 2)
     print(f"[AUDIO] Voiceover synthesized successfully ({timestamps['total']:.2f}s).")
 

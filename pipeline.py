@@ -311,8 +311,8 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     )
 
     af = (
-        "[1:a]volume=1.5[a_voice]; "
-        "[8:a]volume=0.29[a_bgm]; "
+        "[1:a]volume=1.6[a_voice]; "
+        "[8:a]volume=0.25[a_bgm]; "
         "[a_voice][a_bgm]amix=inputs=2:duration=longest:dropout_transition=2:normalize=0[outa]"
     )
 

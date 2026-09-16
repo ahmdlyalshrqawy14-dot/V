@@ -155,26 +155,32 @@ def generate_lesson_script(lesson_info, persona):
     teacher_name = persona.get("name", "Professor")
 
     print(f"[GEMINI] Generating lesson script for '{topic}'...")
-    prompt = f"""
+        prompt = f"""
     You are {teacher_name}, an elite viral math educator on TikTok and YouTube Shorts.
-    Create an ultra-retaining 20 to 25-second math hack.
+    Create an ultra-retaining 25 to 30-second complete math hack breakdown.
 
     LESSON FOCUS:
     - Topic: {topic}
     - Problem Example: {example}
 
-    SCRIPTING RULES:
-    1. Hook (spoken_hook): Immediate punchy challenge or question under 8-10 words. No fluff or greetings (e.g. 'Can you square 31 in 3 seconds?').
-    2. Step 1 (spoken_step1): Reveal the general mental formula or base calculation clearly (8-12 words).
-    3. Step 2 (spoken_step2): Execute the next quick mental step (8-12 words).
-    4. Result (spoken_result): Big reveal followed by an interactive challenge question asking viewers to solve a similar number in the comments (10-14 words).
+    WORD COUNT AND PACING RULES (TARGET: 65-75 TOTAL SPOKEN WORDS FOR 25-30 SECONDS):
+    1. Hook (spoken_hook): Immediate punchy challenge, question, and motivation (12-16 words).
+       Example: 'Stop doing long math! Can you square thirty-one in your head in just three seconds?'
+    2. Step 1 (spoken_step1): Detailed explanation of the baseline mental trick and first calculation (18-22 words).
+       Example: 'First, round down to thirty and square it to get nine hundred. Keep that big number locked in your head!'
+    3. Step 2 (spoken_step2): Guiding the viewer through the middle calculation and combining the values (18-22 words).
+       Example: 'Next, double thirty to get sixty, and add it to nine hundred, giving us nine hundred and sixty!'
+    4. Result (spoken_result): The final touch, the reveal, and a direct challenge to the audience for comments (16-20 words).
+       Example: 'Finally, just add one to get nine hundred sixty-one! Now, can you calculate forty-one? Tell me below!'
+
+    FORMATTING RULES:
     5. Write out all spoken numbers as plain English words (e.g., 'forty-three', 'eleven', 'plus').
     6. Absolutely NO LaTeX or raw math syntax in spoken fields.
     7. Topic vs Hook: 'title' is the general category name. 'hook_text' MUST be the exact problem challenge (e.g., '{example} in 3 Seconds') and must NOT repeat the wording of 'title'.
-    8. Visual Steps: 'step_1' and 'step_2' must show actual math calculation numbers (e.g., '1. 30² = 900'), NOT long descriptive text or overcrowded multi-step lines. Keep them clean and bite-sized.
+    8. Visual Steps: 'step_1' and 'step_2' must show actual concise math calculation numbers (e.g., '1. 30² = 900'), NOT long descriptive text.
     9. Step Numbering: 'result_text' MUST start with '3. Final Answer = ' to maintain sequence.
     10. Do NOT use the pipe symbol '|' anywhere.
-    11. CRITICAL: NEVER include exclamation marks '!' anywhere in equations or results (prevents confusing 961 as 961 factorial).
+    11. CRITICAL: NEVER include exclamation marks '!' in equations or results.
 
     Output strictly valid JSON with this exact schema:
     {{
@@ -191,6 +197,7 @@ def generate_lesson_script(lesson_info, persona):
       "spoken_result": "Spoken result text and comment challenge here."
     }}
     """
+
 
     models = [
         "gemini-3.8-flash",

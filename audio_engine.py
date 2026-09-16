@@ -85,7 +85,7 @@ async def build_complete_voiceover(content_data, persona):
     dsp_config = voice_config.get("dsp", {})
 
     # إبطاء سرعة الصوت بنسبة 50%
-    SPEECH_RATE = "-50%"
+    SPEECH_RATE = "-30%"
 
     sections = [
         ("hook", content_data.get("spoken_hook", ""), SPEECH_RATE),

@@ -2,1505 +2,1005 @@
   "series_id": "speed_math",
   "series_title": "Speed Mental Math Hacks",
   "lessons": [
-    {
-      "lesson_id": 1,
-      "topic": "Multiply a two-digit number by 11 by adding its digits and carrying.",
-      "example": "43 x 11"
-    },
-    {
-      "lesson_id": 2,
-      "topic": "Square any number ending in 5 by multiplying the tens digit by the next integer and appending 25.",
-      "example": "35^2"
-    },
-    {
-      "lesson_id": 3,
-      "topic": "Multiply by 5 by dividing by 2 and multiplying by 10.",
-      "example": "48 x 5"
-    },
-    {
-      "lesson_id": 4,
-      "topic": "Multiply by 9 by multiplying by 10 and subtracting the original number.",
-      "example": "47 x 9"
-    },
-    {
-      "lesson_id": 5,
-      "topic": "Multiply by 99 by multiplying by 100 and subtracting the original number.",
-      "example": "47 x 99"
-    },
-    {
-      "lesson_id": 6,
-      "topic": "Multiply by 15 by multiplying by 10 and adding half of that result.",
-      "example": "24 x 15"
-    },
-    {
-      "lesson_id": 7,
-      "topic": "Multiply by 25 by dividing by 4 and multiplying by 100.",
-      "example": "48 x 25"
-    },
-    {
-      "lesson_id": 8,
-      "topic": "Square a two-digit number near 100 using base 100: add the difference to 100, and append the square of the difference.",
-      "example": "98^2"
-    },
-    {
-      "lesson_id": 9,
-      "topic": "Multiply two-digit numbers near 100 using base 100: cross-add differences, then multiply differences.",
-      "example": "97 x 96"
-    },
-    {
-      "lesson_id": 10,
-      "topic": "Multiply two-digit numbers near 50 using base 50: add cross differences to 50, then multiply excesses.",
-      "example": "47 x 48"
-    },
-    {
-      "lesson_id": 11,
-      "topic": "Square numbers near 50 using base 50: add excess to 25, multiply by 100, then add excess squared.",
-      "example": "52^2"
-    },
-    {
-      "lesson_id": 12,
-      "topic": "Multiply numbers with the same tens digit and ones digits summing to 10: multiply tens by next, append ones product.",
-      "example": "43 x 47"
-    },
-    {
-      "lesson_id": 13,
-      "topic": "Square numbers ending in 1 by using (a+1)^2 = a^2 + 2a + 1.",
-      "example": "31^2"
-    },
-    {
-      "lesson_id": 14,
-      "topic": "Square numbers ending in 9 by using (a-1)^2 = a^2 - 2a + 1.",
-      "example": "29^2"
-    },
-    {
-      "lesson_id": 15,
-      "topic": "Multiply by 12 by multiplying by 10 and adding double the original number.",
-      "example": "34 x 12"
-    },
-    {
-      "lesson_id": 16,
-      "topic": "Multiply by 6 by multiplying by 5 and adding the original number.",
-      "example": "47 x 6"
-    },
-    {
-      "lesson_id": 17,
-      "topic": "Multiply by 7 by multiplying by 5 and adding double the original number.",
-      "example": "48 x 7"
-    },
-    {
-      "lesson_id": 18,
-      "topic": "Multiply by 8 by doubling the number three times.",
-      "example": "37 x 8"
-    },
-    {
-      "lesson_id": 19,
-      "topic": "Multiply by 4 by doubling the number twice.",
-      "example": "63 x 4"
-    },
-    {
-      "lesson_id": 20,
-      "topic": "Divide by 5 by multiplying by 2 and dividing by 10.",
-      "example": "85 / 5"
-    },
-    {
-      "lesson_id": 21,
-      "topic": "Find 10% of any number by moving the decimal point one place left.",
-      "example": "10% of 240"
-    },
-    {
-      "lesson_id": 22,
-      "topic": "Find 5% of any number by taking half of 10%.",
-      "example": "5% of 240"
-    },
-    {
-      "lesson_id": 23,
-      "topic": "Find 15% of any number by adding 10% and 5%.",
-      "example": "15% of 80"
-    },
-    {
-      "lesson_id": 24,
-      "topic": "Find 20% of any number by dividing by 5 or doubling 10%.",
-      "example": "20% of 45"
-    },
-    {
-      "lesson_id": 25,
-      "topic": "Find 25% of any number by dividing by 4.",
-      "example": "25% of 68"
-    },
-    {
-      "lesson_id": 26,
-      "topic": "Find 50% of any number by dividing by 2.",
-      "example": "50% of 84"
-    },
-    {
-      "lesson_id": 27,
-      "topic": "Find 1% of any number by moving the decimal point two places left.",
-      "example": "1% of 300"
-    },
-    {
-      "lesson_id": 28,
-      "topic": "Find 2% of any number by doubling 1%.",
-      "example": "2% of 150"
-    },
-    {
-      "lesson_id": 29,
-      "topic": "Find 30% of any number by multiplying 10% by 3.",
-      "example": "30% of 90"
-    },
-    {
-      "lesson_id": 30,
-      "topic": "Find 40% of any number by multiplying 10% by 4.",
-      "example": "40% of 75"
-    },
-    {
-      "lesson_id": 31,
-      "topic": "Multiply by 101 by writing the two-digit number twice.",
-      "example": "43 x 101"
-    },
-    {
-      "lesson_id": 32,
-      "topic": "Multiply by 1001 by writing the number, then a zero, then the number again.",
-      "example": "27 x 1001"
-    },
-    {
-      "lesson_id": 33,
-      "topic": "Square numbers ending in 6 by using (a+1)^2 = a^2 + 2a + 1 where a ends in 5.",
-      "example": "46^2"
-    },
-    {
-      "lesson_id": 34,
-      "topic": "Square numbers ending in 4 by using (a-1)^2 = a^2 - 2a + 1 where a ends in 5.",
-      "example": "44^2"
-    },
-    {
-      "lesson_id": 35,
-      "topic": "Multiply by 37 by using 37 x 3 = 111, then multiply the remaining factor.",
-      "example": "37 x 18"
-    },
-    {
-      "lesson_id": 36,
-      "topic": "Use the finger trick for the 9 times table: bend the nth finger, count tens and ones.",
-      "example": "9 x 7"
-    },
-    {
-      "lesson_id": 37,
-      "topic": "Multiply a three-digit number by 11 by adding adjacent digits with carry.",
-      "example": "123 x 11"
-    },
-    {
-      "lesson_id": 38,
-      "topic": "Multiply by 111 by writing the number, then adding shifted copies.",
-      "example": "23 x 111"
-    },
-    {
-      "lesson_id": 39,
-      "topic": "Square numbers ending in 0 by squaring the non-zero part and appending two zeros.",
-      "example": "70^2"
-    },
-    {
-      "lesson_id": 40,
-      "topic": "Multiply two numbers differing by 2 by squaring their average and subtracting 1.",
-      "example": "12 x 14"
-    },
-    {
-      "lesson_id": 41,
-      "topic": "Multiply two numbers differing by 4 by squaring their average and subtracting 4.",
-      "example": "11 x 15"
-    },
-    {
-      "lesson_id": 42,
-      "topic": "Multiply two numbers near 1000 using base 1000: cross-add differences, then multiply differences.",
-      "example": "998 x 997"
-    },
-    {
-      "lesson_id": 43,
-      "topic": "Square numbers near 1000 using (1000 ± d)^2 = 1,000,000 ± 2000d + d^2.",
-      "example": "1002^2"
-    },
-    {
-      "lesson_id": 44,
-      "topic": "Multiply by 75 by dividing by 4 and multiplying by 300.",
-      "example": "48 x 75"
-    },
-    {
-      "lesson_id": 45,
-      "topic": "Multiply by 125 by dividing by 8 and multiplying by 1000.",
-      "example": "32 x 125"
-    },
-    {
-      "lesson_id": 46,
-      "topic": "Multiply by 625 by dividing by 16 and multiplying by 10000.",
-      "example": "16 x 625"
-    },
-    {
-      "lesson_id": 47,
-      "topic": "Divide by 25 by multiplying by 4 and dividing by 100.",
-      "example": "150 / 25"
-    },
-    {
-      "lesson_id": 48,
-      "topic": "Square numbers ending in 2 by using (a+2)^2 = a^2 + 4a + 4.",
-      "example": "32^2"
-    },
-    {
-      "lesson_id": 49,
-      "topic": "Square numbers ending in 8 by using (a-2)^2 = a^2 - 4a + 4.",
-      "example": "38^2"
-    },
-    {
-      "lesson_id": 50,
-      "topic": "Find 33% of a number by dividing by 3 (approximate for 33.33%).",
-      "example": "33% of 90"
-    },
-    {
-      "lesson_id": 51,
-      "topic": "Multiply two numbers where tens digits sum to 10 and ones digits are the same: multiply tens, add the ones digit, then append ones squared.",
-      "example": "43 x 63"
-    },
-    {
-      "lesson_id": 52,
-      "topic": "Square any two-digit number using (a+b)^2 = a^2 + 2ab + b^2, expanding by place value.",
-      "example": "23^2"
-    },
-    {
-      "lesson_id": 53,
-      "topic": "Square numbers 51-59 using base 50: (50+n)^2 = 2500 + 100n + n^2.",
-      "example": "53^2"
-    },
-    {
-      "lesson_id": 54,
-      "topic": "Square numbers 41-49 using base 50: (50-n)^2 = 2500 - 100n + n^2.",
-      "example": "47^2"
-    },
-    {
-      "lesson_id": 55,
-      "topic": "Square numbers 91-99 using base 100: (100-n)^2 = 10000 - 200n + n^2.",
-      "example": "96^2"
-    },
-    {
-      "lesson_id": 56,
-      "topic": "Square numbers 101-109 using base 100: (100+n)^2 = 10000 + 200n + n^2.",
-      "example": "104^2"
-    },
-    {
-      "lesson_id": 57,
-      "topic": "Square numbers near 200 using base 200: (200-d)^2 = 40000 - 400d + d^2.",
-      "example": "197^2"
-    },
-    {
-      "lesson_id": 58,
-      "topic": "Square numbers near 500 using base 500: (500-d)^2 = 250000 - 1000d + d^2.",
-      "example": "497^2"
-    },
-    {
-      "lesson_id": 59,
-      "topic": "Multiply numbers near 200 using base 200: cross-add differences, then multiply differences.",
-      "example": "197 x 198"
-    },
-    {
-      "lesson_id": 60,
-      "topic": "Multiply numbers near 300 using base 300: cross-add differences, then multiply differences.",
-      "example": "297 x 298"
-    },
-    {
-      "lesson_id": 61,
-      "topic": "Multiply numbers near 500 using base 500: cross-add differences, then multiply differences.",
-      "example": "497 x 498"
-    },
-    {
-      "lesson_id": 62,
-      "topic": "Multiply two numbers differing by 6 by squaring their average and subtracting 9.",
-      "example": "12 x 18"
-    },
-    {
-      "lesson_id": 63,
-      "topic": "Multiply two numbers differing by 8 by squaring their average and subtracting 16.",
-      "example": "11 x 19"
-    },
-    {
-      "lesson_id": 64,
-      "topic": "Multiply two numbers differing by 10 by squaring their average and subtracting 25.",
-      "example": "15 x 25"
-    },
-    {
-      "lesson_id": 65,
-      "topic": "Multiply two numbers ending in 5 with different tens: (10a+5)(10b+5) = 100ab + 50(a+b) + 25.",
-      "example": "35 x 45"
-    },
-    {
-      "lesson_id": 66,
-      "topic": "Multiply numbers 6 through 10 using the finger trick: count raised and lowered fingers.",
-      "example": "8 x 7"
-    },
-    {
-      "lesson_id": 67,
-      "topic": "Square numbers ending in 3: (10n+3)^2 = 100n^2 + 60n + 9.",
-      "example": "33^2"
-    },
-    {
-      "lesson_id": 68,
-      "topic": "Square numbers ending in 7: (10n+7)^2 = 100n^2 + 140n + 49.",
-      "example": "37^2"
-    },
-    {
-      "lesson_id": 69,
-      "topic": "Multiply by 9.9 by multiplying by 10 and subtracting 0.1 of the number.",
-      "example": "40 x 9.9"
-    },
-    {
-      "lesson_id": 70,
-      "topic": "Multiply by 0.9 by subtracting 10% of the number.",
-      "example": "80 x 0.9"
-    },
-    {
-      "lesson_id": 71,
-      "topic": "Multiply by 1.1 by adding 10% of the number.",
-      "example": "60 x 1.1"
-    },
-    {
-      "lesson_id": 72,
-      "topic": "Multiply by 1.25 by adding 25% of the number.",
-      "example": "48 x 1.25"
-    },
-    {
-      "lesson_id": 73,
-      "topic": "Multiply by 0.75 by subtracting 25% of the number.",
-      "example": "80 x 0.75"
-    },
-    {
-      "lesson_id": 74,
-      "topic": "Multiply by 1.75 by adding 75% of the number.",
-      "example": "40 x 1.75"
-    },
-    {
-      "lesson_id": 75,
-      "topic": "Find 12.5% of a number by dividing by 8.",
-      "example": "12.5% of 64"
-    },
-    {
-      "lesson_id": 76,
-      "topic": "Find 6.25% of a number by dividing by 16.",
-      "example": "6.25% of 80"
-    },
-    {
-      "lesson_id": 77,
-      "topic": "Find 37.5% of a number by multiplying by 3/8.",
-      "example": "37.5% of 80"
-    },
-    {
-      "lesson_id": 78,
-      "topic": "Find 62.5% of a number by multiplying by 5/8.",
-      "example": "62.5% of 64"
-    },
-    {
-      "lesson_id": 79,
-      "topic": "Find 75% of a number by multiplying by 3/4.",
-      "example": "75% of 48"
-    },
-    {
-      "lesson_id": 80,
-      "topic": "Find 80% of a number by multiplying by 4/5.",
-      "example": "80% of 45"
-    },
-    {
-      "lesson_id": 81,
-      "topic": "Find 90% of a number by subtracting 10% of the number.",
-      "example": "90% of 70"
-    },
-    {
-      "lesson_id": 82,
-      "topic": "Find 110% of a number by adding 10% of the number.",
-      "example": "110% of 50"
-    },
-    {
-      "lesson_id": 83,
-      "topic": "Find 150% of a number by adding 50% of the number.",
-      "example": "150% of 40"
-    },
-    {
-      "lesson_id": 84,
-      "topic": "Find 200% of a number by doubling the number.",
-      "example": "200% of 35"
-    },
-    {
-      "lesson_id": 85,
-      "topic": "Find 300% of a number by tripling the number.",
-      "example": "300% of 25"
-    },
-    {
-      "lesson_id": 86,
-      "topic": "Find 45% of a number by taking 50% and subtracting 5%.",
-      "example": "45% of 80"
-    },
-    {
-      "lesson_id": 87,
-      "topic": "Find 55% of a number by taking 50% and adding 5%.",
-      "example": "55% of 60"
-    },
-    {
-      "lesson_id": 88,
-      "topic": "Find 35% of a number by taking 25% and adding 10%.",
-      "example": "35% of 40"
-    },
-    {
-      "lesson_id": 89,
-      "topic": "Find 60% of a number by taking 50% and adding 10%.",
-      "example": "60% of 90"
-    },
-    {
-      "lesson_id": 90,
-      "topic": "Find 70% of a number by taking 50% and adding 20%.",
-      "example": "70% of 80"
-    },
-    {
-      "lesson_id": 91,
-      "topic": "Find 85% of a number by taking 100% and subtracting 15%.",
-      "example": "85% of 60"
-    },
-    {
-      "lesson_id": 92,
-      "topic": "Find 95% of a number by taking 100% and subtracting 5%.",
-      "example": "95% of 40"
-    },
-    {
-      "lesson_id": 93,
-      "topic": "Find 125% of a number by adding 25% to the number.",
-      "example": "125% of 80"
-    },
-    {
-      "lesson_id": 94,
-      "topic": "Find 1/3 of a number by dividing by 3.",
-      "example": "1/3 of 90"
-    },
-    {
-      "lesson_id": 95,
-      "topic": "Find 1/6 of a number by taking half of 1/3 of the number.",
-      "example": "1/6 of 120"
-    },
-    {
-      "lesson_id": 96,
-      "topic": "Find 1/8 of a number by taking half of 1/4 of the number.",
-      "example": "1/8 of 96"
-    },
-    {
-      "lesson_id": 97,
-      "topic": "Find 1/9 of a number by dividing by 9 using digit sum for verification.",
-      "example": "1/9 of 72"
-    },
-    {
-      "lesson_id": 98,
-      "topic": "Check divisibility by 7: double the last digit and subtract it from the rest.",
-      "example": "182"
-    },
-    {
-      "lesson_id": 99,
-      "topic": "Check divisibility by 13: add 4 times the last digit to the rest.",
-      "example": "182"
-    },
-    {
-      "lesson_id": 100,
-      "topic": "Sum consecutive numbers 1 through n using n(n+1)/2.",
-      "example": "1+2+...+10"
-    },
-    {
-      "lesson_id": 101,
-      "topic": "Square numbers 11-19 using (10+n)^2 = 100 + 20n + n^2.",
-      "example": "13^2"
-    },
-    {
-      "lesson_id": 102,
-      "topic": "Square numbers 21-29 using (20+n)^2 = 400 + 40n + n^2.",
-      "example": "23^2"
-    },
-    {
-      "lesson_id": 103,
-      "topic": "Square numbers 31-39 using (30+n)^2 = 900 + 60n + n^2.",
-      "example": "32^2"
-    },
-    {
-      "lesson_id": 104,
-      "topic": "Square numbers 61-69 using (60+n)^2 = 3600 + 120n + n^2.",
-      "example": "63^2"
-    },
-    {
-      "lesson_id": 105,
-      "topic": "Square numbers 71-79 using (70+n)^2 = 4900 + 140n + n^2.",
-      "example": "72^2"
-    },
-    {
-      "lesson_id": 106,
-      "topic": "Square numbers 81-89 using (80+n)^2 = 6400 + 160n + n^2.",
-      "example": "83^2"
-    },
-    {
-      "lesson_id": 107,
-      "topic": "Square numbers 110-119 using (110+n)^2 = 12100 + 220n + n^2.",
-      "example": "112^2"
-    },
-    {
-      "lesson_id": 108,
-      "topic": "Square numbers 120-129 using (120+n)^2 = 14400 + 240n + n^2.",
-      "example": "123^2"
-    },
-    {
-      "lesson_id": 109,
-      "topic": "Multiply by 13 by multiplying by 10 and adding 3 times the number.",
-      "example": "24 x 13"
-    },
-    {
-      "lesson_id": 110,
-      "topic": "Multiply by 14 by multiplying by 10 and adding 4 times the number.",
-      "example": "25 x 14"
-    },
-    {
-      "lesson_id": 111,
-      "topic": "Multiply by 16 by doubling the number four times.",
-      "example": "27 x 16"
-    },
-    {
-      "lesson_id": 112,
-      "topic": "Multiply by 17 by multiplying by 10 and adding 7 times the number.",
-      "example": "32 x 17"
-    },
-    {
-      "lesson_id": 113,
-      "topic": "Multiply by 18 by multiplying by 20 and subtracting twice the number.",
-      "example": "35 x 18"
-    },
-    {
-      "lesson_id": 114,
-      "topic": "Multiply by 19 by multiplying by 20 and subtracting the number.",
-      "example": "42 x 19"
-    },
-    {
-      "lesson_id": 115,
-      "topic": "Multiply by 21 by multiplying by 20 and adding the number.",
-      "example": "34 x 21"
-    },
-    {
-      "lesson_id": 116,
-      "topic": "Multiply by 22 by multiplying by 20 and adding twice the number.",
-      "example": "43 x 22"
-    },
-    {
-      "lesson_id": 117,
-      "topic": "Multiply by 23 by multiplying by 20 and adding 3 times the number.",
-      "example": "25 x 23"
-    },
-    {
-      "lesson_id": 118,
-      "topic": "Multiply by 24 by multiplying by 25 and subtracting the number.",
-      "example": "36 x 24"
-    },
-    {
-      "lesson_id": 119,
-      "topic": "Multiply by 26 by multiplying by 25 and adding the number.",
-      "example": "48 x 26"
-    },
-    {
-      "lesson_id": 120,
-      "topic": "Multiply by 27 by multiplying by 30 and subtracting 3 times the number.",
-      "example": "29 x 27"
-    },
-    {
-      "lesson_id": 121,
-      "topic": "Multiply by 28 by multiplying by 30 and subtracting twice the number.",
-      "example": "31 x 28"
-    },
-    {
-      "lesson_id": 122,
-      "topic": "Multiply by 29 by multiplying by 30 and subtracting the number.",
-      "example": "45 x 29"
-    },
-    {
-      "lesson_id": 123,
-      "topic": "Multiply by 31 by multiplying by 30 and adding the number.",
-      "example": "52 x 31"
-    },
-    {
-      "lesson_id": 124,
-      "topic": "Multiply by 32 by doubling the number five times.",
-      "example": "17 x 32"
-    },
-    {
-      "lesson_id": 125,
-      "topic": "Multiply by 33 by multiplying by 30 and adding 3 times the number.",
-      "example": "24 x 33"
-    },
-    {
-      "lesson_id": 126,
-      "topic": "Multiply by 34 by multiplying by 30 and adding 4 times the number.",
-      "example": "25 x 34"
-    },
-    {
-      "lesson_id": 127,
-      "topic": "Multiply by 35 by multiplying by 30 and adding 5 times the number.",
-      "example": "26 x 35"
-    },
-    {
-      "lesson_id": 128,
-      "topic": "Multiply by 36 by multiplying by 40 and subtracting 4 times the number.",
-      "example": "27 x 36"
-    },
-    {
-      "lesson_id": 129,
-      "topic": "Multiply by 38 by multiplying by 40 and subtracting twice the number.",
-      "example": "28 x 38"
-    },
-    {
-      "lesson_id": 130,
-      "topic": "Multiply by 39 by multiplying by 40 and subtracting the number.",
-      "example": "29 x 39"
-    },
-    {
-      "lesson_id": 131,
-      "topic": "Multiply by 41 by multiplying by 40 and adding the number.",
-      "example": "53 x 41"
-    },
-    {
-      "lesson_id": 132,
-      "topic": "Multiply by 42 by multiplying by 40 and adding twice the number.",
-      "example": "54 x 42"
-    },
-    {
-      "lesson_id": 133,
-      "topic": "Multiply by 43 by multiplying by 40 and adding 3 times the number.",
-      "example": "55 x 43"
-    },
-    {
-      "lesson_id": 134,
-      "topic": "Multiply by 44 by multiplying by 40 and adding 4 times the number.",
-      "example": "56 x 44"
-    },
-    {
-      "lesson_id": 135,
-      "topic": "Multiply by 45 by multiplying by 50 and subtracting 5 times the number.",
-      "example": "57 x 45"
-    },
-    {
-      "lesson_id": 136,
-      "topic": "Multiply by 46 by multiplying by 50 and subtracting 4 times the number.",
-      "example": "58 x 46"
-    },
-    {
-      "lesson_id": 137,
-      "topic": "Multiply by 47 by multiplying by 50 and subtracting 3 times the number.",
-      "example": "59 x 47"
-    },
-    {
-      "lesson_id": 138,
-      "topic": "Multiply by 48 by multiplying by 50 and subtracting twice the number.",
-      "example": "61 x 48"
-    },
-    {
-      "lesson_id": 139,
-      "topic": "Multiply by 49 by multiplying by 50 and subtracting the number.",
-      "example": "62 x 49"
-    },
-    {
-      "lesson_id": 140,
-      "topic": "Multiply by 51 by multiplying by 50 and adding the number.",
-      "example": "63 x 51"
-    },
-    {
-      "lesson_id": 141,
-      "topic": "Multiply by 52 by multiplying by 50 and adding twice the number.",
-      "example": "64 x 52"
-    },
-    {
-      "lesson_id": 142,
-      "topic": "Multiply by 53 by multiplying by 50 and adding 3 times the number.",
-      "example": "65 x 53"
-    },
-    {
-      "lesson_id": 143,
-      "topic": "Multiply by 54 by multiplying by 50 and adding 4 times the number.",
-      "example": "66 x 54"
-    },
-    {
-      "lesson_id": 144,
-      "topic": "Multiply by 55 by multiplying by 50 and adding 5 times the number.",
-      "example": "67 x 55"
-    },
-    {
-      "lesson_id": 145,
-      "topic": "Multiply by 56 by multiplying by 50 and adding 6 times the number.",
-      "example": "68 x 56"
-    },
-    {
-      "lesson_id": 146,
-      "topic": "Multiply by 57 by multiplying by 50 and adding 7 times the number.",
-      "example": "69 x 57"
-    },
-    {
-      "lesson_id": 147,
-      "topic": "Multiply by 58 by multiplying by 50 and adding 8 times the number.",
-      "example": "71 x 58"
-    },
-    {
-      "lesson_id": 148,
-      "topic": "Multiply by 59 by multiplying by 60 and subtracting the number.",
-      "example": "72 x 59"
-    },
-    {
-      "lesson_id": 149,
-      "topic": "Multiply by 61 by multiplying by 60 and adding the number.",
-      "example": "73 x 61"
-    },
-    {
-      "lesson_id": 150,
-      "topic": "Multiply by 62 by multiplying by 60 and adding twice the number.",
-      "example": "74 x 62"
-    },
-    {
-      "lesson_id": 151,
-      "topic": "Multiply numbers near 100 where one is above and one is below: (100+a)(100-b) = 10000 + 100(a-b) - ab.",
-      "example": "102 x 98"
-    },
-    {
-      "lesson_id": 152,
-      "topic": "Multiply numbers near 50 where one is above and one is below: (50+a)(50-b) = 2500 + 50(a-b) - ab.",
-      "example": "52 x 48"
-    },
-    {
-      "lesson_id": 153,
-      "topic": "Multiply numbers near 200 where one is above and one is below: (200+a)(200-b) = 40000 + 200(a-b) - ab.",
-      "example": "203 x 197"
-    },
-    {
-      "lesson_id": 154,
-      "topic": "Multiply numbers near 1000 where one is above and one is below: (1000+a)(1000-b) = 1000000 + 1000(a-b) - ab.",
-      "example": "1003 x 997"
-    },
-    {
-      "lesson_id": 155,
-      "topic": "Square numbers above 200: (200+a)^2 = 40000 + 400a + a^2.",
-      "example": "203^2"
-    },
-    {
-      "lesson_id": 156,
-      "topic": "Square numbers above 500: (500+a)^2 = 250000 + 1000a + a^2.",
-      "example": "503^2"
-    },
-    {
-      "lesson_id": 157,
-      "topic": "Square numbers below 1000: (1000-a)^2 = 1000000 - 2000a + a^2.",
-      "example": "997^2"
-    },
-    {
-      "lesson_id": 158,
-      "topic": "Square numbers near 300: (300±a)^2 = 90000 ± 600a + a^2.",
-      "example": "297^2"
-    },
-    {
-      "lesson_id": 159,
-      "topic": "Square numbers near 400: (400±a)^2 = 160000 ± 800a + a^2.",
-      "example": "403^2"
-    },
-    {
-      "lesson_id": 160,
-      "topic": "Multiply by 50 by halving the number and appending two zeros.",
-      "example": "84 x 50"
-    },
-    {
-      "lesson_id": 161,
-      "topic": "Multiply by 500 by halving the number and appending three zeros.",
-      "example": "84 x 500"
-    },
-    {
-      "lesson_id": 162,
-      "topic": "Multiply by 250 by quartering the number and appending three zeros.",
-      "example": "84 x 250"
-    },
-    {
-      "lesson_id": 163,
-      "topic": "Multiply by 375 by taking three-eighths of the number and appending three zeros.",
-      "example": "64 x 375"
-    },
-    {
-      "lesson_id": 164,
-      "topic": "Multiply by 875 by taking seven-eighths of the number and appending three zeros.",
-      "example": "64 x 875"
-    },
-    {
-      "lesson_id": 165,
-      "topic": "Multiply by 1.5 by adding half of the number to itself.",
-      "example": "48 x 1.5"
-    },
-    {
-      "lesson_id": 166,
-      "topic": "Multiply by 2.5 by multiplying by 10 and dividing by 4.",
-      "example": "48 x 2.5"
-    },
-    {
-      "lesson_id": 167,
-      "topic": "Multiply by 3.5 by multiplying by 7 and dividing by 2.",
-      "example": "48 x 3.5"
-    },
-    {
-      "lesson_id": 168,
-      "topic": "Multiply by 4.5 by multiplying by 9 and dividing by 2.",
-      "example": "48 x 4.5"
-    },
-    {
-      "lesson_id": 169,
-      "topic": "Multiply by 5.5 by multiplying by 11 and dividing by 2.",
-      "example": "48 x 5.5"
-    },
-    {
-      "lesson_id": 170,
-      "topic": "Multiply by 6.5 by multiplying by 13 and dividing by 2.",
-      "example": "48 x 6.5"
-    },
-    {
-      "lesson_id": 171,
-      "topic": "Multiply by 7.5 by multiplying by 15 and dividing by 2.",
-      "example": "48 x 7.5"
-    },
-    {
-      "lesson_id": 172,
-      "topic": "Multiply by 8.5 by multiplying by 17 and dividing by 2.",
-      "example": "48 x 8.5"
-    },
-    {
-      "lesson_id": 173,
-      "topic": "Multiply by 9.5 by multiplying by 19 and dividing by 2.",
-      "example": "48 x 9.5"
-    },
-    {
-      "lesson_id": 174,
-      "topic": "Add 9 by adding 10 and subtracting 1.",
-      "example": "47 + 9"
-    },
-    {
-      "lesson_id": 175,
-      "topic": "Add 99 by adding 100 and subtracting 1.",
-      "example": "47 + 99"
-    },
-    {
-      "lesson_id": 176,
-      "topic": "Add 999 by adding 1000 and subtracting 1.",
-      "example": "47 + 999"
-    },
-    {
-      "lesson_id": 177,
-      "topic": "Subtract 9 by subtracting 10 and adding 1.",
-      "example": "47 - 9"
-    },
-    {
-      "lesson_id": 178,
-      "topic": "Subtract 99 by subtracting 100 and adding 1.",
-      "example": "47 - 99"
-    },
-    {
-      "lesson_id": 179,
-      "topic": "Subtract 999 by subtracting 1000 and adding 1.",
-      "example": "47 - 999"
-    },
-    {
-      "lesson_id": 180,
-      "topic": "Add numbers near 100 by adding 100 and adjusting the difference.",
-      "example": "98 + 76"
-    },
-    {
-      "lesson_id": 181,
-      "topic": "Subtract numbers near 100 by subtracting 100 and adjusting the difference.",
-      "example": "124 - 98"
-    },
-    {
-      "lesson_id": 182,
-      "topic": "Add numbers near 1000 by adding 1000 and adjusting the difference.",
-      "example": "998 + 456"
-    },
-    {
-      "lesson_id": 183,
-      "topic": "Subtract numbers near 1000 by subtracting 1000 and adjusting the difference.",
-      "example": "1234 - 998"
-    },
-    {
-      "lesson_id": 184,
-      "topic": "Sum of first n odd numbers equals n squared.",
-      "example": "1+3+5+7"
-    },
-    {
-      "lesson_id": 185,
-      "topic": "Sum of first n even numbers equals n times (n+1).",
-      "example": "2+4+6+8"
-    },
-    {
-      "lesson_id": 186,
-      "topic": "Check divisibility by 3: sum of digits must be divisible by 3.",
-      "example": "123"
-    },
-    {
-      "lesson_id": 187,
-      "topic": "Check divisibility by 4: last two digits must be divisible by 4.",
-      "example": "1236"
-    },
-    {
-      "lesson_id": 188,
-      "topic": "Check divisibility by 6: number must be divisible by both 2 and 3.",
-      "example": "72"
-    },
-    {
-      "lesson_id": 189,
-      "topic": "Check divisibility by 8: last three digits must be divisible by 8.",
-      "example": "1232"
-    },
-    {
-      "lesson_id": 190,
-      "topic": "Check divisibility by 9: sum of digits must be divisible by 9.",
-      "example": "234"
-    },
-    {
-      "lesson_id": 191,
-      "topic": "Check divisibility by 11: alternating sum of digits must be divisible by 11.",
-      "example": "2728"
-    },
-    {
-      "lesson_id": 192,
-      "topic": "Check divisibility by 12: number must be divisible by both 3 and 4.",
-      "example": "144"
-    },
-    {
-      "lesson_id": 193,
-      "topic": "Check divisibility by 17: subtract 5 times the last digit from the rest.",
-      "example": "221"
-    },
-    {
-      "lesson_id": 194,
-      "topic": "Check divisibility by 19: add 2 times the last digit to the rest.",
-      "example": "247"
-    },
-    {
-      "lesson_id": 195,
-      "topic": "Check divisibility by 23: add 7 times the last digit to the rest.",
-      "example": "299"
-    },
-    {
-      "lesson_id": 196,
-      "topic": "Check divisibility by 29: add 3 times the last digit to the rest.",
-      "example": "319"
-    },
-    {
-      "lesson_id": 197,
-      "topic": "Check divisibility by 31: subtract 3 times the last digit from the rest.",
-      "example": "341"
-    },
-    {
-      "lesson_id": 198,
-      "topic": "Multiply numbers differing by 1: a(a+1) = a^2 + a.",
-      "example": "12 x 13"
-    },
-    {
-      "lesson_id": 199,
-      "topic": "Multiply numbers differing by 3: a(a+3) = a^2 + 3a.",
-      "example": "12 x 15"
-    },
-    {
-      "lesson_id": 200,
-      "topic": "Multiply numbers differing by 5: a(a+5) = a^2 + 5a.",
-      "example": "12 x 17"
-    },
-    {
-      "lesson_id": 201,
-      "topic": "Square numbers near 600 using (600±a)^2 = 360000 ± 1200a + a^2.",
-      "example": "597^2"
-    },
-    {
-      "lesson_id": 202,
-      "topic": "Square numbers near 700 using (700±a)^2 = 490000 ± 1400a + a^2.",
-      "example": "703^2"
-    },
-    {
-      "lesson_id": 203,
-      "topic": "Square numbers near 800 using (800±a)^2 = 640000 ± 1600a + a^2.",
-      "example": "797^2"
-    },
-    {
-      "lesson_id": 204,
-      "topic": "Square numbers near 900 using (900±a)^2 = 810000 ± 1800a + a^2.",
-      "example": "903^2"
-    },
-    {
-      "lesson_id": 205,
-      "topic": "Square numbers near 150 using (150±a)^2 = 22500 ± 300a + a^2.",
-      "example": "147^2"
-    },
-    {
-      "lesson_id": 206,
-      "topic": "Square numbers near 250 using (250±a)^2 = 62500 ± 500a + a^2.",
-      "example": "253^2"
-    },
-    {
-      "lesson_id": 207,
-      "topic": "Square numbers near 350 using (350±a)^2 = 122500 ± 700a + a^2.",
-      "example": "347^2"
-    },
-    {
-      "lesson_id": 208,
-      "topic": "Square numbers near 450 using (450±a)^2 = 202500 ± 900a + a^2.",
-      "example": "453^2"
-    },
-    {
-      "lesson_id": 209,
-      "topic": "Square numbers near 550 using (550±a)^2 = 302500 ± 1100a + a^2.",
-      "example": "547^2"
-    },
-    {
-      "lesson_id": 210,
-      "topic": "Multiply numbers near 600 using base 600: cross-add differences, then multiply differences.",
-      "example": "597 x 598"
-    },
-    {
-      "lesson_id": 211,
-      "topic": "Multiply numbers near 700 using base 700: cross-add differences, then multiply differences.",
-      "example": "697 x 698"
-    },
-    {
-      "lesson_id": 212,
-      "topic": "Multiply numbers near 800 using base 800: cross-add differences, then multiply differences.",
-      "example": "797 x 798"
-    },
-    {
-      "lesson_id": 213,
-      "topic": "Multiply numbers near 900 using base 900: cross-add differences, then multiply differences.",
-      "example": "897 x 898"
-    },
-    {
-      "lesson_id": 214,
-      "topic": "Multiply numbers near 150 using base 150: cross-add differences, then multiply differences.",
-      "example": "147 x 148"
-    },
-    {
-      "lesson_id": 215,
-      "topic": "Multiply numbers near 250 using base 250: cross-add differences, then multiply differences.",
-      "example": "247 x 248"
-    },
-    {
-      "lesson_id": 216,
-      "topic": "Multiply numbers near 350 using base 350: cross-add differences, then multiply differences.",
-      "example": "347 x 348"
-    },
-    {
-      "lesson_id": 217,
-      "topic": "Multiply numbers near 450 using base 450: cross-add differences, then multiply differences.",
-      "example": "447 x 448"
-    },
-    {
-      "lesson_id": 218,
-      "topic": "Multiply numbers near 550 using base 550: cross-add differences, then multiply differences.",
-      "example": "547 x 548"
-    },
-    {
-      "lesson_id": 219,
-      "topic": "Multiply by 105 by multiplying by 100 and adding 5 times the number.",
-      "example": "24 x 105"
-    },
-    {
-      "lesson_id": 220,
-      "topic": "Multiply by 115 by multiplying by 100 and adding 15 times the number.",
-      "example": "24 x 115"
-    },
-    {
-      "lesson_id": 221,
-      "topic": "Multiply by 150 by multiplying by 100 and adding 50 times the number.",
-      "example": "24 x 150"
-    },
-    {
-      "lesson_id": 222,
-      "topic": "Multiply by 175 by multiplying by 200 and subtracting 25 times the number.",
-      "example": "24 x 175"
-    },
-    {
-      "lesson_id": 223,
-      "topic": "Multiply by 225 by multiplying by 200 and adding 25 times the number.",
-      "example": "24 x 225"
-    },
-    {
-      "lesson_id": 224,
-      "topic": "Multiply by 350 by multiplying by 300 and adding 50 times the number.",
-      "example": "24 x 350"
-    },
-    {
-      "lesson_id": 225,
-      "topic": "Multiply by 450 by multiplying by 500 and subtracting 50 times the number.",
-      "example": "24 x 450"
-    },
-    {
-      "lesson_id": 226,
-      "topic": "Multiply by 550 by multiplying by 500 and adding 50 times the number.",
-      "example": "24 x 550"
-    },
-    {
-      "lesson_id": 227,
-      "topic": "Multiply by 650 by multiplying by 600 and adding 50 times the number.",
-      "example": "24 x 650"
-    },
-    {
-      "lesson_id": 228,
-      "topic": "Multiply by 850 by multiplying by 1000 and subtracting 150 times the number.",
-      "example": "24 x 850"
-    },
-    {
-      "lesson_id": 229,
-      "topic": "Multiply by 950 by multiplying by 1000 and subtracting 50 times the number.",
-      "example": "24 x 950"
-    },
-    {
-      "lesson_id": 230,
-      "topic": "Multiply by 0.875 (7/8) by multiplying by 7 and dividing by 8.",
-      "example": "64 x 0.875"
-    },
-    {
-      "lesson_id": 231,
-      "topic": "Multiply by 0.0625 (1/16) by dividing by 16.",
-      "example": "64 x 0.0625"
-    },
-    {
-      "lesson_id": 232,
-      "topic": "Multiply by 0.03125 (1/32) by dividing by 32.",
-      "example": "64 x 0.03125"
-    },
-    {
-      "lesson_id": 233,
-      "topic": "Multiply by 0.015625 (1/64) by dividing by 64.",
-      "example": "64 x 0.015625"
-    },
-    {
-      "lesson_id": 234,
-      "topic": "Multiply by 0.0078125 (1/128) by dividing by 128.",
-      "example": "64 x 0.0078125"
-    },
-    {
-      "lesson_id": 235,
-      "topic": "Multiply by 10001 by writing the number, then three zeros, then the number again.",
-      "example": "23 x 10001"
-    },
-    {
-      "lesson_id": 236,
-      "topic": "Multiply by 100001 by writing the number, then four zeros, then the number again.",
-      "example": "23 x 100001"
-    },
-    {
-      "lesson_id": 237,
-      "topic": "Multiply by 10101 by writing the number three times consecutively.",
-      "example": "23 x 10101"
-    },
-    {
-      "lesson_id": 238,
-      "topic": "Square numbers near 2000 using (2000±a)^2 = 4,000,000 ± 4000a + a^2.",
-      "example": "1997^2"
-    },
-    {
-      "lesson_id": 239,
-      "topic": "Square numbers near 3000 using (3000±a)^2 = 9,000,000 ± 6000a + a^2.",
-      "example": "2997^2"
-    },
-    {
-      "lesson_id": 240,
-      "topic": "Square numbers near 4000 using (4000±a)^2 = 16,000,000 ± 8000a + a^2.",
-      "example": "3997^2"
-    },
-    {
-      "lesson_id": 241,
-      "topic": "Square numbers near 5000 using (5000±a)^2 = 25,000,000 ± 10000a + a^2.",
-      "example": "4997^2"
-    },
-    {
-      "lesson_id": 242,
-      "topic": "Multiply numbers near 2000 using base 2000: cross-add differences, then multiply differences.",
-      "example": "1997 x 1998"
-    },
-    {
-      "lesson_id": 243,
-      "topic": "Multiply numbers near 3000 using base 3000: cross-add differences, then multiply differences.",
-      "example": "2997 x 2998"
-    },
-    {
-      "lesson_id": 244,
-      "topic": "Multiply numbers near 4000 using base 4000: cross-add differences, then multiply differences.",
-      "example": "3997 x 3998"
-    },
-    {
-      "lesson_id": 245,
-      "topic": "Multiply numbers near 5000 using base 5000: cross-add differences, then multiply differences.",
-      "example": "4997 x 4998"
-    },
-    {
-      "lesson_id": 246,
-      "topic": "Multiply two numbers that sum to 20 using 10^2 - d^2.",
-      "example": "8 x 12"
-    },
-    {
-      "lesson_id": 247,
-      "topic": "Multiply two numbers that sum to 50 using 25^2 - d^2.",
-      "example": "23 x 27"
-    },
-    {
-      "lesson_id": 248,
-      "topic": "Multiply two numbers that sum to 100 using 50^2 - d^2.",
-      "example": "43 x 57"
-    },
-    {
-      "lesson_id": 249,
-      "topic": "Multiply two numbers that sum to 200 using 100^2 - d^2.",
-      "example": "87 x 113"
-    },
-    {
-      "lesson_id": 250,
-      "topic": "Multiply two numbers that sum to 1000 using 500^2 - d^2.",
-      "example": "497 x 503"
-    },
-    {
-      "lesson_id": 251,
-      "topic": "Multiply a 4-digit number by 11 by adding adjacent digits with carry.",
-      "example": "1234 x 11"
-    },
-    {
-      "lesson_id": 252,
-      "topic": "Multiply a 3-digit number by 111 by writing the number, then sum of first two, sum of all three, sum of last two, last digit.",
-      "example": "123 x 111"
-    },
-    {
-      "lesson_id": 253,
-      "topic": "Multiply a 2-digit number by 1111 by writing the number, then three sums of the two digits, then last digit.",
-      "example": "23 x 1111"
-    },
-    {
-      "lesson_id": 254,
-      "topic": "Square a number consisting of all 1s by writing increasing then decreasing digits.",
-      "example": "111^2"
-    },
-    {
-      "lesson_id": 255,
-      "topic": "Square a number consisting of all 3s by writing (n-1) ones, 0, (n-1) eights, 9.",
-      "example": "333^2"
-    },
-    {
-      "lesson_id": 256,
-      "topic": "Square a number consisting of all 6s by writing (n-1) fours, 3, 5, (n-1) fives, 6.",
-      "example": "666^2"
-    },
-    {
-      "lesson_id": 257,
-      "topic": "Square a number consisting of all 9s by writing (n-1) nines, 8, (n-1) zeros, 1.",
-      "example": "999^2"
-    },
-    {
-      "lesson_id": 258,
-      "topic": "Multiply by 3125 by dividing by 32 and appending five zeros.",
-      "example": "64 x 3125"
-    },
-    {
-      "lesson_id": 259,
-      "topic": "Multiply by 15625 by dividing by 64 and appending six zeros.",
-      "example": "64 x 15625"
-    },
-    {
-      "lesson_id": 260,
-      "topic": "Divide by 125 by multiplying by 8 and dividing by 1000.",
-      "example": "1000 / 125"
-    },
-    {
-      "lesson_id": 261,
-      "topic": "Divide by 625 by multiplying by 16 and dividing by 10000.",
-      "example": "10000 / 625"
-    },
-    {
-      "lesson_id": 262,
-      "topic": "Divide by 3125 by multiplying by 32 and dividing by 100000.",
-      "example": "100000 / 3125"
-    },
-    {
-      "lesson_id": 263,
-      "topic": "Divide by 1.25 by multiplying by 8 and dividing by 10.",
-      "example": "10 / 1.25"
-    },
-    {
-      "lesson_id": 264,
-      "topic": "Divide by 2.5 by multiplying by 4 and dividing by 10.",
-      "example": "10 / 2.5"
-    },
-    {
-      "lesson_id": 265,
-      "topic": "Divide by 0.75 by multiplying by 4 and dividing by 3.",
-      "example": "9 / 0.75"
-    },
-    {
-      "lesson_id": 266,
-      "topic": "Multiply by 0.4 by multiplying by 4 and dividing by 10.",
-      "example": "25 x 0.4"
-    },
-    {
-      "lesson_id": 267,
-      "topic": "Multiply by 0.6 by multiplying by 6 and dividing by 10.",
-      "example": "25 x 0.6"
-    },
-    {
-      "lesson_id": 268,
-      "topic": "Multiply by 0.8 by multiplying by 8 and dividing by 10.",
-      "example": "25 x 0.8"
-    },
-    {
-      "lesson_id": 269,
-      "topic": "Multiply by 0.2 by multiplying by 2 and dividing by 10.",
-      "example": "25 x 0.2"
-    },
-    {
-      "lesson_id": 270,
-      "topic": "Find 4% of a number by taking 1% and multiplying by 4.",
-      "example": "4% of 250"
-    },
-    {
-      "lesson_id": 271,
-      "topic": "Find 3% of a number by taking 1% and multiplying by 3.",
-      "example": "3% of 200"
-    },
-    {
-      "lesson_id": 272,
-      "topic": "Find 7% of a number by taking 5% and adding 2%.",
-      "example": "7% of 100"
-    },
-    {
-      "lesson_id": 273,
-      "topic": "Find 8% of a number by taking 10% and subtracting 2%.",
-      "example": "8% of 50"
-    },
-    {
-      "lesson_id": 274,
-      "topic": "Find 9% of a number by taking 10% and subtracting 1%.",
-      "example": "9% of 200"
-    },
-    {
-      "lesson_id": 275,
-      "topic": "Find 11% of a number by taking 10% and adding 1%.",
-      "example": "11% of 200"
-    },
-    {
-      "lesson_id": 276,
-      "topic": "Find 12% of a number by taking 10% and adding 2%.",
-      "example": "12% of 50"
-    },
-    {
-      "lesson_id": 277,
-      "topic": "Find 13% of a number by taking 10% and adding 3%.",
-      "example": "13% of 100"
-    },
-    {
-      "lesson_id": 278,
-      "topic": "Find 14% of a number by taking 10% and adding 4%.",
-      "example": "14% of 50"
-    },
-    {
-      "lesson_id": 279,
-      "topic": "Find 16% of a number by taking 10% and adding 6%.",
-      "example": "16% of 100"
-    },
-    {
-      "lesson_id": 280,
-      "topic": "Find 17% of a number by taking 10% and adding 7%.",
-      "example": "17% of 100"
-    },
-    {
-      "lesson_id": 281,
-      "topic": "Find 18% of a number by taking 20% and subtracting 2%.",
-      "example": "18% of 50"
-    },
-    {
-      "lesson_id": 282,
-      "topic": "Find 19% of a number by taking 20% and subtracting 1%.",
-      "example": "19% of 100"
-    },
-    {
-      "lesson_id": 283,
-      "topic": "Find 21% of a number by taking 20% and adding 1%.",
-      "example": "21% of 100"
-    },
-    {
-      "lesson_id": 284,
-      "topic": "Find 22% of a number by taking 20% and adding 2%.",
-      "example": "22% of 50"
-    },
-    {
-      "lesson_id": 285,
-      "topic": "Find 23% of a number by taking 20% and adding 3%.",
-      "example": "23% of 100"
-    },
-    {
-      "lesson_id": 286,
-      "topic": "Find 24% of a number by taking 25% and subtracting 1%.",
-      "example": "24% of 200"
-    },
-    {
-      "lesson_id": 287,
-      "topic": "Find 26% of a number by taking 25% and adding 1%.",
-      "example": "26% of 200"
-    },
-    {
-      "lesson_id": 288,
-      "topic": "Find 27% of a number by taking 25% and adding 2%.",
-      "example": "27% of 100"
-    },
-    {
-      "lesson_id": 289,
-      "topic": "Find 28% of a number by taking 25% and adding 3%.",
-      "example": "28% of 50"
-    },
-    {
-      "lesson_id": 290,
-      "topic": "Find 29% of a number by taking 30% and subtracting 1%.",
-      "example": "29% of 100"
-    },
-    {
-      "lesson_id": 291,
-      "topic": "Find 31% of a number by taking 30% and adding 1%.",
-      "example": "31% of 100"
-    },
-    {
-      "lesson_id": 292,
-      "topic": "Find 32% of a number by taking 30% and adding 2%.",
-      "example": "32% of 50"
-    },
-    {
-      "lesson_id": 293,
-      "topic": "Find 34% of a number by taking 35% and subtracting 1%.",
-      "example": "34% of 200"
-    },
-    {
-      "lesson_id": 294,
-      "topic": "Find 36% of a number by taking 35% and adding 1%.",
-      "example": "36% of 200"
-    },
-    {
-      "lesson_id": 295,
-      "topic": "Find 38% of a number by taking 40% and subtracting 2%.",
-      "example": "38% of 50"
-    },
-    {
-      "lesson_id": 296,
-      "topic": "Find 66.66% of a number by multiplying by 2 and dividing by 3.",
-      "example": "66.66% of 90"
-    },
-    {
-      "lesson_id": 297,
-      "topic": "Find 16.66% of a number by dividing by 6.",
-      "example": "16.66% of 120"
-    },
-    {
-      "lesson_id": 298,
-      "topic": "Find 83.33% of a number by multiplying by 5 and dividing by 6.",
-      "example": "83.33% of 120"
-    },
-    {
-      "lesson_id": 299,
-      "topic": "Find 14.28% of a number by dividing by 7.",
-      "example": "14.28% of 70"
-    },
-    {
-      "lesson_id": 300,
-      "topic": "Find 11.11% of a number by dividing by 9.",
-      "example": "11.11% of 90"
-    }
+    { "lesson_id": 1, "topic": "Multiply a two-digit number by 11 by adding its digits and carrying.", "example": "43 x 11" },
+    { "lesson_id": 2, "topic": "Square any number ending in 5 by multiplying the tens digit by the next integer and appending 25.", "example": "35^2" },
+    { "lesson_id": 3, "topic": "Multiply by 5 by dividing by 2 and multiplying by 10.", "example": "48 x 5" },
+    { "lesson_id": 4, "topic": "Multiply by 9 by multiplying by 10 and subtracting the original number.", "example": "47 x 9" },
+    { "lesson_id": 5, "topic": "Multiply by 99 by multiplying by 100 and subtracting the original number.", "example": "47 x 99" },
+    { "lesson_id": 6, "topic": "Multiply by 15 by multiplying by 10 and adding half of that result.", "example": "24 x 15" },
+    { "lesson_id": 7, "topic": "Multiply by 25 by dividing by 4 and multiplying by 100.", "example": "48 x 25" },
+    { "lesson_id": 8, "topic": "Square a two-digit number near 100 using base 100: add the difference to 100, and append the square of the difference.", "example": "98^2" },
+    { "lesson_id": 9, "topic": "Multiply two-digit numbers near 100 using base 100: cross-add differences, then multiply differences.", "example": "97 x 96" },
+    { "lesson_id": 10, "topic": "Multiply two-digit numbers near 50 using base 50: add cross differences to 50, then multiply excesses.", "example": "47 x 48" },
+    { "lesson_id": 11, "topic": "Square numbers near 50 using base 50: add excess to 25, multiply by 100, then add excess squared.", "example": "52^2" },
+    { "lesson_id": 12, "topic": "Multiply numbers with the same tens digit and ones digits summing to 10: multiply tens by next, append ones product.", "example": "43 x 47" },
+    { "lesson_id": 13, "topic": "Square numbers ending in 1 by using (a+1)^2 = a^2 + 2a + 1.", "example": "31^2" },
+    { "lesson_id": 14, "topic": "Square numbers ending in 9 by using (a-1)^2 = a^2 - 2a + 1.", "example": "29^2" },
+    { "lesson_id": 15, "topic": "Multiply by 12 by multiplying by 10 and adding double the original number.", "example": "34 x 12" },
+    { "lesson_id": 16, "topic": "Multiply by 6 by multiplying by 5 and adding the original number.", "example": "47 x 6" },
+    { "lesson_id": 17, "topic": "Multiply by 7 by multiplying by 5 and adding double the original number.", "example": "48 x 7" },
+    { "lesson_id": 18, "topic": "Multiply by 8 by doubling the number three times.", "example": "37 x 8" },
+    { "lesson_id": 19, "topic": "Multiply by 4 by doubling the number twice.", "example": "63 x 4" },
+    { "lesson_id": 20, "topic": "Divide by 5 by multiplying by 2 and dividing by 10.", "example": "85 / 5" },
+    { "lesson_id": 21, "topic": "Find 10% of any number by moving the decimal point one place left.", "example": "10% of 240" },
+    { "lesson_id": 22, "topic": "Find 5% of any number by taking half of 10%.", "example": "5% of 240" },
+    { "lesson_id": 23, "topic": "Find 15% of any number by adding 10% and 5%.", "example": "15% of 80" },
+    { "lesson_id": 24, "topic": "Find 20% of any number by dividing by 5 or doubling 10%.", "example": "20% of 45" },
+    { "lesson_id": 25, "topic": "Find 25% of any number by dividing by 4.", "example": "25% of 68" },
+    { "lesson_id": 26, "topic": "Find 50% of any number by dividing by 2.", "example": "50% of 84" },
+    { "lesson_id": 27, "topic": "Find 1% of any number by moving the decimal point two places left.", "example": "1% of 300" },
+    { "lesson_id": 28, "topic": "Find 2% of any number by doubling 1%.", "example": "2% of 150" },
+    { "lesson_id": 29, "topic": "Find 30% of any number by multiplying 10% by 3.", "example": "30% of 90" },
+    { "lesson_id": 30, "topic": "Find 40% of any number by multiplying 10% by 4.", "example": "40% of 75" },
+    { "lesson_id": 31, "topic": "Multiply by 101 by writing the two-digit number twice.", "example": "43 x 101" },
+    { "lesson_id": 32, "topic": "Multiply by 1001 by writing the number, then a zero, then the number again.", "example": "27 x 1001" },
+    { "lesson_id": 33, "topic": "Square numbers ending in 6 by using (a+1)^2 = a^2 + 2a + 1 where a ends in 5.", "example": "46^2" },
+    { "lesson_id": 34, "topic": "Square numbers ending in 4 by using (a-1)^2 = a^2 - 2a + 1 where a ends in 5.", "example": "44^2" },
+    { "lesson_id": 35, "topic": "Multiply by 37 by using 37 x 3 = 111, then multiply the remaining factor.", "example": "37 x 18" },
+    { "lesson_id": 36, "topic": "Use the finger trick for the 9 times table: bend the nth finger, count tens and ones.", "example": "9 x 7" },
+    { "lesson_id": 37, "topic": "Multiply a three-digit number by 11 by adding adjacent digits with carry.", "example": "123 x 11" },
+    { "lesson_id": 38, "topic": "Multiply by 111 by writing the number, then adding shifted copies.", "example": "23 x 111" },
+    { "lesson_id": 39, "topic": "Square numbers ending in 0 by squaring the non-zero part and appending two zeros.", "example": "70^2" },
+    { "lesson_id": 40, "topic": "Multiply two numbers differing by 2 by squaring their average and subtracting 1.", "example": "12 x 14" },
+    { "lesson_id": 41, "topic": "Multiply two numbers differing by 4 by squaring their average and subtracting 4.", "example": "11 x 15" },
+    { "lesson_id": 42, "topic": "Multiply two numbers near 1000 using base 1000: cross-add differences, then multiply differences.", "example": "998 x 997" },
+    { "lesson_id": 43, "topic": "Square numbers near 1000 using (1000 ± d)^2 = 1,000,000 ± 2000d + d^2.", "example": "1002^2" },
+    { "lesson_id": 44, "topic": "Multiply by 75 by dividing by 4 and multiplying by 300.", "example": "48 x 75" },
+    { "lesson_id": 45, "topic": "Multiply by 125 by dividing by 8 and multiplying by 1000.", "example": "32 x 125" },
+    { "lesson_id": 46, "topic": "Multiply by 625 by dividing by 16 and multiplying by 10000.", "example": "16 x 625" },
+    { "lesson_id": 47, "topic": "Divide by 25 by multiplying by 4 and dividing by 100.", "example": "150 / 25" },
+    { "lesson_id": 48, "topic": "Square numbers ending in 2 by using (a+2)^2 = a^2 + 4a + 4.", "example": "32^2" },
+    { "lesson_id": 49, "topic": "Square numbers ending in 8 by using (a-2)^2 = a^2 - 4a + 4.", "example": "38^2" },
+    { "lesson_id": 50, "topic": "Find 33% of a number by dividing by 3 (approximate for 33.33%).", "example": "33% of 90" },
+    { "lesson_id": 51, "topic": "Multiply two numbers where tens digits sum to 10 and ones digits are the same: multiply tens, add the ones digit, then append ones squared.", "example": "43 x 63" },
+    { "lesson_id": 52, "topic": "Square any two-digit number using (a+b)^2 = a^2 + 2ab + b^2, expanding by place value.", "example": "23^2" },
+    { "lesson_id": 53, "topic": "Square numbers 51-59 using base 50: (50+n)^2 = 2500 + 100n + n^2.", "example": "53^2" },
+    { "lesson_id": 54, "topic": "Square numbers 41-49 using base 50: (50-n)^2 = 2500 - 100n + n^2.", "example": "47^2" },
+    { "lesson_id": 55, "topic": "Square numbers 91-99 using base 100: (100-n)^2 = 10000 - 200n + n^2.", "example": "96^2" },
+    { "lesson_id": 56, "topic": "Square numbers 101-109 using base 100: (100+n)^2 = 10000 + 200n + n^2.", "example": "104^2" },
+    { "lesson_id": 57, "topic": "Square numbers near 200 using base 200: (200-d)^2 = 40000 - 400d + d^2.", "example": "197^2" },
+    { "lesson_id": 58, "topic": "Square numbers near 500 using base 500: (500-d)^2 = 250000 - 1000d + d^2.", "example": "497^2" },
+    { "lesson_id": 59, "topic": "Multiply numbers near 200 using base 200: cross-add differences, then multiply differences.", "example": "197 x 198" },
+    { "lesson_id": 60, "topic": "Multiply numbers near 300 using base 300: cross-add differences, then multiply differences.", "example": "297 x 298" },
+    { "lesson_id": 61, "topic": "Multiply numbers near 500 using base 500: cross-add differences, then multiply differences.", "example": "497 x 498" },
+    { "lesson_id": 62, "topic": "Multiply two numbers differing by 6 by squaring their average and subtracting 9.", "example": "12 x 18" },
+    { "lesson_id": 63, "topic": "Multiply two numbers differing by 8 by squaring their average and subtracting 16.", "example": "11 x 19" },
+    { "lesson_id": 64, "topic": "Multiply two numbers differing by 10 by squaring their average and subtracting 25.", "example": "15 x 25" },
+    { "lesson_id": 65, "topic": "Multiply two numbers ending in 5 with different tens: (10a+5)(10b+5) = 100ab + 50(a+b) + 25.", "example": "35 x 45" },
+    { "lesson_id": 66, "topic": "Multiply numbers 6 through 10 using the finger trick: count raised and lowered fingers.", "example": "8 x 7" },
+    { "lesson_id": 67, "topic": "Square numbers ending in 3: (10n+3)^2 = 100n^2 + 60n + 9.", "example": "33^2" },
+    { "lesson_id": 68, "topic": "Square numbers ending in 7: (10n+7)^2 = 100n^2 + 140n + 49.", "example": "37^2" },
+    { "lesson_id": 69, "topic": "Multiply by 9.9 by multiplying by 10 and subtracting 0.1 of the number.", "example": "40 x 9.9" },
+    { "lesson_id": 70, "topic": "Multiply by 0.9 by subtracting 10% of the number.", "example": "80 x 0.9" },
+    { "lesson_id": 71, "topic": "Multiply by 1.1 by adding 10% of the number.", "example": "60 x 1.1" },
+    { "lesson_id": 72, "topic": "Multiply by 1.25 by adding 25% of the number.", "example": "48 x 1.25" },
+    { "lesson_id": 73, "topic": "Multiply by 0.75 by subtracting 25% of the number.", "example": "80 x 0.75" },
+    { "lesson_id": 74, "topic": "Multiply by 1.75 by adding 75% of the number.", "example": "40 x 1.75" },
+    { "lesson_id": 75, "topic": "Find 12.5% of a number by dividing by 8.", "example": "12.5% of 64" },
+    { "lesson_id": 76, "topic": "Find 6.25% of a number by dividing by 16.", "example": "6.25% of 80" },
+    { "lesson_id": 77, "topic": "Find 37.5% of a number by multiplying by 3/8.", "example": "37.5% of 80" },
+    { "lesson_id": 78, "topic": "Find 62.5% of a number by multiplying by 5/8.", "example": "62.5% of 64" },
+    { "lesson_id": 79, "topic": "Find 75% of a number by multiplying by 3/4.", "example": "75% of 48" },
+    { "lesson_id": 80, "topic": "Find 80% of a number by multiplying by 4/5.", "example": "80% of 45" },
+    { "lesson_id": 81, "topic": "Find 90% of a number by subtracting 10% of the number.", "example": "90% of 70" },
+    { "lesson_id": 82, "topic": "Find 110% of a number by adding 10% of the number.", "example": "110% of 50" },
+    { "lesson_id": 83, "topic": "Find 150% of a number by adding 50% of the number.", "example": "150% of 40" },
+    { "lesson_id": 84, "topic": "Find 200% of a number by doubling the number.", "example": "200% of 35" },
+    { "lesson_id": 85, "topic": "Find 300% of a number by tripling the number.", "example": "300% of 25" },
+    { "lesson_id": 86, "topic": "Find 45% of a number by taking 50% and subtracting 5%.", "example": "45% of 80" },
+    { "lesson_id": 87, "topic": "Find 55% of a number by taking 50% and adding 5%.", "example": "55% of 60" },
+    { "lesson_id": 88, "topic": "Find 35% of a number by taking 25% and adding 10%.", "example": "35% of 40" },
+    { "lesson_id": 89, "topic": "Find 60% of a number by taking 50% and adding 10%.", "example": "60% of 90" },
+    { "lesson_id": 90, "topic": "Find 70% of a number by taking 50% and adding 20%.", "example": "70% of 80" },
+    { "lesson_id": 91, "topic": "Find 85% of a number by taking 100% and subtracting 15%.", "example": "85% of 60" },
+    { "lesson_id": 92, "topic": "Find 95% of a number by taking 100% and subtracting 5%.", "example": "95% of 40" },
+    { "lesson_id": 93, "topic": "Find 125% of a number by adding 25% to the number.", "example": "125% of 80" },
+    { "lesson_id": 94, "topic": "Find 1/3 of a number by dividing by 3.", "example": "1/3 of 90" },
+    { "lesson_id": 95, "topic": "Find 1/6 of a number by taking half of 1/3 of the number.", "example": "1/6 of 120" },
+    { "lesson_id": 96, "topic": "Find 1/8 of a number by taking half of 1/4 of the number.", "example": "1/8 of 96" },
+    { "lesson_id": 97, "topic": "Find 1/9 of a number by dividing by 9 using digit sum for verification.", "example": "1/9 of 72" },
+    { "lesson_id": 98, "topic": "Check divisibility by 7: double the last digit and subtract it from the rest.", "example": "182" },
+    { "lesson_id": 99, "topic": "Check divisibility by 13: add 4 times the last digit to the rest.", "example": "182" },
+    { "lesson_id": 100, "topic": "Sum consecutive numbers 1 through n using n(n+1)/2.", "example": "1+2+...+10" },
+    { "lesson_id": 101, "topic": "Square numbers 11-19 using (10+n)^2 = 100 + 20n + n^2.", "example": "13^2" },
+    { "lesson_id": 102, "topic": "Square numbers 21-29 using (20+n)^2 = 400 + 40n + n^2.", "example": "23^2" },
+    { "lesson_id": 103, "topic": "Square numbers 31-39 using (30+n)^2 = 900 + 60n + n^2.", "example": "32^2" },
+    { "lesson_id": 104, "topic": "Square numbers 61-69 using (60+n)^2 = 3600 + 120n + n^2.", "example": "63^2" },
+    { "lesson_id": 105, "topic": "Square numbers 71-79 using (70+n)^2 = 4900 + 140n + n^2.", "example": "72^2" },
+    { "lesson_id": 106, "topic": "Square numbers 81-89 using (80+n)^2 = 6400 + 160n + n^2.", "example": "83^2" },
+    { "lesson_id": 107, "topic": "Square numbers 110-119 using (110+n)^2 = 12100 + 220n + n^2.", "example": "112^2" },
+    { "lesson_id": 108, "topic": "Square numbers 120-129 using (120+n)^2 = 14400 + 240n + n^2.", "example": "123^2" },
+    { "lesson_id": 109, "topic": "Multiply by 13 by multiplying by 10 and adding 3 times the number.", "example": "24 x 13" },
+    { "lesson_id": 110, "topic": "Multiply by 14 by multiplying by 10 and adding 4 times the number.", "example": "25 x 14" },
+    { "lesson_id": 111, "topic": "Multiply by 16 by doubling the number four times.", "example": "27 x 16" },
+    { "lesson_id": 112, "topic": "Multiply by 17 by multiplying by 10 and adding 7 times the number.", "example": "32 x 17" },
+    { "lesson_id": 113, "topic": "Multiply by 18 by multiplying by 20 and subtracting twice the number.", "example": "35 x 18" },
+    { "lesson_id": 114, "topic": "Multiply by 19 by multiplying by 20 and subtracting the number.", "example": "42 x 19" },
+    { "lesson_id": 115, "topic": "Multiply by 21 by multiplying by 20 and adding the number.", "example": "34 x 21" },
+    { "lesson_id": 116, "topic": "Multiply by 22 by multiplying by 20 and adding twice the number.", "example": "43 x 22" },
+    { "lesson_id": 117, "topic": "Multiply by 23 by multiplying by 20 and adding 3 times the number.", "example": "25 x 23" },
+    { "lesson_id": 118, "topic": "Multiply by 24 by multiplying by 25 and subtracting the number.", "example": "36 x 24" },
+    { "lesson_id": 119, "topic": "Multiply by 26 by multiplying by 25 and adding the number.", "example": "48 x 26" },
+    { "lesson_id": 120, "topic": "Multiply by 27 by multiplying by 30 and subtracting 3 times the number.", "example": "29 x 27" },
+    { "lesson_id": 121, "topic": "Multiply by 28 by multiplying by 30 and subtracting twice the number.", "example": "31 x 28" },
+    { "lesson_id": 122, "topic": "Multiply by 29 by multiplying by 30 and subtracting the number.", "example": "45 x 29" },
+    { "lesson_id": 123, "topic": "Multiply by 31 by multiplying by 30 and adding the number.", "example": "52 x 31" },
+    { "lesson_id": 124, "topic": "Multiply by 32 by doubling the number five times.", "example": "17 x 32" },
+    { "lesson_id": 125, "topic": "Multiply by 33 by multiplying by 30 and adding 3 times the number.", "example": "24 x 33" },
+    { "lesson_id": 126, "topic": "Multiply by 34 by multiplying by 30 and adding 4 times the number.", "example": "25 x 34" },
+    { "lesson_id": 127, "topic": "Multiply by 35 by multiplying by 30 and adding 5 times the number.", "example": "26 x 35" },
+    { "lesson_id": 128, "topic": "Multiply by 36 by multiplying by 40 and subtracting 4 times the number.", "example": "27 x 36" },
+    { "lesson_id": 129, "topic": "Multiply by 38 by multiplying by 40 and subtracting twice the number.", "example": "28 x 38" },
+    { "lesson_id": 130, "topic": "Multiply by 39 by multiplying by 40 and subtracting the number.", "example": "29 x 39" },
+    { "lesson_id": 131, "topic": "Multiply by 41 by multiplying by 40 and adding the number.", "example": "53 x 41" },
+    { "lesson_id": 132, "topic": "Multiply by 42 by multiplying by 40 and adding twice the number.", "example": "54 x 42" },
+    { "lesson_id": 133, "topic": "Multiply by 43 by multiplying by 40 and adding 3 times the number.", "example": "55 x 43" },
+    { "lesson_id": 134, "topic": "Multiply by 44 by multiplying by 40 and adding 4 times the number.", "example": "56 x 44" },
+    { "lesson_id": 135, "topic": "Multiply by 45 by multiplying by 50 and subtracting 5 times the number.", "example": "57 x 45" },
+    { "lesson_id": 136, "topic": "Multiply by 46 by multiplying by 50 and subtracting 4 times the number.", "example": "58 x 46" },
+    { "lesson_id": 137, "topic": "Multiply by 47 by multiplying by 50 and subtracting 3 times the number.", "example": "59 x 47" },
+    { "lesson_id": 138, "topic": "Multiply by 48 by multiplying by 50 and subtracting twice the number.", "example": "61 x 48" },
+    { "lesson_id": 139, "topic": "Multiply by 49 by multiplying by 50 and subtracting the number.", "example": "62 x 49" },
+    { "lesson_id": 140, "topic": "Multiply by 51 by multiplying by 50 and adding the number.", "example": "63 x 51" },
+    { "lesson_id": 141, "topic": "Multiply by 52 by multiplying by 50 and adding twice the number.", "example": "64 x 52" },
+    { "lesson_id": 142, "topic": "Multiply by 53 by multiplying by 50 and adding 3 times the number.", "example": "65 x 53" },
+    { "lesson_id": 143, "topic": "Multiply by 54 by multiplying by 50 and adding 4 times the number.", "example": "66 x 54" },
+    { "lesson_id": 144, "topic": "Multiply by 55 by multiplying by 50 and adding 5 times the number.", "example": "67 x 55" },
+    { "lesson_id": 145, "topic": "Multiply by 56 by multiplying by 50 and adding 6 times the number.", "example": "68 x 56" },
+    { "lesson_id": 146, "topic": "Multiply by 57 by multiplying by 50 and adding 7 times the number.", "example": "69 x 57" },
+    { "lesson_id": 147, "topic": "Multiply by 58 by multiplying by 50 and adding 8 times the number.", "example": "71 x 58" },
+    { "lesson_id": 148, "topic": "Multiply by 59 by multiplying by 60 and subtracting the number.", "example": "72 x 59" },
+    { "lesson_id": 149, "topic": "Multiply by 61 by multiplying by 60 and adding the number.", "example": "73 x 61" },
+    { "lesson_id": 150, "topic": "Multiply by 62 by multiplying by 60 and adding twice the number.", "example": "74 x 62" },
+    { "lesson_id": 151, "topic": "Multiply numbers near 100 where one is above and one is below: (100+a)(100-b) = 10000 + 100(a-b) - ab.", "example": "102 x 98" },
+    { "lesson_id": 152, "topic": "Multiply numbers near 50 where one is above and one is below: (50+a)(50-b) = 2500 + 50(a-b) - ab.", "example": "52 x 48" },
+    { "lesson_id": 153, "topic": "Multiply numbers near 200 where one is above and one is below: (200+a)(200-b) = 40000 + 200(a-b) - ab.", "example": "203 x 197" },
+    { "lesson_id": 154, "topic": "Multiply numbers near 1000 where one is above and one is below: (1000+a)(1000-b) = 1000000 + 1000(a-b) - ab.", "example": "1003 x 997" },
+    { "lesson_id": 155, "topic": "Square numbers above 200: (200+a)^2 = 40000 + 400a + a^2.", "example": "203^2" },
+    { "lesson_id": 156, "topic": "Square numbers above 500: (500+a)^2 = 250000 + 1000a + a^2.", "example": "503^2" },
+    { "lesson_id": 157, "topic": "Square numbers below 1000: (1000-a)^2 = 1000000 - 2000a + a^2.", "example": "997^2" },
+    { "lesson_id": 158, "topic": "Square numbers near 300: (300±a)^2 = 90000 ± 600a + a^2.", "example": "297^2" },
+    { "lesson_id": 159, "topic": "Square numbers near 400: (400±a)^2 = 160000 ± 800a + a^2.", "example": "403^2" },
+    { "lesson_id": 160, "topic": "Multiply by 50 by halving the number and appending two zeros.", "example": "84 x 50" },
+    { "lesson_id": 161, "topic": "Multiply by 500 by halving the number and appending three zeros.", "example": "84 x 500" },
+    { "lesson_id": 162, "topic": "Multiply by 250 by quartering the number and appending three zeros.", "example": "84 x 250" },
+    { "lesson_id": 163, "topic": "Multiply by 375 by taking three-eighths of the number and appending three zeros.", "example": "64 x 375" },
+    { "lesson_id": 164, "topic": "Multiply by 875 by taking seven-eighths of the number and appending three zeros.", "example": "64 x 875" },
+    { "lesson_id": 165, "topic": "Multiply by 1.5 by adding half of the number to itself.", "example": "48 x 1.5" },
+    { "lesson_id": 166, "topic": "Multiply by 2.5 by multiplying by 10 and dividing by 4.", "example": "48 x 2.5" },
+    { "lesson_id": 167, "topic": "Multiply by 3.5 by multiplying by 7 and dividing by 2.", "example": "48 x 3.5" },
+    { "lesson_id": 168, "topic": "Multiply by 4.5 by multiplying by 9 and dividing by 2.", "example": "48 x 4.5" },
+    { "lesson_id": 169, "topic": "Multiply by 5.5 by multiplying by 11 and dividing by 2.", "example": "48 x 5.5" },
+    { "lesson_id": 170, "topic": "Multiply by 6.5 by multiplying by 13 and dividing by 2.", "example": "48 x 6.5" },
+    { "lesson_id": 171, "topic": "Multiply by 7.5 by multiplying by 15 and dividing by 2.", "example": "48 x 7.5" },
+    { "lesson_id": 172, "topic": "Multiply by 8.5 by multiplying by 17 and dividing by 2.", "example": "48 x 8.5" },
+    { "lesson_id": 173, "topic": "Multiply by 9.5 by multiplying by 19 and dividing by 2.", "example": "48 x 9.5" },
+    { "lesson_id": 174, "topic": "Add 9 by adding 10 and subtracting 1.", "example": "47 + 9" },
+    { "lesson_id": 175, "topic": "Add 99 by adding 100 and subtracting 1.", "example": "47 + 99" },
+    { "lesson_id": 176, "topic": "Add 999 by adding 1000 and subtracting 1.", "example": "47 + 999" },
+    { "lesson_id": 177, "topic": "Subtract 9 by subtracting 10 and adding 1.", "example": "47 - 9" },
+    { "lesson_id": 178, "topic": "Subtract 99 by subtracting 100 and adding 1.", "example": "47 - 99" },
+    { "lesson_id": 179, "topic": "Subtract 999 by subtracting 1000 and adding 1.", "example": "47 - 999" },
+    { "lesson_id": 180, "topic": "Add numbers near 100 by adding 100 and adjusting the difference.", "example": "98 + 76" },
+    { "lesson_id": 181, "topic": "Subtract numbers near 100 by subtracting 100 and adjusting the difference.", "example": "124 - 98" },
+    { "lesson_id": 182, "topic": "Add numbers near 1000 by adding 1000 and adjusting the difference.", "example": "998 + 456" },
+    { "lesson_id": 183, "topic": "Subtract numbers near 1000 by subtracting 1000 and adjusting the difference.", "example": "1234 - 998" },
+    { "lesson_id": 184, "topic": "Sum of first n odd numbers equals n squared.", "example": "1+3+5+7" },
+    { "lesson_id": 185, "topic": "Sum of first n even numbers equals n times (n+1).", "example": "2+4+6+8" },
+    { "lesson_id": 186, "topic": "Check divisibility by 3: sum of digits must be divisible by 3.", "example": "123" },
+    { "lesson_id": 187, "topic": "Check divisibility by 4: last two digits must be divisible by 4.", "example": "1236" },
+    { "lesson_id": 188, "topic": "Check divisibility by 6: number must be divisible by both 2 and 3.", "example": "72" },
+    { "lesson_id": 189, "topic": "Check divisibility by 8: last three digits must be divisible by 8.", "example": "1232" },
+    { "lesson_id": 190, "topic": "Check divisibility by 9: sum of digits must be divisible by 9.", "example": "234" },
+    { "lesson_id": 191, "topic": "Check divisibility by 11: alternating sum of digits must be divisible by 11.", "example": "2728" },
+    { "lesson_id": 192, "topic": "Check divisibility by 12: number must be divisible by both 3 and 4.", "example": "144" },
+    { "lesson_id": 193, "topic": "Check divisibility by 17: subtract 5 times the last digit from the rest.", "example": "221" },
+    { "lesson_id": 194, "topic": "Check divisibility by 19: add 2 times the last digit to the rest.", "example": "247" },
+    { "lesson_id": 195, "topic": "Check divisibility by 23: add 7 times the last digit to the rest.", "example": "299" },
+    { "lesson_id": 196, "topic": "Check divisibility by 29: add 3 times the last digit to the rest.", "example": "319" },
+    { "lesson_id": 197, "topic": "Check divisibility by 31: subtract 3 times the last digit from the rest.", "example": "341" },
+    { "lesson_id": 198, "topic": "Multiply numbers differing by 1: a(a+1) = a^2 + a.", "example": "12 x 13" },
+    { "lesson_id": 199, "topic": "Multiply numbers differing by 3: a(a+3) = a^2 + 3a.", "example": "12 x 15" },
+    { "lesson_id": 200, "topic": "Multiply numbers differing by 5: a(a+5) = a^2 + 5a.", "example": "12 x 17" },
+    { "lesson_id": 201, "topic": "Square numbers near 600 using (600±a)^2 = 360000 ± 1200a + a^2.", "example": "597^2" },
+    { "lesson_id": 202, "topic": "Square numbers near 700 using (700±a)^2 = 490000 ± 1400a + a^2.", "example": "703^2" },
+    { "lesson_id": 203, "topic": "Square numbers near 800 using (800±a)^2 = 640000 ± 1600a + a^2.", "example": "797^2" },
+    { "lesson_id": 204, "topic": "Square numbers near 900 using (900±a)^2 = 810000 ± 1800a + a^2.", "example": "903^2" },
+    { "lesson_id": 205, "topic": "Square numbers near 150 using (150±a)^2 = 22500 ± 300a + a^2.", "example": "147^2" },
+    { "lesson_id": 206, "topic": "Square numbers near 250 using (250±a)^2 = 62500 ± 500a + a^2.", "example": "253^2" },
+    { "lesson_id": 207, "topic": "Square numbers near 350 using (350±a)^2 = 122500 ± 700a + a^2.", "example": "347^2" },
+    { "lesson_id": 208, "topic": "Square numbers near 450 using (450±a)^2 = 202500 ± 900a + a^2.", "example": "453^2" },
+    { "lesson_id": 209, "topic": "Square numbers near 550 using (550±a)^2 = 302500 ± 1100a + a^2.", "example": "547^2" },
+    { "lesson_id": 210, "topic": "Multiply numbers near 600 using base 600: cross-add differences, then multiply differences.", "example": "597 x 598" },
+    { "lesson_id": 211, "topic": "Multiply numbers near 700 using base 700: cross-add differences, then multiply differences.", "example": "697 x 698" },
+    { "lesson_id": 212, "topic": "Multiply numbers near 800 using base 800: cross-add differences, then multiply differences.", "example": "797 x 798" },
+    { "lesson_id": 213, "topic": "Multiply numbers near 900 using base 900: cross-add differences, then multiply differences.", "example": "897 x 898" },
+    { "lesson_id": 214, "topic": "Multiply numbers near 150 using base 150: cross-add differences, then multiply differences.", "example": "147 x 148" },
+    { "lesson_id": 215, "topic": "Multiply numbers near 250 using base 250: cross-add differences, then multiply differences.", "example": "247 x 248" },
+    { "lesson_id": 216, "topic": "Multiply numbers near 350 using base 350: cross-add differences, then multiply differences.", "example": "347 x 348" },
+    { "lesson_id": 217, "topic": "Multiply numbers near 450 using base 450: cross-add differences, then multiply differences.", "example": "447 x 448" },
+    { "lesson_id": 218, "topic": "Multiply numbers near 550 using base 550: cross-add differences, then multiply differences.", "example": "547 x 548" },
+    { "lesson_id": 219, "topic": "Multiply by 105 by multiplying by 100 and adding 5 times the number.", "example": "24 x 105" },
+    { "lesson_id": 220, "topic": "Multiply by 115 by multiplying by 100 and adding 15 times the number.", "example": "24 x 115" },
+    { "lesson_id": 221, "topic": "Multiply by 150 by multiplying by 100 and adding 50 times the number.", "example": "24 x 150" },
+    { "lesson_id": 222, "topic": "Multiply by 175 by multiplying by 200 and subtracting 25 times the number.", "example": "24 x 175" },
+    { "lesson_id": 223, "topic": "Multiply by 225 by multiplying by 200 and adding 25 times the number.", "example": "24 x 225" },
+    { "lesson_id": 224, "topic": "Multiply by 350 by multiplying by 300 and adding 50 times the number.", "example": "24 x 350" },
+    { "lesson_id": 225, "topic": "Multiply by 450 by multiplying by 500 and subtracting 50 times the number.", "example": "24 x 450" },
+    { "lesson_id": 226, "topic": "Multiply by 550 by multiplying by 500 and adding 50 times the number.", "example": "24 x 550" },
+    { "lesson_id": 227, "topic": "Multiply by 650 by multiplying by 600 and adding 50 times the number.", "example": "24 x 650" },
+    { "lesson_id": 228, "topic": "Multiply by 850 by multiplying by 1000 and subtracting 150 times the number.", "example": "24 x 850" },
+    { "lesson_id": 229, "topic": "Multiply by 950 by multiplying by 1000 and subtracting 50 times the number.", "example": "24 x 950" },
+    { "lesson_id": 230, "topic": "Multiply by 0.875 (7/8) by multiplying by 7 and dividing by 8.", "example": "64 x 0.875" },
+    { "lesson_id": 231, "topic": "Multiply by 0.0625 (1/16) by dividing by 16.", "example": "64 x 0.0625" },
+    { "lesson_id": 232, "topic": "Multiply by 0.03125 (1/32) by dividing by 32.", "example": "64 x 0.03125" },
+    { "lesson_id": 233, "topic": "Multiply by 0.015625 (1/64) by dividing by 64.", "example": "64 x 0.015625" },
+    { "lesson_id": 234, "topic": "Multiply by 0.0078125 (1/128) by dividing by 128.", "example": "64 x 0.0078125" },
+    { "lesson_id": 235, "topic": "Multiply by 10001 by writing the number, then three zeros, then the number again.", "example": "23 x 10001" },
+    { "lesson_id": 236, "topic": "Multiply by 100001 by writing the number, then four zeros, then the number again.", "example": "23 x 100001" },
+    { "lesson_id": 237, "topic": "Multiply by 10101 by writing the number three times consecutively.", "example": "23 x 10101" },
+    { "lesson_id": 238, "topic": "Square numbers near 2000 using (2000±a)^2 = 4,000,000 ± 4000a + a^2.", "example": "1997^2" },
+    { "lesson_id": 239, "topic": "Square numbers near 3000 using (3000±a)^2 = 9,000,000 ± 6000a + a^2.", "example": "2997^2" },
+    { "lesson_id": 240, "topic": "Square numbers near 4000 using (4000±a)^2 = 16,000,000 ± 8000a + a^2.", "example": "3997^2" },
+    { "lesson_id": 241, "topic": "Square numbers near 5000 using (5000±a)^2 = 25,000,000 ± 10000a + a^2.", "example": "4997^2" },
+    { "lesson_id": 242, "topic": "Multiply numbers near 2000 using base 2000: cross-add differences, then multiply differences.", "example": "1997 x 1998" },
+    { "lesson_id": 243, "topic": "Multiply numbers near 3000 using base 3000: cross-add differences, then multiply differences.", "example": "2997 x 2998" },
+    { "lesson_id": 244, "topic": "Multiply numbers near 4000 using base 4000: cross-add differences, then multiply differences.", "example": "3997 x 3998" },
+    { "lesson_id": 245, "topic": "Multiply numbers near 5000 using base 5000: cross-add differences, then multiply differences.", "example": "4997 x 4998" },
+    { "lesson_id": 246, "topic": "Multiply two numbers that sum to 20 using 10^2 - d^2.", "example": "8 x 12" },
+    { "lesson_id": 247, "topic": "Multiply two numbers that sum to 50 using 25^2 - d^2.", "example": "23 x 27" },
+    { "lesson_id": 248, "topic": "Multiply two numbers that sum to 100 using 50^2 - d^2.", "example": "43 x 57" },
+    { "lesson_id": 249, "topic": "Multiply two numbers that sum to 200 using 100^2 - d^2.", "example": "87 x 113" },
+    { "lesson_id": 250, "topic": "Multiply two numbers that sum to 1000 using 500^2 - d^2.", "example": "497 x 503" },
+    { "lesson_id": 251, "topic": "Multiply a 4-digit number by 11 by adding adjacent digits with carry.", "example": "1234 x 11" },
+    { "lesson_id": 252, "topic": "Multiply a 3-digit number by 111 by writing the number, then sum of first two, sum of all three, sum of last two, last digit.", "example": "123 x 111" },
+    { "lesson_id": 253, "topic": "Multiply a 2-digit number by 1111 by writing the number, then three sums of the two digits, then last digit.", "example": "23 x 1111" },
+    { "lesson_id": 254, "topic": "Square a number consisting of all 1s by writing increasing then decreasing digits.", "example": "111^2" },
+    { "lesson_id": 255, "topic": "Square a number consisting of all 3s by writing (n-1) ones, 0, (n-1) eights, 9.", "example": "333^2" },
+    { "lesson_id": 256, "topic": "Square a number consisting of all 6s by writing (n-1) fours, 3, 5, (n-1) fives, 6.", "example": "666^2" },
+    { "lesson_id": 257, "topic": "Square a number consisting of all 9s by writing (n-1) nines, 8, (n-1) zeros, 1.", "example": "999^2" },
+    { "lesson_id": 258, "topic": "Multiply by 3125 by dividing by 32 and appending five zeros.", "example": "64 x 3125" },
+    { "lesson_id": 259, "topic": "Multiply by 15625 by dividing by 64 and appending six zeros.", "example": "64 x 15625" },
+    { "lesson_id": 260, "topic": "Divide by 125 by multiplying by 8 and dividing by 1000.", "example": "1000 / 125" },
+    { "lesson_id": 261, "topic": "Divide by 625 by multiplying by 16 and dividing by 10000.", "example": "10000 / 625" },
+    { "lesson_id": 262, "topic": "Divide by 3125 by multiplying by 32 and dividing by 100000.", "example": "100000 / 3125" },
+    { "lesson_id": 263, "topic": "Divide by 1.25 by multiplying by 8 and dividing by 10.", "example": "10 / 1.25" },
+    { "lesson_id": 264, "topic": "Divide by 2.5 by multiplying by 4 and dividing by 10.", "example": "10 / 2.5" },
+    { "lesson_id": 265, "topic": "Divide by 0.75 by multiplying by 4 and dividing by 3.", "example": "9 / 0.75" },
+    { "lesson_id": 266, "topic": "Multiply by 0.4 by multiplying by 4 and dividing by 10.", "example": "25 x 0.4" },
+    { "lesson_id": 267, "topic": "Multiply by 0.6 by multiplying by 6 and dividing by 10.", "example": "25 x 0.6" },
+    { "lesson_id": 268, "topic": "Multiply by 0.8 by multiplying by 8 and dividing by 10.", "example": "25 x 0.8" },
+    { "lesson_id": 269, "topic": "Multiply by 0.2 by multiplying by 2 and dividing by 10.", "example": "25 x 0.2" },
+    { "lesson_id": 270, "topic": "Find 4% of a number by taking 1% and multiplying by 4.", "example": "4% of 250" },
+    { "lesson_id": 271, "topic": "Find 3% of a number by taking 1% and multiplying by 3.", "example": "3% of 200" },
+    { "lesson_id": 272, "topic": "Find 7% of a number by taking 5% and adding 2%.", "example": "7% of 100" },
+    { "lesson_id": 273, "topic": "Find 8% of a number by taking 10% and subtracting 2%.", "example": "8% of 50" },
+    { "lesson_id": 274, "topic": "Find 9% of a number by taking 10% and subtracting 1%.", "example": "9% of 200" },
+    { "lesson_id": 275, "topic": "Find 11% of a number by taking 10% and adding 1%.", "example": "11% of 200" },
+    { "lesson_id": 276, "topic": "Find 12% of a number by taking 10% and adding 2%.", "example": "12% of 50" },
+    { "lesson_id": 277, "topic": "Find 13% of a number by taking 10% and adding 3%.", "example": "13% of 100" },
+    { "lesson_id": 278, "topic": "Find 14% of a number by taking 10% and adding 4%.", "example": "14% of 50" },
+    { "lesson_id": 279, "topic": "Find 16% of a number by taking 10% and adding 6%.", "example": "16% of 100" },
+    { "lesson_id": 280, "topic": "Find 17% of a number by taking 10% and adding 7%.", "example": "17% of 100" },
+    { "lesson_id": 281, "topic": "Find 18% of a number by taking 20% and subtracting 2%.", "example": "18% of 50" },
+    { "lesson_id": 282, "topic": "Find 19% of a number by taking 20% and subtracting 1%.", "example": "19% of 100" },
+    { "lesson_id": 283, "topic": "Find 21% of a number by taking 20% and adding 1%.", "example": "21% of 100" },
+    { "lesson_id": 284, "topic": "Find 22% of a number by taking 20% and adding 2%.", "example": "22% of 50" },
+    { "lesson_id": 285, "topic": "Find 23% of a number by taking 20% and adding 3%.", "example": "23% of 100" },
+    { "lesson_id": 286, "topic": "Find 24% of a number by taking 25% and subtracting 1%.", "example": "24% of 200" },
+    { "lesson_id": 287, "topic": "Find 26% of a number by taking 25% and adding 1%.", "example": "26% of 200" },
+    { "lesson_id": 288, "topic": "Find 27% of a number by taking 25% and adding 2%.", "example": "27% of 100" },
+    { "lesson_id": 289, "topic": "Find 28% of a number by taking 25% and adding 3%.", "example": "28% of 50" },
+    { "lesson_id": 290, "topic": "Find 29% of a number by taking 30% and subtracting 1%.", "example": "29% of 100" },
+    { "lesson_id": 291, "topic": "Find 31% of a number by taking 30% and adding 1%.", "example": "31% of 100" },
+    { "lesson_id": 292, "topic": "Find 32% of a number by taking 30% and adding 2%.", "example": "32% of 50" },
+    { "lesson_id": 293, "topic": "Find 34% of a number by taking 35% and subtracting 1%.", "example": "34% of 200" },
+    { "lesson_id": 294, "topic": "Find 36% of a number by taking 35% and adding 1%.", "example": "36% of 200" },
+    { "lesson_id": 295, "topic": "Find 38% of a number by taking 40% and subtracting 2%.", "example": "38% of 50" },
+    { "lesson_id": 296, "topic": "Find 66.66% of a number by multiplying by 2 and dividing by 3.", "example": "66.66% of 90" },
+    { "lesson_id": 297, "topic": "Find 16.66% of a number by dividing by 6.", "example": "16.66% of 120" },
+    { "lesson_id": 298, "topic": "Find 83.33% of a number by multiplying by 5 and dividing by 6.", "example": "83.33% of 120" },
+    { "lesson_id": 299, "topic": "Find 14.28% of a number by dividing by 7.", "example": "14.28% of 70" },
+    { "lesson_id": 300, "topic": "Find 11.11% of a number by dividing by 9.", "example": "11.11% of 90" },
+    { "lesson_id": 301, "topic": "Multiply by 63 by multiplying by 7 and then by 9.", "example": "24 x 63" },
+    { "lesson_id": 302, "topic": "Multiply by 64 by doubling six times.", "example": "23 x 64" },
+    { "lesson_id": 303, "topic": "Multiply by 65 by multiplying by 13 and then by 5.", "example": "24 x 65" },
+    { "lesson_id": 304, "topic": "Multiply by 66 by multiplying by 6 and then by 11.", "example": "25 x 66" },
+    { "lesson_id": 305, "topic": "Multiply by 67 by multiplying by 70 and subtracting 3 times the number.", "example": "26 x 67" },
+    { "lesson_id": 306, "topic": "Multiply by 68 by multiplying by 70 and subtracting twice the number.", "example": "27 x 68" },
+    { "lesson_id": 307, "topic": "Multiply by 69 by multiplying by 70 and subtracting the number.", "example": "28 x 69" },
+    { "lesson_id": 308, "topic": "Multiply by 71 by multiplying by 70 and adding the number.", "example": "32 x 71" },
+    { "lesson_id": 309, "topic": "Multiply by 72 by multiplying by 8 and then by 9.", "example": "34 x 72" },
+    { "lesson_id": 310, "topic": "Multiply by 73 by multiplying by 70 and adding 3 times the number.", "example": "35 x 73" },
+    { "lesson_id": 311, "topic": "Multiply by 74 by multiplying by 75 and subtracting the number.", "example": "36 x 74" },
+    { "lesson_id": 312, "topic": "Multiply by 76 by multiplying by 75 and adding the number.", "example": "37 x 76" },
+    { "lesson_id": 313, "topic": "Multiply by 77 by multiplying by 7 and then by 11.", "example": "38 x 77" },
+    { "lesson_id": 314, "topic": "Multiply by 78 by multiplying by 80 and subtracting twice the number.", "example": "39 x 78" },
+    { "lesson_id": 315, "topic": "Multiply by 79 by multiplying by 80 and subtracting the number.", "example": "41 x 79" },
+    { "lesson_id": 316, "topic": "Multiply by 81 by multiplying by 9 and then by 9.", "example": "42 x 81" },
+    { "lesson_id": 317, "topic": "Multiply by 82 by multiplying by 80 and adding twice the number.", "example": "43 x 82" },
+    { "lesson_id": 318, "topic": "Multiply by 83 by multiplying by 80 and adding 3 times the number.", "example": "44 x 83" },
+    { "lesson_id": 319, "topic": "Multiply by 84 by multiplying by 7 and then by 12.", "example": "45 x 84" },
+    { "lesson_id": 320, "topic": "Multiply by 85 by multiplying by 17 and then by 5.", "example": "46 x 85" },
+    { "lesson_id": 321, "topic": "Multiply by 86 by multiplying by 80 and adding 6 times the number.", "example": "47 x 86" },
+    { "lesson_id": 322, "topic": "Multiply by 87 by multiplying by 90 and subtracting 3 times the number.", "example": "48 x 87" },
+    { "lesson_id": 323, "topic": "Multiply by 88 by multiplying by 8 and then by 11.", "example": "49 x 88" },
+    { "lesson_id": 324, "topic": "Multiply by 89 by multiplying by 90 and subtracting the number.", "example": "51 x 89" },
+    { "lesson_id": 325, "topic": "Multiply by 91 by multiplying by 90 and adding the number.", "example": "52 x 91" },
+    { "lesson_id": 326, "topic": "Multiply by 92 by multiplying by 100 and subtracting 8 times the number.", "example": "53 x 92" },
+    { "lesson_id": 327, "topic": "Multiply by 93 by multiplying by 100 and subtracting 7 times the number.", "example": "54 x 93" },
+    { "lesson_id": 328, "topic": "Multiply by 94 by multiplying by 100 and subtracting 6 times the number.", "example": "55 x 94" },
+    { "lesson_id": 329, "topic": "Multiply by 95 by multiplying by 100 and subtracting 5 times the number.", "example": "56 x 95" },
+    { "lesson_id": 330, "topic": "Multiply by 96 by multiplying by 100 and subtracting 4 times the number.", "example": "57 x 96" },
+    { "lesson_id": 331, "topic": "Multiply by 97 by multiplying by 100 and subtracting 3 times the number.", "example": "58 x 97" },
+    { "lesson_id": 332, "topic": "Multiply by 98 by multiplying by 100 and subtracting twice the number.", "example": "59 x 98" },
+    { "lesson_id": 333, "topic": "Multiply by 102 by multiplying by 100 and adding twice the number.", "example": "24 x 102" },
+    { "lesson_id": 334, "topic": "Multiply by 103 by multiplying by 100 and adding 3 times the number.", "example": "25 x 103" },
+    { "lesson_id": 335, "topic": "Multiply by 104 by multiplying by 100 and adding 4 times the number.", "example": "26 x 104" },
+    { "lesson_id": 336, "topic": "Multiply by 106 by multiplying by 100 and adding 6 times the number.", "example": "27 x 106" },
+    { "lesson_id": 337, "topic": "Multiply by 107 by multiplying by 100 and adding 7 times the number.", "example": "28 x 107" },
+    { "lesson_id": 338, "topic": "Multiply by 108 by multiplying by 100 and adding 8 times the number.", "example": "29 x 108" },
+    { "lesson_id": 339, "topic": "Multiply by 109 by multiplying by 100 and adding 9 times the number.", "example": "31 x 109" },
+    { "lesson_id": 340, "topic": "Multiply by 112 by multiplying by 100 and adding 12 times the number.", "example": "32 x 112" },
+    { "lesson_id": 341, "topic": "Multiply by 113 by multiplying by 100 and adding 13 times the number.", "example": "33 x 113" },
+    { "lesson_id": 342, "topic": "Multiply by 114 by multiplying by 100 and adding 14 times the number.", "example": "34 x 114" },
+    { "lesson_id": 343, "topic": "Multiply by 116 by multiplying by 100 and adding 16 times the number.", "example": "35 x 116" },
+    { "lesson_id": 344, "topic": "Multiply by 117 by multiplying by 100 and adding 17 times the number.", "example": "36 x 117" },
+    { "lesson_id": 345, "topic": "Multiply by 118 by multiplying by 100 and adding 18 times the number.", "example": "37 x 118" },
+    { "lesson_id": 346, "topic": "Multiply by 119 by multiplying by 100 and adding 19 times the number.", "example": "38 x 119" },
+    { "lesson_id": 347, "topic": "Multiply by 121 by multiplying by 11 and then by 11.", "example": "24 x 121" },
+    { "lesson_id": 348, "topic": "Multiply by 122 by multiplying by 120 and adding twice the number.", "example": "25 x 122" },
+    { "lesson_id": 349, "topic": "Multiply by 123 by multiplying by 100 and adding 23 times the number.", "example": "26 x 123" },
+    { "lesson_id": 350, "topic": "Multiply by 124 by multiplying by 125 and subtracting the number.", "example": "27 x 124" },
+    { "lesson_id": 351, "topic": "Multiply by 126 by multiplying by 125 and adding the number.", "example": "28 x 126" },
+    { "lesson_id": 352, "topic": "Multiply by 127 by multiplying by 130 and subtracting 3 times the number.", "example": "29 x 127" },
+    { "lesson_id": 353, "topic": "Multiply by 128 by doubling seven times.", "example": "31 x 128" },
+    { "lesson_id": 354, "topic": "Multiply by 129 by multiplying by 130 and subtracting the number.", "example": "32 x 129" },
+    { "lesson_id": 355, "topic": "Multiply by 131 by multiplying by 130 and adding the number.", "example": "33 x 131" },
+    { "lesson_id": 356, "topic": "Multiply by 132 by multiplying by 12 and then by 11.", "example": "34 x 132" },
+    { "lesson_id": 357, "topic": "Multiply by 133 by multiplying by 130 and adding 3 times the number.", "example": "35 x 133" },
+    { "lesson_id": 358, "topic": "Multiply by 134 by multiplying by 130 and adding 4 times the number.", "example": "36 x 134" },
+    { "lesson_id": 359, "topic": "Multiply by 135 by multiplying by 100 and adding 35 times the number.", "example": "37 x 135" },
+    { "lesson_id": 360, "topic": "Multiply by 136 by multiplying by 140 and subtracting 4 times the number.", "example": "38 x 136" },
+    { "lesson_id": 361, "topic": "Multiply by 137 by multiplying by 140 and subtracting 3 times the number.", "example": "39 x 137" },
+    { "lesson_id": 362, "topic": "Multiply by 138 by multiplying by 140 and subtracting twice the number.", "example": "41 x 138" },
+    { "lesson_id": 363, "topic": "Multiply by 139 by multiplying by 140 and subtracting the number.", "example": "42 x 139" },
+    { "lesson_id": 364, "topic": "Multiply by 141 by multiplying by 140 and adding the number.", "example": "43 x 141" },
+    { "lesson_id": 365, "topic": "Multiply by 142 by multiplying by 140 and adding twice the number.", "example": "44 x 142" },
+    { "lesson_id": 366, "topic": "Multiply by 143 by multiplying by 11 and then by 13.", "example": "45 x 143" },
+    { "lesson_id": 367, "topic": "Multiply by 144 by multiplying by 12 and then by 12.", "example": "46 x 144" },
+    { "lesson_id": 368, "topic": "Multiply by 145 by multiplying by 100 and adding 45 times the number.", "example": "47 x 145" },
+    { "lesson_id": 369, "topic": "Multiply by 146 by multiplying by 150 and subtracting 4 times the number.", "example": "48 x 146" },
+    { "lesson_id": 370, "topic": "Multiply by 147 by multiplying by 150 and subtracting 3 times the number.", "example": "49 x 147" },
+    { "lesson_id": 371, "topic": "Multiply by 148 by multiplying by 150 and subtracting twice the number.", "example": "51 x 148" },
+    { "lesson_id": 372, "topic": "Multiply by 149 by multiplying by 150 and subtracting the number.", "example": "52 x 149" },
+    { "lesson_id": 373, "topic": "Multiply by 160 by multiplying by 16 and appending a zero.", "example": "23 x 160" },
+    { "lesson_id": 374, "topic": "Multiply by 165 by multiplying by 15 and then by 11.", "example": "24 x 165" },
+    { "lesson_id": 375, "topic": "Multiply by 175 by multiplying by 7 and then by 25.", "example": "25 x 175" },
+    { "lesson_id": 376, "topic": "Multiply by 185 by multiplying by 200 and subtracting 15 times the number.", "example": "26 x 185" },
+    { "lesson_id": 377, "topic": "Multiply by 195 by multiplying by 200 and subtracting 5 times the number.", "example": "27 x 195" },
+    { "lesson_id": 378, "topic": "Multiply by 205 by multiplying by 200 and adding 5 times the number.", "example": "28 x 205" },
+    { "lesson_id": 379, "topic": "Multiply by 215 by multiplying by 200 and adding 15 times the number.", "example": "29 x 215" },
+    { "lesson_id": 380, "topic": "Multiply by 245 by multiplying by 250 and subtracting 5 times the number.", "example": "31 x 245" },
+    { "lesson_id": 381, "topic": "Multiply by 255 by multiplying by 250 and adding 5 times the number.", "example": "32 x 255" },
+    { "lesson_id": 382, "topic": "Multiply by 265 by multiplying by 250 and adding 15 times the number.", "example": "33 x 265" },
+    { "lesson_id": 383, "topic": "Multiply by 275 by multiplying by 300 and subtracting 25 times the number.", "example": "34 x 275" },
+    { "lesson_id": 384, "topic": "Multiply by 285 by multiplying by 300 and subtracting 15 times the number.", "example": "35 x 285" },
+    { "lesson_id": 385, "topic": "Multiply by 295 by multiplying by 300 and subtracting 5 times the number.", "example": "36 x 295" },
+    { "lesson_id": 386, "topic": "Multiply by 305 by multiplying by 300 and adding 5 times the number.", "example": "37 x 305" },
+    { "lesson_id": 387, "topic": "Multiply by 315 by multiplying by 300 and adding 15 times the number.", "example": "38 x 315" },
+    { "lesson_id": 388, "topic": "Multiply by 325 by multiplying by 300 and adding 25 times the number.", "example": "39 x 325" },
+    { "lesson_id": 389, "topic": "Multiply by 335 by multiplying by 300 and adding 35 times the number.", "example": "41 x 335" },
+    { "lesson_id": 390, "topic": "Multiply by 345 by multiplying by 350 and subtracting 5 times the number.", "example": "42 x 345" },
+    { "lesson_id": 391, "topic": "Multiply by 355 by multiplying by 350 and adding 5 times the number.", "example": "43 x 355" },
+    { "lesson_id": 392, "topic": "Multiply by 365 by multiplying by 400 and subtracting 35 times the number.", "example": "44 x 365" },
+    { "lesson_id": 393, "topic": "Multiply by 375 by multiplying by 3 and then by 125.", "example": "45 x 375" },
+    { "lesson_id": 394, "topic": "Multiply by 385 by multiplying by 400 and subtracting 15 times the number.", "example": "46 x 385" },
+    { "lesson_id": 395, "topic": "Multiply by 395 by multiplying by 400 and subtracting 5 times the number.", "example": "47 x 395" },
+    { "lesson_id": 396, "topic": "Multiply by 405 by multiplying by 400 and adding 5 times the number.", "example": "48 x 405" },
+    { "lesson_id": 397, "topic": "Multiply by 415 by multiplying by 400 and adding 15 times the number.", "example": "49 x 415" },
+    { "lesson_id": 398, "topic": "Multiply by 425 by multiplying by 400 and adding 25 times the number.", "example": "51 x 425" },
+    { "lesson_id": 399, "topic": "Multiply by 435 by multiplying by 400 and adding 35 times the number.", "example": "52 x 435" },
+    { "lesson_id": 400, "topic": "Multiply by 445 by multiplying by 450 and subtracting 5 times the number.", "example": "53 x 445" },
+    { "lesson_id": 401, "topic": "Multiply by 455 by multiplying by 450 and adding 5 times the number.", "example": "54 x 455" },
+    { "lesson_id": 402, "topic": "Multiply by 465 by multiplying by 500 and subtracting 35 times the number.", "example": "55 x 465" },
+    { "lesson_id": 403, "topic": "Multiply by 475 by multiplying by 500 and subtracting 25 times the number.", "example": "56 x 475" },
+    { "lesson_id": 404, "topic": "Multiply by 485 by multiplying by 500 and subtracting 15 times the number.", "example": "57 x 485" },
+    { "lesson_id": 405, "topic": "Multiply by 495 by multiplying by 500 and subtracting 5 times the number.", "example": "58 x 495" },
+    { "lesson_id": 406, "topic": "Multiply by 505 by multiplying by 500 and adding 5 times the number.", "example": "59 x 505" },
+    { "lesson_id": 407, "topic": "Multiply by 515 by multiplying by 500 and adding 15 times the number.", "example": "61 x 515" },
+    { "lesson_id": 408, "topic": "Multiply by 525 by multiplying by 500 and adding 25 times the number.", "example": "62 x 525" },
+    { "lesson_id": 409, "topic": "Multiply by 535 by multiplying by 500 and adding 35 times the number.", "example": "63 x 535" },
+    { "lesson_id": 410, "topic": "Multiply by 545 by multiplying by 550 and subtracting 5 times the number.", "example": "64 x 545" },
+    { "lesson_id": 411, "topic": "Multiply by 555 by multiplying by 5 and then by 111.", "example": "65 x 555" },
+    { "lesson_id": 412, "topic": "Multiply by 565 by multiplying by 600 and subtracting 35 times the number.", "example": "66 x 565" },
+    { "lesson_id": 413, "topic": "Multiply by 575 by multiplying by 600 and subtracting 25 times the number.", "example": "67 x 575" },
+    { "lesson_id": 414, "topic": "Multiply by 585 by multiplying by 600 and subtracting 15 times the number.", "example": "68 x 585" },
+    { "lesson_id": 415, "topic": "Multiply by 595 by multiplying by 600 and subtracting 5 times the number.", "example": "69 x 595" },
+    { "lesson_id": 416, "topic": "Multiply by 605 by multiplying by 600 and adding 5 times the number.", "example": "71 x 605" },
+    { "lesson_id": 417, "topic": "Multiply by 615 by multiplying by 600 and adding 15 times the number.", "example": "72 x 615" },
+    { "lesson_id": 418, "topic": "Multiply by 625 by multiplying by 5 and then by 125.", "example": "73 x 625" },
+    { "lesson_id": 419, "topic": "Multiply by 635 by multiplying by 600 and adding 35 times the number.", "example": "74 x 635" },
+    { "lesson_id": 420, "topic": "Multiply by 645 by multiplying by 650 and subtracting 5 times the number.", "example": "75 x 645" },
+    { "lesson_id": 421, "topic": "Multiply by 655 by multiplying by 650 and adding 5 times the number.", "example": "76 x 655" },
+    { "lesson_id": 422, "topic": "Multiply by 665 by multiplying by 700 and subtracting 35 times the number.", "example": "77 x 665" },
+    { "lesson_id": 423, "topic": "Multiply by 675 by multiplying by 700 and subtracting 25 times the number.", "example": "78 x 675" },
+    { "lesson_id": 424, "topic": "Multiply by 685 by multiplying by 700 and subtracting 15 times the number.", "example": "79 x 685" },
+    { "lesson_id": 425, "topic": "Multiply by 695 by multiplying by 700 and subtracting 5 times the number.", "example": "81 x 695" },
+    { "lesson_id": 426, "topic": "Multiply by 705 by multiplying by 700 and adding 5 times the number.", "example": "82 x 705" },
+    { "lesson_id": 427, "topic": "Multiply by 715 by multiplying by 700 and adding 15 times the number.", "example": "83 x 715" },
+    { "lesson_id": 428, "topic": "Multiply by 725 by multiplying by 700 and adding 25 times the number.", "example": "84 x 725" },
+    { "lesson_id": 429, "topic": "Multiply by 735 by multiplying by 700 and adding 35 times the number.", "example": "85 x 735" },
+    { "lesson_id": 430, "topic": "Multiply by 745 by multiplying by 750 and subtracting 5 times the number.", "example": "86 x 745" },
+    { "lesson_id": 431, "topic": "Multiply by 755 by multiplying by 750 and adding 5 times the number.", "example": "87 x 755" },
+    { "lesson_id": 432, "topic": "Multiply by 765 by multiplying by 800 and subtracting 35 times the number.", "example": "88 x 765" },
+    { "lesson_id": 433, "topic": "Multiply by 775 by multiplying by 800 and subtracting 25 times the number.", "example": "89 x 775" },
+    { "lesson_id": 434, "topic": "Multiply by 785 by multiplying by 800 and subtracting 15 times the number.", "example": "91 x 785" },
+    { "lesson_id": 435, "topic": "Multiply by 795 by multiplying by 800 and subtracting 5 times the number.", "example": "92 x 795" },
+    { "lesson_id": 436, "topic": "Multiply by 805 by multiplying by 800 and adding 5 times the number.", "example": "93 x 805" },
+    { "lesson_id": 437, "topic": "Multiply by 815 by multiplying by 800 and adding 15 times the number.", "example": "94 x 815" },
+    { "lesson_id": 438, "topic": "Multiply by 825 by multiplying by 800 and adding 25 times the number.", "example": "95 x 825" },
+    { "lesson_id": 439, "topic": "Multiply by 835 by multiplying by 800 and adding 35 times the number.", "example": "96 x 835" },
+    { "lesson_id": 440, "topic": "Multiply by 845 by multiplying by 850 and subtracting 5 times the number.", "example": "97 x 845" },
+    { "lesson_id": 441, "topic": "Multiply by 855 by multiplying by 850 and adding 5 times the number.", "example": "98 x 855" },
+    { "lesson_id": 442, "topic": "Multiply by 865 by multiplying by 900 and subtracting 35 times the number.", "example": "99 x 865" },
+    { "lesson_id": 443, "topic": "Multiply by 875 by multiplying by 7 and then by 125.", "example": "24 x 875" },
+    { "lesson_id": 444, "topic": "Multiply by 885 by multiplying by 900 and subtracting 15 times the number.", "example": "25 x 885" },
+    { "lesson_id": 445, "topic": "Multiply by 895 by multiplying by 900 and subtracting 5 times the number.", "example": "26 x 895" },
+    { "lesson_id": 446, "topic": "Multiply by 905 by multiplying by 900 and adding 5 times the number.", "example": "27 x 905" },
+    { "lesson_id": 447, "topic": "Multiply by 915 by multiplying by 900 and adding 15 times the number.", "example": "28 x 915" },
+    { "lesson_id": 448, "topic": "Multiply by 925 by multiplying by 900 and adding 25 times the number.", "example": "29 x 925" },
+    { "lesson_id": 449, "topic": "Multiply by 935 by multiplying by 900 and adding 35 times the number.", "example": "31 x 935" },
+    { "lesson_id": 450, "topic": "Multiply by 945 by multiplying by 950 and subtracting 5 times the number.", "example": "32 x 945" },
+    { "lesson_id": 451, "topic": "Multiply by 955 by multiplying by 950 and adding 5 times the number.", "example": "33 x 955" },
+    { "lesson_id": 452, "topic": "Multiply by 965 by multiplying by 1000 and subtracting 35 times the number.", "example": "34 x 965" },
+    { "lesson_id": 453, "topic": "Multiply by 975 by multiplying by 1000 and subtracting 25 times the number.", "example": "35 x 975" },
+    { "lesson_id": 454, "topic": "Multiply by 985 by multiplying by 1000 and subtracting 15 times the number.", "example": "36 x 985" },
+    { "lesson_id": 455, "topic": "Multiply by 995 by multiplying by 1000 and subtracting 5 times the number.", "example": "37 x 995" },
+    { "lesson_id": 456, "topic": "Multiply by 1005 by multiplying by 1000 and adding 5 times the number.", "example": "38 x 1005" },
+    { "lesson_id": 457, "topic": "Multiply by 1015 by multiplying by 1000 and adding 15 times the number.", "example": "39 x 1015" },
+    { "lesson_id": 458, "topic": "Multiply by 1025 by multiplying by 1000 and adding 25 times the number.", "example": "41 x 1025" },
+    { "lesson_id": 459, "topic": "Multiply by 1035 by multiplying by 1000 and adding 35 times the number.", "example": "42 x 1035" },
+    { "lesson_id": 460, "topic": "Multiply by 1045 by multiplying by 1050 and subtracting 5 times the number.", "example": "43 x 1045" },
+    { "lesson_id": 461, "topic": "Square a number ending in 1 using (10a+1)^2 = 100a^2 + 20a + 1.", "example": "61^2" },
+    { "lesson_id": 462, "topic": "Square a number ending in 9 using (10a-1)^2 = 100a^2 - 20a + 1.", "example": "59^2" },
+    { "lesson_id": 463, "topic": "Square a number ending in 2 using (10a+2)^2 = 100a^2 + 40a + 4.", "example": "62^2" },
+    { "lesson_id": 464, "topic": "Square a number ending in 8 using (10a-2)^2 = 100a^2 - 40a + 4.", "example": "58^2" },
+    { "lesson_id": 465, "topic": "Square a number ending in 3 using (10a+3)^2 = 100a^2 + 60a + 9.", "example": "63^2" },
+    { "lesson_id": 466, "topic": "Square a number ending in 7 using (10a-3)^2 = 100a^2 - 60a + 9.", "example": "57^2" },
+    { "lesson_id": 467, "topic": "Square a number ending in 4 using (10a+4)^2 = 100a^2 + 80a + 16.", "example": "64^2" },
+    { "lesson_id": 468, "topic": "Square a number ending in 6 using (10a-4)^2 = 100a^2 - 80a + 16.", "example": "56^2" },
+    { "lesson_id": 469, "topic": "Square a number ending in 5 using (10a+5)^2 = 100a(a+1) + 25.", "example": "75^2" },
+    { "lesson_id": 470, "topic": "Square a number ending in 0 using (10a)^2 = 100a^2.", "example": "80^2" },
+    { "lesson_id": 471, "topic": "Square a palindrome like 121 using (110+11)^2 expansion.", "example": "121^2" },
+    { "lesson_id": 472, "topic": "Square a number like 101 using (100+1)^2 = 10000 + 200 + 1.", "example": "101^2" },
+    { "lesson_id": 473, "topic": "Square a number like 99 using (100-1)^2 = 10000 - 200 + 1.", "example": "99^2" },
+    { "lesson_id": 474, "topic": "Square a number like 1001 using (1000+1)^2 = 1000000 + 2000 + 1.", "example": "1001^2" },
+    { "lesson_id": 475, "topic": "Square a number like 999 using (1000-1)^2 = 1000000 - 2000 + 1.", "example": "999^2" },
+    { "lesson_id": 476, "topic": "Square a number like 15 using (10+5)^2 = 100 + 100 + 25.", "example": "15^2" },
+    { "lesson_id": 477, "topic": "Square a number like 25 using (20+5)^2 = 400 + 200 + 25.", "example": "25^2" },
+    { "lesson_id": 478, "topic": "Square a number like 35 using (30+5)^2 = 900 + 300 + 25.", "example": "35^2" },
+    { "lesson_id": 479, "topic": "Square a number like 45 using (40+5)^2 = 1600 + 400 + 25.", "example": "45^2" },
+    { "lesson_id": 480, "topic": "Square a number like 55 using (50+5)^2 = 2500 + 500 + 25.", "example": "55^2" },
+    { "lesson_id": 481, "topic": "Square a number like 65 using (60+5)^2 = 3600 + 600 + 25.", "example": "65^2" },
+    { "lesson_id": 482, "topic": "Square a number like 85 using (80+5)^2 = 6400 + 800 + 25.", "example": "85^2" },
+    { "lesson_id": 483, "topic": "Square a number like 95 using (90+5)^2 = 8100 + 900 + 25.", "example": "95^2" },
+    { "lesson_id": 484, "topic": "Square 105 using (100+5)^2 = 10000 + 1000 + 25.", "example": "105^2" },
+    { "lesson_id": 485, "topic": "Square 115 using (100+15)^2 = 10000 + 3000 + 225.", "example": "115^2" },
+    { "lesson_id": 486, "topic": "Square 125 using (100+25)^2 = 10000 + 5000 + 625.", "example": "125^2" },
+    { "lesson_id": 487, "topic": "Square 135 using (100+35)^2 = 10000 + 7000 + 1225.", "example": "135^2" },
+    { "lesson_id": 488, "topic": "Square 145 using (100+45)^2 = 10000 + 9000 + 2025.", "example": "145^2" },
+    { "lesson_id": 489, "topic": "Square 155 using (150+5)^2 = 22500 + 1500 + 25.", "example": "155^2" },
+    { "lesson_id": 490, "topic": "Square 165 using (160+5)^2 = 25600 + 1600 + 25.", "example": "165^2" },
+    { "lesson_id": 491, "topic": "Square 175 using (170+5)^2 = 28900 + 1700 + 25.", "example": "175^2" },
+    { "lesson_id": 492, "topic": "Square 185 using (180+5)^2 = 32400 + 1800 + 25.", "example": "185^2" },
+    { "lesson_id": 493, "topic": "Square 195 using (200-5)^2 = 40000 - 2000 + 25.", "example": "195^2" },
+    { "lesson_id": 494, "topic": "Square 205 using (200+5)^2 = 40000 + 2000 + 25.", "example": "205^2" },
+    { "lesson_id": 495, "topic": "Square 215 using (200+15)^2 = 40000 + 6000 + 225.", "example": "215^2" },
+    { "lesson_id": 496, "topic": "Square 225 using (200+25)^2 = 40000 + 10000 + 625.", "example": "225^2" },
+    { "lesson_id": 497, "topic": "Square 235 using (200+35)^2 = 40000 + 14000 + 1225.", "example": "235^2" },
+    { "lesson_id": 498, "topic": "Square 245 using (200+45)^2 = 40000 + 18000 + 2025.", "example": "245^2" },
+    { "lesson_id": 499, "topic": "Square 255 using (250+5)^2 = 62500 + 2500 + 25.", "example": "255^2" },
+    { "lesson_id": 500, "topic": "Square 265 using (260+5)^2 = 67600 + 2600 + 25.", "example": "265^2" },
+    { "lesson_id": 501, "topic": "Find the square root of a perfect square ending in 5 by noting the last digit is 5 and the tens come from the square root of the prefix.", "example": "√1225" },
+    { "lesson_id": 502, "topic": "Find the square root of a perfect square ending in 25 by recognizing 5 as the last digit.", "example": "√2025" },
+    { "lesson_id": 503, "topic": "Find the square root of a perfect square ending in 00 by taking the square root of the non-zero part.", "example": "√1600" },
+    { "lesson_id": 504, "topic": "Find the square root of a perfect square ending in 1 by checking last digit 1 or 9.", "example": "√1521" },
+    { "lesson_id": 505, "topic": "Find the square root of a perfect square ending in 4 by checking last digit 2 or 8.", "example": "√1444" },
+    { "lesson_id": 506, "topic": "Find the square root of a perfect square ending in 6 by checking last digit 4 or 6.", "example": "√1936" },
+    { "lesson_id": 507, "topic": "Find the square root of a perfect square ending in 9 by checking last digit 3 or 7.", "example": "√1369" },
+    { "lesson_id": 508, "topic": "Estimate square roots by finding the nearest perfect squares.", "example": "√50" },
+    { "lesson_id": 509, "topic": "Estimate square roots using √(a²+b) ≈ a + b/(2a).", "example": "√101" },
+    { "lesson_id": 510, "topic": "Estimate square roots using √(a²-b) ≈ a - b/(2a).", "example": "√99" },
+    { "lesson_id": 511, "topic": "Find the cube root of a perfect cube ending in 1 by noting last digit 1.", "example": "∛1331" },
+    { "lesson_id": 512, "topic": "Find the cube root of a perfect cube ending in 8 by noting last digit 2.", "example": "∛1728" },
+    { "lesson_id": 513, "topic": "Find the cube root of a perfect cube ending in 7 by noting last digit 3.", "example": "∛2197" },
+    { "lesson_id": 514, "topic": "Find the cube root of a perfect cube ending in 4 by noting last digit 4.", "example": "∛13824" },
+    { "lesson_id": 515, "topic": "Find the cube root of a perfect cube ending in 5 by noting last digit 5.", "example": "∛15625" },
+    { "lesson_id": 516, "topic": "Find the cube root of a perfect cube ending in 6 by noting last digit 6.", "example": "∛17576" },
+    { "lesson_id": 517, "topic": "Find the cube root of a perfect cube ending in 3 by noting last digit 7.", "example": "∛19683" },
+    { "lesson_id": 518, "topic": "Find the cube root of a perfect cube ending in 2 by noting last digit 8.", "example": "∛32768" },
+    { "lesson_id": 519, "topic": "Find the cube root of a perfect cube ending in 9 by noting last digit 9.", "example": "∛19683" },
+    { "lesson_id": 520, "topic": "Find the cube root of a perfect cube ending in 0 by noting last digit 0.", "example": "∛27000" },
+    { "lesson_id": 521, "topic": "Compute 2^10 = 1024 using doubling ten times.", "example": "2^10" },
+    { "lesson_id": 522, "topic": "Compute 2^20 ≈ 1,048,576 using 2^10 squared.", "example": "2^20" },
+    { "lesson_id": 523, "topic": "Compute 3^5 = 243 using 3^2 x 3^3.", "example": "3^5" },
+    { "lesson_id": 524, "topic": "Compute 4^5 = 1024 using 2^10.", "example": "4^5" },
+    { "lesson_id": 525, "topic": "Compute 5^4 = 625 using 25^2.", "example": "5^4" },
+    { "lesson_id": 526, "topic": "Compute 6^3 = 216 using 6^2 x 6.", "example": "6^3" },
+    { "lesson_id": 527, "topic": "Compute 7^3 = 343 using 7^2 x 7.", "example": "7^3" },
+    { "lesson_id": 528, "topic": "Compute 8^3 = 512 using 2^9.", "example": "8^3" },
+    { "lesson_id": 529, "topic": "Compute 9^3 = 729 using 9^2 x 9.", "example": "9^3" },
+    { "lesson_id": 530, "topic": "Compute 11^3 = 1331 using 11^2 x 11.", "example": "11^3" },
+    { "lesson_id": 531, "topic": "Compute 12^3 = 1728 using 12^2 x 12.", "example": "12^3" },
+    { "lesson_id": 532, "topic": "Compute 13^3 = 2197 using 13^2 x 13.", "example": "13^3" },
+    { "lesson_id": 533, "topic": "Compute 14^3 = 2744 using 14^2 x 14.", "example": "14^3" },
+    { "lesson_id": 534, "topic": "Compute 15^3 = 3375 using 15^2 x 15.", "example": "15^3" },
+    { "lesson_id": 535, "topic": "Compute 16^3 = 4096 using 2^12.", "example": "16^3" },
+    { "lesson_id": 536, "topic": "Compute 17^3 = 4913 using 17^2 x 17.", "example": "17^3" },
+    { "lesson_id": 537, "topic": "Compute 18^3 = 5832 using 18^2 x 18.", "example": "18^3" },
+    { "lesson_id": 538, "topic": "Compute 19^3 = 6859 using 19^2 x 19.", "example": "19^3" },
+    { "lesson_id": 539, "topic": "Compute 20^3 = 8000 using 8 x 1000.", "example": "20^3" },
+    { "lesson_id": 540, "topic": "Compute 25^3 = 15625 using 25^2 x 25.", "example": "25^3" },
+    { "lesson_id": 541, "topic": "Divide by 15 by multiplying by 2 and dividing by 30.", "example": "90 / 15" },
+    { "lesson_id": 542, "topic": "Divide by 45 by multiplying by 2 and dividing by 90.", "example": "180 / 45" },
+    { "lesson_id": 543, "topic": "Divide by 55 by multiplying by 2 and dividing by 110.", "example": "220 / 55" },
+    { "lesson_id": 544, "topic": "Divide by 65 by multiplying by 2 and dividing by 130.", "example": "260 / 65" },
+    { "lesson_id": 545, "topic": "Divide by 75 by multiplying by 4 and dividing by 300.", "example": "300 / 75" },
+    { "lesson_id": 546, "topic": "Divide by 85 by multiplying by 2 and dividing by 170.", "example": "340 / 85" },
+    { "lesson_id": 547, "topic": "Divide by 95 by multiplying by 2 and dividing by 190.", "example": "380 / 95" },
+    { "lesson_id": 548, "topic": "Divide by 35 by multiplying by 2 and dividing by 70.", "example": "140 / 35" },
+    { "lesson_id": 549, "topic": "Divide by 14 by dividing by 2 and then by 7.", "example": "84 / 14" },
+    { "lesson_id": 550, "topic": "Divide by 16 by halving four times.", "example": "128 / 16" },
+    { "lesson_id": 551, "topic": "Divide by 18 by dividing by 2 and then by 9.", "example": "162 / 18" },
+    { "lesson_id": 552, "topic": "Divide by 22 by dividing by 2 and then by 11.", "example": "132 / 22" },
+    { "lesson_id": 553, "topic": "Divide by 24 by dividing by 3 and then by 8.", "example": "144 / 24" },
+    { "lesson_id": 554, "topic": "Divide by 28 by dividing by 4 and then by 7.", "example": "168 / 28" },
+    { "lesson_id": 555, "topic": "Divide by 32 by halving five times.", "example": "256 / 32" },
+    { "lesson_id": 556, "topic": "Divide by 36 by dividing by 4 and then by 9.", "example": "216 / 36" },
+    { "lesson_id": 557, "topic": "Divide by 44 by dividing by 4 and then by 11.", "example": "264 / 44" },
+    { "lesson_id": 558, "topic": "Divide by 48 by dividing by 6 and then by 8.", "example": "288 / 48" },
+    { "lesson_id": 559, "topic": "Divide by 64 by halving six times.", "example": "512 / 64" },
+    { "lesson_id": 560, "topic": "Divide by 72 by dividing by 8 and then by 9.", "example": "432 / 72" },
+    { "lesson_id": 561, "topic": "Divide by 88 by dividing by 8 and then by 11.", "example": "528 / 88" },
+    { "lesson_id": 562, "topic": "Divide by 96 by dividing by 12 and then by 8.", "example": "576 / 96" },
+    { "lesson_id": 563, "topic": "Divide by 11 using alternating sum for exact division.", "example": "253 / 11" },
+    { "lesson_id": 564, "topic": "Divide by 9 using digit sum for exact division.", "example": "243 / 9" },
+    { "lesson_id": 565, "topic": "Divide by 99 using the complement method.", "example": "4851 / 99" },
+    { "lesson_id": 566, "topic": "Divide by 101 using the pattern of repeated digits.", "example": "4343 / 101" },
+    { "lesson_id": 567, "topic": "Divide by 37 by noting 37 x 3 = 111.", "example": "444 / 37" },
+    { "lesson_id": 568, "topic": "Divide by 27 by noting 27 x 37 = 999.", "example": "999 / 27" },
+    { "lesson_id": 569, "topic": "Divide by 125 by multiplying by 8 and dividing by 1000.", "example": "5000 / 125" },
+    { "lesson_id": 570, "topic": "Divide by 625 by multiplying by 16 and dividing by 10000.", "example": "50000 / 625" },
+    { "lesson_id": 571, "topic": "Divide by 1.5 by multiplying by 2 and dividing by 3.", "example": "9 / 1.5" },
+    { "lesson_id": 572, "topic": "Divide by 3.5 by multiplying by 2 and dividing by 7.", "example": "14 / 3.5" },
+    { "lesson_id": 573, "topic": "Divide by 4.5 by multiplying by 2 and dividing by 9.", "example": "18 / 4.5" },
+    { "lesson_id": 574, "topic": "Divide by 5.5 by multiplying by 2 and dividing by 11.", "example": "22 / 5.5" },
+    { "lesson_id": 575, "topic": "Divide by 6.5 by multiplying by 2 and dividing by 13.", "example": "26 / 6.5" },
+    { "lesson_id": 576, "topic": "Divide by 7.5 by multiplying by 2 and dividing by 15.", "example": "30 / 7.5" },
+    { "lesson_id": 577, "topic": "Divide by 8.5 by multiplying by 2 and dividing by 17.", "example": "34 / 8.5" },
+    { "lesson_id": 578, "topic": "Divide by 9.5 by multiplying by 2 and dividing by 19.", "example": "38 / 9.5" },
+    { "lesson_id": 579, "topic": "Divide by 0.5 by multiplying by 2.", "example": "17 / 0.5" },
+    { "lesson_id": 580, "topic": "Divide by 0.25 by multiplying by 4.", "example": "19 / 0.25" },
+    { "lesson_id": 581, "topic": "Convert 1/7 to decimal by recalling 0.142857 repeating.", "example": "1/7" },
+    { "lesson_id": 582, "topic": "Convert 2/7 to decimal by doubling 1/7 decimal.", "example": "2/7" },
+    { "lesson_id": 583, "topic": "Convert 3/7 to decimal by tripling 1/7 decimal.", "example": "3/7" },
+    { "lesson_id": 584, "topic": "Convert 1/9 to decimal by recalling 0.111... repeating.", "example": "1/9" },
+    { "lesson_id": 585, "topic": "Convert 1/11 to decimal by recalling 0.0909... repeating.", "example": "1/11" },
+    { "lesson_id": 586, "topic": "Convert 1/6 to decimal by recalling 0.1666... repeating.", "example": "1/6" },
+    { "lesson_id": 587, "topic": "Convert 1/12 to decimal by recalling 0.08333... repeating.", "example": "1/12" },
+    { "lesson_id": 588, "topic": "Convert 1/16 to decimal by recalling 0.0625.", "example": "1/16" },
+    { "lesson_id": 589, "topic": "Convert 1/32 to decimal by recalling 0.03125.", "example": "1/32" },
+    { "lesson_id": 590, "topic": "Convert 1/64 to decimal by recalling 0.015625.", "example": "1/64" },
+    { "lesson_id": 591, "topic": "Convert 3/8 to decimal by recalling 0.375.", "example": "3/8" },
+    { "lesson_id": 592, "topic": "Convert 5/8 to decimal by recalling 0.625.", "example": "5/8" },
+    { "lesson_id": 593, "topic": "Convert 7/8 to decimal by recalling 0.875.", "example": "7/8" },
+    { "lesson_id": 594, "topic": "Convert 1/3 to decimal by recalling 0.333... repeating.", "example": "1/3" },
+    { "lesson_id": 595, "topic": "Convert 2/3 to decimal by recalling 0.666... repeating.", "example": "2/3" },
+    { "lesson_id": 596, "topic": "Convert 1/5 to decimal by recalling 0.2.", "example": "1/5" },
+    { "lesson_id": 597, "topic": "Convert 2/5 to decimal by recalling 0.4.", "example": "2/5" },
+    { "lesson_id": 598, "topic": "Convert 3/5 to decimal by recalling 0.6.", "example": "3/5" },
+    { "lesson_id": 599, "topic": "Convert 4/5 to decimal by recalling 0.8.", "example": "4/5" },
+    { "lesson_id": 600, "topic": "Convert 1/8 to decimal by recalling 0.125.", "example": "1/8" },
+    { "lesson_id": 601, "topic": "Convert a decimal to fraction by placing over 10, 100, or 1000 and simplifying.", "example": "0.75" },
+    { "lesson_id": 602, "topic": "Convert a repeating decimal like 0.333... to fraction by using 1/3.", "example": "0.333..." },
+    { "lesson_id": 603, "topic": "Convert a repeating decimal like 0.666... to fraction by using 2/3.", "example": "0.666..." },
+    { "lesson_id": 604, "topic": "Convert a repeating decimal like 0.142857... to fraction by using 1/7.", "example": "0.142857..." },
+    { "lesson_id": 605, "topic": "Add fractions with unlike denominators by cross-multiplying.", "example": "1/3 + 1/4" },
+    { "lesson_id": 606, "topic": "Subtract fractions with unlike denominators by cross-multiplying.", "example": "3/4 - 1/3" },
+    { "lesson_id": 607, "topic": "Multiply fractions by multiplying numerators and denominators.", "example": "2/3 x 3/5" },
+    { "lesson_id": 608, "topic": "Divide fractions by multiplying by the reciprocal.", "example": "2/3 ÷ 4/5" },
+    { "lesson_id": 609, "topic": "Simplify fractions by dividing by the GCD.", "example": "24/36" },
+    { "lesson_id": 610, "topic": "Compare fractions by cross-multiplying.", "example": "3/7 vs 4/9" },
+    { "lesson_id": 611, "topic": "Find a fraction of a whole number by multiplying.", "example": "3/4 of 48" },
+    { "lesson_id": 612, "topic": "Convert a mixed number to an improper fraction.", "example": "3 2/5" },
+    { "lesson_id": 613, "topic": "Convert an improper fraction to a mixed number.", "example": "17/5" },
+    { "lesson_id": 614, "topic": "Add mixed numbers by adding whole parts and fractions separately.", "example": "2 1/3 + 1 1/4" },
+    { "lesson_id": 615, "topic": "Subtract mixed numbers by borrowing from the whole part.", "example": "3 1/4 - 1 1/2" },
+    { "lesson_id": 616, "topic": "Multiply a whole number by a fraction by multiplying numerator and dividing.", "example": "15 x 2/3" },
+    { "lesson_id": 617, "topic": "Find 1/7 of a number by dividing by 7.", "example": "1/7 of 84" },
+    { "lesson_id": 618, "topic": "Find 1/11 of a number by dividing by 11.", "example": "1/11 of 121" },
+    { "lesson_id": 619, "topic": "Find 1/12 of a number by dividing by 12.", "example": "1/12 of 144" },
+    { "lesson_id": 620, "topic": "Find 1/15 of a number by dividing by 15.", "example": "1/15 of 225" },
+    { "lesson_id": 621, "topic": "Find 1/16 of a number by dividing by 16.", "example": "1/16 of 256" },
+    { "lesson_id": 622, "topic": "Find 1/20 of a number by dividing by 20.", "example": "1/20 of 400" },
+    { "lesson_id": 623, "topic": "Find 1/25 of a number by dividing by 25.", "example": "1/25 of 500" },
+    { "lesson_id": 624, "topic": "Find 1/30 of a number by dividing by 30.", "example": "1/30 of 900" },
+    { "lesson_id": 625, "topic": "Find 1/40 of a number by dividing by 40.", "example": "1/40 of 800" },
+    { "lesson_id": 626, "topic": "Find 1/50 of a number by dividing by 50.", "example": "1/50 of 1000" },
+    { "lesson_id": 627, "topic": "Find 1/60 of a number by dividing by 60.", "example": "1/60 of 1200" },
+    { "lesson_id": 628, "topic": "Find 1/70 of a number by dividing by 70.", "example": "1/70 of 1400" },
+    { "lesson_id": 629, "topic": "Find 1/80 of a number by dividing by 80.", "example": "1/80 of 1600" },
+    { "lesson_id": 630, "topic": "Find 1/90 of a number by dividing by 90.", "example": "1/90 of 1800" },
+    { "lesson_id": 631, "topic": "Find 1/100 of a number by moving decimal two places left.", "example": "1/100 of 4500" },
+    { "lesson_id": 632, "topic": "Find 2/3 of a number by dividing by 3 and multiplying by 2.", "example": "2/3 of 90" },
+    { "lesson_id": 633, "topic": "Find 3/4 of a number by dividing by 4 and multiplying by 3.", "example": "3/4 of 80" },
+    { "lesson_id": 634, "topic": "Find 2/5 of a number by dividing by 5 and multiplying by 2.", "example": "2/5 of 75" },
+    { "lesson_id": 635, "topic": "Find 3/5 of a number by dividing by 5 and multiplying by 3.", "example": "3/5 of 80" },
+    { "lesson_id": 636, "topic": "Find 4/5 of a number by dividing by 5 and multiplying by 4.", "example": "4/5 of 90" },
+    { "lesson_id": 637, "topic": "Find 5/6 of a number by dividing by 6 and multiplying by 5.", "example": "5/6 of 120" },
+    { "lesson_id": 638, "topic": "Find 7/8 of a number by dividing by 8 and multiplying by 7.", "example": "7/8 of 96" },
+    { "lesson_id": 639, "topic": "Find 5/9 of a number by dividing by 9 and multiplying by 5.", "example": "5/9 of 81" },
+    { "lesson_id": 640, "topic": "Find 7/10 of a number by dividing by 10 and multiplying by 7.", "example": "7/10 of 150" },
+    { "lesson_id": 641, "topic": "Find 3/7 of a number by dividing by 7 and multiplying by 3.", "example": "3/7 of 91" },
+    { "lesson_id": 642, "topic": "Find 4/9 of a number by dividing by 9 and multiplying by 4.", "example": "4/9 of 108" },
+    { "lesson_id": 643, "topic": "Find 5/11 of a number by dividing by 11 and multiplying by 5.", "example": "5/11 of 132" },
+    { "lesson_id": 644, "topic": "Find 6/7 of a number by dividing by 7 and multiplying by 6.", "example": "6/7 of 84" },
+    { "lesson_id": 645, "topic": "Find 8/9 of a number by dividing by 9 and multiplying by 8.", "example": "8/9 of 99" },
+    { "lesson_id": 646, "topic": "Find 9/10 of a number by dividing by 10 and multiplying by 9.", "example": "9/10 of 200" },
+    { "lesson_id": 647, "topic": "Find 11/12 of a number by dividing by 12 and multiplying by 11.", "example": "11/12 of 144" },
+    { "lesson_id": 648, "topic": "Find 13/16 of a number by dividing by 16 and multiplying by 13.", "example": "13/16 of 256" },
+    { "lesson_id": 649, "topic": "Find 17/20 of a number by dividing by 20 and multiplying by 17.", "example": "17/20 of 400" },
+    { "lesson_id": 650, "topic": "Find 19/25 of a number by dividing by 25 and multiplying by 19.", "example": "19/25 of 500" },
+    { "lesson_id": 651, "topic": "Find 100% of a number (the number itself).", "example": "100% of 73" },
+    { "lesson_id": 652, "topic": "Find 0% of a number (always zero).", "example": "0% of 99" },
+    { "lesson_id": 653, "topic": "Find 1.5% of a number by taking 1% and adding half of 1%.", "example": "1.5% of 200" },
+    { "lesson_id": 654, "topic": "Find 2.5% of a number by taking 1% and multiplying by 2.5.", "example": "2.5% of 400" },
+    { "lesson_id": 655, "topic": "Find 3.5% of a number by taking 3% and adding 0.5%.", "example": "3.5% of 200" },
+    { "lesson_id": 656, "topic": "Find 4.5% of a number by taking 5% and subtracting 0.5%.", "example": "4.5% of 200" },
+    { "lesson_id": 657, "topic": "Find 5.5% of a number by taking 5% and adding 0.5%.", "example": "5.5% of 200" },
+    { "lesson_id": 658, "topic": "Find 6.5% of a number by taking 5% and adding 1.5%.", "example": "6.5% of 200" },
+    { "lesson_id": 659, "topic": "Find 7.5% of a number by taking 10% and subtracting 2.5%.", "example": "7.5% of 200" },
+    { "lesson_id": 660, "topic": "Find 8.5% of a number by taking 10% and subtracting 1.5%.", "example": "8.5% of 200" },
+    { "lesson_id": 661, "topic": "Find 9.5% of a number by taking 10% and subtracting 0.5%.", "example": "9.5% of 200" },
+    { "lesson_id": 662, "topic": "Find 12.5% of a number by dividing by 8.", "example": "12.5% of 96" },
+    { "lesson_id": 663, "topic": "Find 37.5% of a number by taking 3/8 of the number.", "example": "37.5% of 96" },
+    { "lesson_id": 664, "topic": "Find 62.5% of a number by taking 5/8 of the number.", "example": "62.5% of 96" },
+    { "lesson_id": 665, "topic": "Find 87.5% of a number by taking 7/8 of the number.", "example": "87.5% of 96" },
+    { "lesson_id": 666, "topic": "Find 6.25% of a number by dividing by 16.", "example": "6.25% of 160" },
+    { "lesson_id": 667, "topic": "Find 18.75% of a number by taking 3/16 of the number.", "example": "18.75% of 160" },
+    { "lesson_id": 668, "topic": "Find 31.25% of a number by taking 5/16 of the number.", "example": "31.25% of 160" },
+    { "lesson_id": 669, "topic": "Find 43.75% of a number by taking 7/16 of the number.", "example": "43.75% of 160" },
+    { "lesson_id": 670, "topic": "Find 56.25% of a number by taking 9/16 of the number.", "example": "56.25% of 160" },
+    { "lesson_id": 671, "topic": "Find 68.75% of a number by taking 11/16 of the number.", "example": "68.75% of 160" },
+    { "lesson_id": 672, "topic": "Find 81.25% of a number by taking 13/16 of the number.", "example": "81.25% of 160" },
+    { "lesson_id": 673, "topic": "Find 93.75% of a number by taking 15/16 of the number.", "example": "93.75% of 160" },
+    { "lesson_id": 674, "topic": "Find 33.33% of a number by dividing by 3.", "example": "33.33% of 120" },
+    { "lesson_id": 675, "topic": "Find 66.67% of a number by multiplying by 2 and dividing by 3.", "example": "66.67% of 120" },
+    { "lesson_id": 676, "topic": "Find 16.67% of a number by dividing by 6.", "example": "16.67% of 120" },
+    { "lesson_id": 677, "topic": "Find 83.33% of a number by multiplying by 5 and dividing by 6.", "example": "83.33% of 120" },
+    { "lesson_id": 678, "topic": "Find 14.28% of a number by dividing by 7.", "example": "14.28% of 140" },
+    { "lesson_id": 679, "topic": "Find 28.57% of a number by multiplying by 2 and dividing by 7.", "example": "28.57% of 140" },
+    { "lesson_id": 680, "topic": "Find 42.86% of a number by multiplying by 3 and dividing by 7.", "example": "42.86% of 140" },
+    { "lesson_id": 681, "topic": "Find 57.14% of a number by multiplying by 4 and dividing by 7.", "example": "57.14% of 140" },
+    { "lesson_id": 682, "topic": "Find 71.43% of a number by multiplying by 5 and dividing by 7.", "example": "71.43% of 140" },
+    { "lesson_id": 683, "topic": "Find 85.71% of a number by multiplying by 6 and dividing by 7.", "example": "85.71% of 140" },
+    { "lesson_id": 684, "topic": "Find 11.11% of a number by dividing by 9.", "example": "11.11% of 180" },
+    { "lesson_id": 685, "topic": "Find 22.22% of a number by multiplying by 2 and dividing by 9.", "example": "22.22% of 180" },
+    { "lesson_id": 686, "topic": "Find 44.44% of a number by multiplying by 4 and dividing by 9.", "example": "44.44% of 180" },
+    { "lesson_id": 687, "topic": "Find 55.56% of a number by multiplying by 5 and dividing by 9.", "example": "55.56% of 180" },
+    { "lesson_id": 688, "topic": "Find 77.78% of a number by multiplying by 7 and dividing by 9.", "example": "77.78% of 180" },
+    { "lesson_id": 689, "topic": "Find 88.89% of a number by multiplying by 8 and dividing by 9.", "example": "88.89% of 180" },
+    { "lesson_id": 690, "topic": "Find 9.09% of a number by dividing by 11.", "example": "9.09% of 220" },
+    { "lesson_id": 691, "topic": "Find 18.18% of a number by multiplying by 2 and dividing by 11.", "example": "18.18% of 220" },
+    { "lesson_id": 692, "topic": "Find 27.27% of a number by multiplying by 3 and dividing by 11.", "example": "27.27% of 220" },
+    { "lesson_id": 693, "topic": "Find 36.36% of a number by multiplying by 4 and dividing by 11.", "example": "36.36% of 220" },
+    { "lesson_id": 694, "topic": "Find 45.45% of a number by multiplying by 5 and dividing by 11.", "example": "45.45% of 220" },
+    { "lesson_id": 695, "topic": "Find 54.55% of a number by multiplying by 6 and dividing by 11.", "example": "54.55% of 220" },
+    { "lesson_id": 696, "topic": "Find 63.64% of a number by multiplying by 7 and dividing by 11.", "example": "63.64% of 220" },
+    { "lesson_id": 697, "topic": "Find 72.73% of a number by multiplying by 8 and dividing by 11.", "example": "72.73% of 220" },
+    { "lesson_id": 698, "topic": "Find 81.82% of a number by multiplying by 9 and dividing by 11.", "example": "81.82% of 220" },
+    { "lesson_id": 699, "topic": "Find 90.91% of a number by multiplying by 10 and dividing by 11.", "example": "90.91% of 220" },
+    { "lesson_id": 700, "topic": "Find percentage increase by dividing the increase by the original and multiplying by 100.", "example": "Increase from 40 to 50" },
+    { "lesson_id": 701, "topic": "Find percentage decrease by dividing the decrease by the original and multiplying by 100.", "example": "Decrease from 50 to 40" },
+    { "lesson_id": 702, "topic": "Find the original amount after a percentage increase by dividing the final by 1 plus the rate.", "example": "After 20% increase to 60" },
+    { "lesson_id": 703, "topic": "Find the original amount after a percentage decrease by dividing the final by 1 minus the rate.", "example": "After 20% decrease to 40" },
+    { "lesson_id": 704, "topic": "Find successive percentage changes by multiplying the multipliers.", "example": "10% then 20% increase" },
+    { "lesson_id": 705, "topic": "Find the average of two numbers by adding and dividing by 2.", "example": "Average of 34 and 56" },
+    { "lesson_id": 706, "topic": "Find the average of three numbers by adding and dividing by 3.", "example": "Average of 12, 18, 24" },
+    { "lesson_id": 707, "topic": "Find the average of an arithmetic sequence by averaging first and last.", "example": "Average of 3,5,7,9,11" },
+    { "lesson_id": 708, "topic": "Find the sum of an arithmetic sequence using n(a+l)/2.", "example": "Sum 2+4+...+20" },
+    { "lesson_id": 709, "topic": "Find the sum of consecutive integers 1 to n using n(n+1)/2.", "example": "1+...+50" },
+    { "lesson_id": 710, "topic": "Find the sum of consecutive even numbers 2 to 2n using n(n+1).", "example": "2+4+...+20" },
+    { "lesson_id": 711, "topic": "Find the sum of consecutive odd numbers 1 to 2n-1 using n².", "example": "1+3+...+19" },
+    { "lesson_id": 712, "topic": "Find the sum of squares 1²+2²+...+n² using n(n+1)(2n+1)/6.", "example": "1²+...+5²" },
+    { "lesson_id": 713, "topic": "Find the sum of cubes 1³+2³+...+n³ using [n(n+1)/2]².", "example": "1³+...+4³" },
+    { "lesson_id": 714, "topic": "Find the average of consecutive numbers by averaging first and last.", "example": "Average 5 to 15" },
+    { "lesson_id": 715, "topic": "Find a missing number given the average and other numbers.", "example": "Avg 20 of 3 numbers" },
+    { "lesson_id": 716, "topic": "Find the weighted average by multiplying values by weights and dividing by total weight.", "example": "Weighted avg of 80 (40%) and 90 (60%)" },
+    { "lesson_id": 717, "topic": "Find the median of an odd set by ordering and picking the middle.", "example": "Median of 3,7,9,11,15" },
+    { "lesson_id": 718, "topic": "Find the median of an even set by averaging the two middle values.", "example": "Median of 2,4,6,8" },
+    { "lesson_id": 719, "topic": "Find the mode by identifying the most frequent value.", "example": "Mode of 1,2,2,3" },
+    { "lesson_id": 720, "topic": "Find the range by subtracting smallest from largest.", "example": "Range of 4,9,2,7" },
+    { "lesson_id": 721, "topic": "Estimate the sum of a series by averaging first and last and multiplying by count.", "example": "Sum 10+11+...+30" },
+    { "lesson_id": 722, "topic": "Find the average speed by total distance divided by total time.", "example": "120 km in 2 h" },
+    { "lesson_id": 723, "topic": "Find the average of two speeds for equal distances using harmonic mean.", "example": "60 and 40 km/h" },
+    { "lesson_id": 724, "topic": "Find simple interest using P x R x T / 100.", "example": "SI on 1000 at 5% for 2 y" },
+    { "lesson_id": 725, "topic": "Find compound interest using A = P(1+r)^t approximation.", "example": "CI on 1000 at 10% for 2 y" },
+    { "lesson_id": 726, "topic": "Find profit percentage using (SP-CP)/CP x 100.", "example": "CP 50, SP 60" },
+    { "lesson_id": 727, "topic": "Find loss percentage using (CP-SP)/CP x 100.", "example": "CP 60, SP 50" },
+    { "lesson_id": 728, "topic": "Find selling price given cost and profit percentage.", "example": "CP 80, 25% profit" },
+    { "lesson_id": 729, "topic": "Find cost price given selling price and profit percentage.", "example": "SP 100, 25% profit" },
+    { "lesson_id": 730, "topic": "Find discount amount by multiplying marked price by discount rate.", "example": "20% off 250" },
+    { "lesson_id": 731, "topic": "Find final price after discount by subtracting discount.", "example": "250 less 20%" },
+    { "lesson_id": 732, "topic": "Find marked price given selling price and discount rate.", "example": "SP 200 after 20% off" },
+    { "lesson_id": 733, "topic": "Find tax amount by multiplying price by tax rate.", "example": "8% tax on 150" },
+    { "lesson_id": 734, "topic": "Find total with tax by adding tax to price.", "example": "150 + 8% tax" },
+    { "lesson_id": 735, "topic": "Find tip amount by multiplying bill by tip rate.", "example": "15% tip on 80" },
+    { "lesson_id": 736, "topic": "Find total bill with tip by adding tip.", "example": "80 + 15% tip" },
+    { "lesson_id": 737, "topic": "Split a bill equally by dividing total by number of people.", "example": "120 / 4 people" },
+    { "lesson_id": 738, "topic": "Find unit price by dividing total price by quantity.", "example": "5 items for 45" },
+    { "lesson_id": 739, "topic": "Find total price given unit price and quantity.", "example": "7 items at 12 each" },
+    { "lesson_id": 740, "topic": "Find better buy by comparing unit prices.", "example": "3 for 12 vs 5 for 18" },
+    { "lesson_id": 741, "topic": "Check divisibility by 2: last digit even.", "example": "348" },
+    { "lesson_id": 742, "topic": "Check divisibility by 5: last digit 0 or 5.", "example": "345" },
+    { "lesson_id": 743, "topic": "Check divisibility by 10: last digit 0.", "example": "470" },
+    { "lesson_id": 744, "topic": "Check divisibility by 25: last two digits divisible by 25.", "example": "575" },
+    { "lesson_id": 745, "topic": "Check divisibility by 50: last two digits 00 or 50.", "example": "1350" },
+    { "lesson_id": 746, "topic": "Check divisibility by 100: last two digits 00.", "example": "1300" },
+    { "lesson_id": 747, "topic": "Check divisibility by 7: double last digit and subtract from rest.", "example": "203" },
+    { "lesson_id": 748, "topic": "Check divisibility by 13: add 4 times last digit to rest.", "example": "247" },
+    { "lesson_id": 749, "topic": "Check divisibility by 17: subtract 5 times last digit from rest.", "example": "323" },
+    { "lesson_id": 750, "topic": "Check divisibility by 19: add 2 times last digit to rest.", "example": "361" },
+    { "lesson_id": 751, "topic": "Check divisibility by 23: add 7 times last digit to rest.", "example": "391" },
+    { "lesson_id": 752, "topic": "Check divisibility by 29: add 3 times last digit to rest.", "example": "377" },
+    { "lesson_id": 753, "topic": "Check divisibility by 31: subtract 3 times last digit from rest.", "example": "403" },
+    { "lesson_id": 754, "topic": "Check divisibility by 37: subtract 11 times last digit from rest.", "example": "407" },
+    { "lesson_id": 755, "topic": "Check divisibility by 41: subtract 4 times last digit from rest.", "example": "451" },
+    { "lesson_id": 756, "topic": "Check divisibility by 43: add 13 times last digit to rest.", "example": "473" },
+    { "lesson_id": 757, "topic": "Check divisibility by 47: subtract 14 times last digit from rest.", "example": "517" },
+    { "lesson_id": 758, "topic": "Check divisibility by 53: add 16 times last digit to rest.", "example": "583" },
+    { "lesson_id": 759, "topic": "Check divisibility by 59: add 6 times last digit to rest.", "example": "649" },
+    { "lesson_id": 760, "topic": "Check divisibility by 61: subtract 6 times last digit from rest.", "example": "671" },
+    { "lesson_id": 761, "topic": "Check divisibility by 67: subtract 20 times last digit from rest.", "example": "737" },
+    { "lesson_id": 762, "topic": "Check divisibility by 71: subtract 7 times last digit from rest.", "example": "781" },
+    { "lesson_id": 763, "topic": "Check divisibility by 73: add 22 times last digit to rest.", "example": "803" },
+    { "lesson_id": 764, "topic": "Check divisibility by 79: add 8 times last digit to rest.", "example": "869" },
+    { "lesson_id": 765, "topic": "Check divisibility by 83: add 25 times last digit to rest.", "example": "913" },
+    { "lesson_id": 766, "topic": "Check divisibility by 89: add 9 times last digit to rest.", "example": "979" },
+    { "lesson_id": 767, "topic": "Check divisibility by 97: subtract 29 times last digit from rest.", "example": "1067" },
+    { "lesson_id": 768, "topic": "Find the GCD of two numbers using the Euclidean algorithm.", "example": "GCD of 48 and 36" },
+    { "lesson_id": 769, "topic": "Find the LCM of two numbers using GCD x LCM = product.", "example": "LCM of 12 and 18" },
+    { "lesson_id": 770, "topic": "Find the number of factors by adding 1 to each prime exponent and multiplying.", "example": "Factors of 72" },
+    { "lesson_id": 771, "topic": "Check if a number is prime by testing divisibility up to its square root.", "example": "Is 97 prime?" },
+    { "lesson_id": 772, "topic": "Find the next prime after a given number by checking odd numbers.", "example": "Next prime after 20" },
+    { "lesson_id": 773, "topic": "Find the prime factorization by dividing by primes in order.", "example": "Factor 60" },
+    { "lesson_id": 774, "topic": "Find the sum of factors using the prime factorization formula.", "example": "Sum of factors of 12" },
+    { "lesson_id": 775, "topic": "Identify perfect squares by their digital root being 1, 4, 7, or 9.", "example": "Is 144 a perfect square?" },
+    { "lesson_id": 776, "topic": "Identify perfect cubes by their digital root being 1, 8, or 9.", "example": "Is 216 a perfect cube?" },
+    { "lesson_id": 777, "topic": "Find the number of trailing zeros in n! by summing n/5 + n/25 + ...", "example": "Trailing zeros in 100!" },
+    { "lesson_id": 778, "topic": "Find the last digit of a power by cycling the last digit pattern.", "example": "Last digit of 7^4" },
+    { "lesson_id": 779, "topic": "Find the remainder when dividing by 9 using digit sum.", "example": "Remainder of 1234 ÷ 9" },
+    { "lesson_id": 780, "topic": "Find the remainder when dividing by 11 using alternating sum.", "example": "Remainder of 2728 ÷ 11" },
+    { "lesson_id": 781, "topic": "Expand (a+b)² using a² + 2ab + b².", "example": "(x+3)²" },
+    { "lesson_id": 782, "topic": "Expand (a-b)² using a² - 2ab + b².", "example": "(x-4)²" },
+    { "lesson_id": 783, "topic": "Expand (a+b)(a-b) using a² - b².", "example": "(x+5)(x-5)" },
+    { "lesson_id": 784, "topic": "Expand (a+b)³ using a³ + 3a²b + 3ab² + b³.", "example": "(x+2)³" },
+    { "lesson_id": 785, "topic": "Expand (a-b)³ using a³ - 3a²b + 3ab² - b³.", "example": "(x-3)³" },
+    { "lesson_id": 786, "topic": "Factor a² - b² as (a+b)(a-b).", "example": "x² - 49" },
+    { "lesson_id": 787, "topic": "Factor a² + 2ab + b² as (a+b)².", "example": "x² + 6x + 9" },
+    { "lesson_id": 788, "topic": "Factor a² - 2ab + b² as (a-b)².", "example": "x² - 8x + 16" },
+    { "lesson_id": 789, "topic": "Factor a³ + b³ as (a+b)(a²-ab+b²).", "example": "x³ + 27" },
+    { "lesson_id": 790, "topic": "Factor a³ - b³ as (a-b)(a²+ab+b²).", "example": "x³ - 64" },
+    { "lesson_id": 791, "topic": "Solve a linear equation by isolating the variable.", "example": "3x + 5 = 20" },
+    { "lesson_id": 792, "topic": "Solve a proportion by cross-multiplying.", "example": "3/4 = x/12" },
+    { "lesson_id": 793, "topic": "Solve a quadratic by factoring.", "example": "x² - 5x + 6 = 0" },
+    { "lesson_id": 794, "topic": "Solve a quadratic using the quadratic formula.", "example": "x² - 4x + 1 = 0" },
+    { "lesson_id": 795, "topic": "Solve a system of two linear equations by elimination.", "example": "x+y=10, x-y=2" },
+    { "lesson_id": 796, "topic": "Solve a system of two linear equations by substitution.", "example": "y=2x, x+y=9" },
+    { "lesson_id": 797, "topic": "Simplify algebraic fractions by canceling common factors.", "example": "(x²-9)/(x-3)" },
+    { "lesson_id": 798, "topic": "Find the slope of a line through two points.", "example": "(1,2) and (3,6)" },
+    { "lesson_id": 799, "topic": "Find the equation of a line given slope and a point.", "example": "m=2 through (1,3)" },
+    { "lesson_id": 800, "topic": "Find the midpoint of two points.", "example": "(2,4) and (6,8)" },
+    { "lesson_id": 801, "topic": "Find the distance between two points using the distance formula.", "example": "(0,0) and (3,4)" },
+    { "lesson_id": 802, "topic": "Find the area of a triangle using ½ base × height.", "example": "b=10, h=6" },
+    { "lesson_id": 803, "topic": "Find the area of a rectangle using length × width.", "example": "8 × 5" },
+    { "lesson_id": 804, "topic": "Find the area of a square using side².", "example": "side=7" },
+    { "lesson_id": 805, "topic": "Find the area of a circle using πr².", "example": "r=7" },
+    { "lesson_id": 806, "topic": "Find the circumference of a circle using 2πr.", "example": "r=7" },
+    { "lesson_id": 807, "topic": "Find the area of a trapezoid using ½(a+b)h.", "example": "a=4, b=8, h=5" },
+    { "lesson_id": 808, "topic": "Find the area of a parallelogram using base × height.", "example": "b=9, h=4" },
+    { "lesson_id": 809, "topic": "Find the volume of a cube using side³.", "example": "side=5" },
+    { "lesson_id": 810, "topic": "Find the volume of a rectangular prism using l × w × h.", "example": "3×4×5" },
+    { "lesson_id": 811, "topic": "Find the volume of a cylinder using πr²h.", "example": "r=3, h=10" },
+    { "lesson_id": 812, "topic": "Find the surface area of a cube using 6 × side².", "example": "side=4" },
+    { "lesson_id": 813, "topic": "Find the surface area of a rectangular prism using 2(lw+lh+wh).", "example": "2×3×4" },
+    { "lesson_id": 814, "topic": "Find the perimeter of a rectangle using 2(l+w).", "example": "l=8, w=5" },
+    { "lesson_id": 815, "topic": "Find the perimeter of a square using 4 × side.", "example": "side=6" },
+    { "lesson_id": 816, "topic": "Convert between Celsius and Fahrenheit using F = 9C/5 + 32.", "example": "25°C to °F" },
+    { "lesson_id": 817, "topic": "Convert between Fahrenheit and Celsius using C = 5(F-32)/9.", "example": "77°F to °C" },
+    { "lesson_id": 818, "topic": "Convert kilometers to miles by multiplying by 0.621.", "example": "10 km to miles" },
+    { "lesson_id": 819, "topic": "Convert miles to kilometers by multiplying by 1.609.", "example": "10 miles to km" },
+    { "lesson_id": 820, "topic": "Convert kilograms to pounds by multiplying by 2.205.", "example": "10 kg to lb" },
+    { "lesson_id": 821, "topic": "Convert pounds to kilograms by multiplying by 0.454.", "example": "10 lb to kg" },
+    { "lesson_id": 822, "topic": "Convert inches to centimeters by multiplying by 2.54.", "example": "10 in to cm" },
+    { "lesson_id": 823, "topic": "Convert centimeters to inches by multiplying by 0.394.", "example": "10 cm to in" },
+    { "lesson_id": 824, "topic": "Convert feet to meters by multiplying by 0.305.", "example": "10 ft to m" },
+    { "lesson_id": 825, "topic": "Convert meters to feet by multiplying by 3.281.", "example": "10 m to ft" },
+    { "lesson_id": 826, "topic": "Convert liters to gallons by multiplying by 0.264.", "example": "10 L to gal" },
+    { "lesson_id": 827, "topic": "Convert gallons to liters by multiplying by 3.785.", "example": "10 gal to L" },
+    { "lesson_id": 828, "topic": "Convert hours to minutes by multiplying by 60.", "example": "2.5 h to min" },
+    { "lesson_id": 829, "topic": "Convert minutes to seconds by multiplying by 60.", "example": "3 min to s" },
+    { "lesson_id": 830, "topic": "Convert days to hours by multiplying by 24.", "example": "3 days to h" },
+    { "lesson_id": 831, "topic": "Add time by adding hours and minutes separately and carrying.", "example": "2h 45m + 1h 30m" },
+    { "lesson_id": 832, "topic": "Subtract time by borrowing 60 minutes from an hour.", "example": "3h 10m - 1h 45m" },
+    { "lesson_id": 833, "topic": "Find elapsed time by subtracting start from end.", "example": "9:30 to 11:15" },
+    { "lesson_id": 834, "topic": "Find speed using distance ÷ time.", "example": "120 km in 2 h" },
+    { "lesson_id": 835, "topic": "Find distance using speed × time.", "example": "60 km/h for 3 h" },
+    { "lesson_id": 836, "topic": "Find time using distance ÷ speed.", "example": "150 km at 50 km/h" },
+    { "lesson_id": 837, "topic": "Find work rate by adding individual rates.", "example": "A in 3h, B in 6h" },
+    { "lesson_id": 838, "topic": "Find time to complete work together using combined rate.", "example": "A in 2h, B in 3h" },
+    { "lesson_id": 839, "topic": "Find the day of the week for a future date using mod 7.", "example": "30 days from Monday" },
+    { "lesson_id": 840, "topic": "Find simple interest for months by adjusting time in years.", "example": "SI on 1200 at 5% for 6 mo" },
+    { "lesson_id": 841, "topic": "Estimate a product by rounding both factors.", "example": "49 × 21" },
+    { "lesson_id": 842, "topic": "Estimate a quotient by rounding dividend and divisor.", "example": "198 ÷ 21" },
+    { "lesson_id": 843, "topic": "Estimate a sum by rounding to the nearest ten.", "example": "38 + 47 + 52" },
+    { "lesson_id": 844, "topic": "Estimate a difference by rounding to the nearest hundred.", "example": "512 - 297" },
+    { "lesson_id": 845, "topic": "Estimate a percentage by rounding to 10%.", "example": "18% of 52" },
+    { "lesson_id": 846, "topic": "Estimate a square root by finding nearby perfect squares.", "example": "√85" },
+    { "lesson_id": 847, "topic": "Estimate a cube root by finding nearby perfect cubes.", "example": "∛30" },
+    { "lesson_id": 848, "topic": "Estimate the area of a circle by using π ≈ 3.", "example": "r=5" },
+    { "lesson_id": 849, "topic": "Estimate the circumference by using π ≈ 3.", "example": "r=7" },
+    { "lesson_id": 850, "topic": "Estimate a tip by rounding the bill and using 10% plus half.", "example": "15% of 47" },
+    { "lesson_id": 851, "topic": "Estimate tax by rounding the price and rate.", "example": "8% of 47" },
+    { "lesson_id": 852, "topic": "Estimate a discount by rounding the price and rate.", "example": "25% off 47" },
+    { "lesson_id": 853, "topic": "Estimate a division by using compatible numbers.", "example": "630 ÷ 9" },
+    { "lesson_id": 854, "topic": "Estimate a product by using compatible numbers.", "example": "8 × 49" },
+    { "lesson_id": 855, "topic": "Estimate a fraction of a number by rounding the fraction.", "example": "2/5 of 47" },
+    { "lesson_id": 856, "topic": "Estimate a decimal product by rounding to whole numbers.", "example": "3.9 × 5.1" },
+    { "lesson_id": 857, "topic": "Estimate a decimal sum by rounding to whole numbers.", "example": "4.8 + 3.2 + 5.9" },
+    { "lesson_id": 858, "topic": "Estimate a decimal quotient by rounding to whole numbers.", "example": "19.8 ÷ 4.1" },
+    { "lesson_id": 859, "topic": "Estimate a percentage increase by rounding the base and rate.", "example": "12% increase on 47" },
+    { "lesson_id": 860, "topic": "Estimate a percentage decrease by rounding the base and rate.", "example": "12% decrease on 47" },
+    { "lesson_id": 861, "topic": "Multiply two numbers using the Urdhva Tiryagbhyam (vertically and crosswise) method.", "example": "23 × 41" },
+    { "lesson_id": 862, "topic": "Multiply two 3-digit numbers using Urdhva Tiryagbhyam.", "example": "123 × 456" },
+    { "lesson_id": 863, "topic": "Divide using the Nikhilam method for numbers near a base.", "example": "1234 ÷ 98" },
+    { "lesson_id": 864, "topic": "Square using the Yavadunam method for numbers near a base.", "example": "108²" },
+    { "lesson_id": 865, "topic": "Multiply using the Ekadhikena Purvena method for numbers ending in 5.", "example": "85 × 85" },
+    { "lesson_id": 866, "topic": "Multiply using the Anurupyena method for proportional bases.", "example": "48 × 49" },
+    { "lesson_id": 867, "topic": "Multiply using the Adyamadyenantyamantyena method for special patterns.", "example": "21 × 29" },
+    { "lesson_id": 868, "topic": "Multiply using the Kevalaih Saptakam Gunyat method for divisibility.", "example": "142857 × 2" },
+    { "lesson_id": 869, "topic": "Multiply using the Vestanam method for subtraction-based multiplication.", "example": "98 × 97" },
+    { "lesson_id": 870, "topic": "Multiply using the Yavadunam Tavadunikritya method for near-base squares.", "example": "97²" },
+    { "lesson_id": 871, "topic": "Multiply using the Antyayordashake'pi method for numbers ending in 10.", "example": "43 × 47" },
+    { "lesson_id": 872, "topic": "Multiply using the Antyayoreva method for numbers with same tens and sum 10.", "example": "62 × 68" },
+    { "lesson_id": 873, "topic": "Multiply using the Samuccayagunitah method for common factors.", "example": "12 × 13 + 12 × 17" },
+    { "lesson_id": 874, "topic": "Multiply using the Lopanasthapanabhyam method for algebraic products.", "example": "(x+2)(x+5)" },
+    { "lesson_id": 875, "topic": "Multiply using the Vilokanam method for visual estimation.", "example": "89 × 91" },
+    { "lesson_id": 876, "topic": "Multiply using the Gunitasamuccayah method for product sums.", "example": "12 × 13" },
+    { "lesson_id": 877, "topic": "Multiply using the Gunakasamuccayah method for factor sums.", "example": "12 × 13" },
+    { "lesson_id": 878, "topic": "Multiply using the Shesanyankena Charamena method for remainders.", "example": "1/7 decimal" },
+    { "lesson_id": 879, "topic": "Multiply using the Sopantyadvayamantyam method for consecutive products.", "example": "1/(2×3) + 1/(3×4)" },
+    { "lesson_id": 880, "topic": "Multiply using the Ekanyunena Purvena method for numbers ending in 9.", "example": "29 × 29" },
+    { "lesson_id": 881, "topic": "Multiply using the Paravartya Yojayet method for division.", "example": "1234 ÷ 112" },
+    { "lesson_id": 882, "topic": "Multiply using the Shunyam Saamyasamuccaye method for zero sums.", "example": "(x+2)(x-2)" },
+    { "lesson_id": 883, "topic": "Multiply using the Anurupyena Sunyamanyat method for proportional zeros.", "example": "1/7 + 1/8" },
+    { "lesson_id": 884, "topic": "Multiply using the Sankalana-vyavakalanabhyam method for simultaneous equations.", "example": "x+y=10, x-y=2" },
+    { "lesson_id": 885, "topic": "Multiply using the Puranapuranabhyam method for completing the square.", "example": "x² + 6x + 5" },
+    { "lesson_id": 886, "topic": "Multiply using the Chalana-Kalanabhyam method for calculus-based rates.", "example": "Rate of change" },
+    { "lesson_id": 887, "topic": "Multiply using the Yavadunam method for cubing near a base.", "example": "103³" },
+    { "lesson_id": 888, "topic": "Multiply using the Vyashtisamanstih method for parts and whole.", "example": "12 × 13" },
+    { "lesson_id": 889, "topic": "Multiply using the Shesanyankena Charamena method for recurring decimals.", "example": "1/13" },
+    { "lesson_id": 890, "topic": "Multiply using the Sopantyadvayamantyam method for arithmetic series.", "example": "1+2+...+10" },
+    { "lesson_id": 891, "topic": "Multiply using the Ekanyunena Purvena method for 9× tables.", "example": "9 × 8" },
+    { "lesson_id": 892, "topic": "Multiply using the Gunakasamuccayah method for polynomial products.", "example": "(x+1)(x+2)" },
+    { "lesson_id": 893, "topic": "Multiply using the Vilokanam method for square roots.", "example": "√1369" },
+    { "lesson_id": 894, "topic": "Multiply using the Yavadunam Tavadunikritya method for cube roots.", "example": "∛17576" },
+    { "lesson_id": 895, "topic": "Multiply using the Antyayordashake'pi method for numbers near 100.", "example": "88 × 92" },
+    { "lesson_id": 896, "topic": "Multiply using the Anurupyena method for base 50 squares.", "example": "47²" },
+    { "lesson_id": 897, "topic": "Multiply using the Nikhilam method for base 100 division.", "example": "1008 ÷ 97" },
+    { "lesson_id": 898, "topic": "Multiply using the Urdhva Tiryagbhyam method for 4-digit products.", "example": "1234 × 5678" },
+    { "lesson_id": 899, "topic": "Multiply using the Ekadhikena Purvena method for 5× tables.", "example": "65 × 65" },
+    { "lesson_id": 900, "topic": "Multiply using the Sankalana-vyavakalanabhyam method for simultaneous equations with coefficients.", "example": "2x+3y=12, 3x+2y=13" },
+    { "lesson_id": 901, "topic": "Square a number by adding the difference to the base and appending the square of the difference (base 100).", "example": "96²" },
+    { "lesson_id": 902, "topic": "Square a number by subtracting the difference from the base and appending the square of the difference (base 100).", "example": "104²" },
+    { "lesson_id": 903, "topic": "Multiply two numbers by using the average and difference of squares.", "example": "18 × 22" },
+    { "lesson_id": 904, "topic": "Square any number ending in 5 by using (n)(n+1)25.", "example": "45²" },
+    { "lesson_id": 905, "topic": "Multiply numbers with the same tens digit and ones summing to 10.", "example": "34 × 36" },
+    { "lesson_id": 906, "topic": "Multiply numbers with the same ones digit and tens summing to 10.", "example": "43 × 63" },
+    { "lesson_id": 907, "topic": "Square a number ending in 1 by using (n)² and adding 2n+1.", "example": "41²" },
+    { "lesson_id": 908, "topic": "Square a number ending in 9 by using (n+1)² and subtracting 2n+1.", "example": "39²" },
+    { "lesson_id": 909, "topic": "Multiply by 11 using the add-and-carry method for 2-digit numbers.", "example": "53 × 11" },
+    { "lesson_id": 910, "topic": "Multiply by 11 using the add-and-carry method for 3-digit numbers.", "example": "234 × 11" },
+    { "lesson_id": 911, "topic": "Multiply by 11 using the add-and-carry method for 4-digit numbers.", "example": "1234 × 11" },
+    { "lesson_id": 912, "topic": "Multiply by 101 by writing the number twice.", "example": "38 × 101" },
+    { "lesson_id": 913, "topic": "Multiply by 1001 by writing the number with a zero in between.", "example": "47 × 1001" },
+    { "lesson_id": 914, "topic": "Multiply by 5 by dividing by 2 and multiplying by 10.", "example": "86 × 5" },
+    { "lesson_id": 915, "topic": "Multiply by 25 by dividing by 4 and multiplying by 100.", "example": "84 × 25" },
+    { "lesson_id": 916, "topic": "Multiply by 9 by multiplying by 10 and subtracting the number.", "example": "67 × 9" },
+    { "lesson_id": 917, "topic": "Multiply by 99 by multiplying by 100 and subtracting the number.", "example": "67 × 99" },
+    { "lesson_id": 918, "topic": "Multiply by 15 by multiplying by 10 and adding half.", "example": "46 × 15" },
+    { "lesson_id": 919, "topic": "Multiply by 75 by multiplying by 3/4 of 100.", "example": "48 × 75" },
+    { "lesson_id": 920, "topic": "Multiply by 125 by dividing by 8 and multiplying by 1000.", "example": "48 × 125" },
+    { "lesson_id": 921, "topic": "Find 10% of a number by moving the decimal one place left.", "example": "10% of 340" },
+    { "lesson_id": 922, "topic": "Find 5% of a number by taking half of 10%.", "example": "5% of 340" },
+    { "lesson_id": 923, "topic": "Find 15% of a number by adding 10% and 5%.", "example": "15% of 340" },
+    { "lesson_id": 924, "topic": "Find 20% of a number by doubling 10%.", "example": "20% of 340" },
+    { "lesson_id": 925, "topic": "Find 25% of a number by dividing by 4.", "example": "25% of 340" },
+    { "lesson_id": 926, "topic": "Find 50% of a number by dividing by 2.", "example": "50% of 340" },
+    { "lesson_id": 927, "topic": "Find 1% of a number by moving the decimal two places left.", "example": "1% of 340" },
+    { "lesson_id": 928, "topic": "Find 2% of a number by doubling 1%.", "example": "2% of 340" },
+    { "lesson_id": 929, "topic": "Find 30% of a number by tripling 10%.", "example": "30% of 340" },
+    { "lesson_id": 930, "topic": "Find 40% of a number by quadrupling 10%.", "example": "40% of 340" },
+    { "lesson_id": 931, "topic": "Find 60% of a number by adding 50% and 10%.", "example": "60% of 340" },
+    { "lesson_id": 932, "topic": "Find 70% of a number by adding 50% and 20%.", "example": "70% of 340" },
+    { "lesson_id": 933, "topic": "Find 80% of a number by multiplying by 4/5.", "example": "80% of 340" },
+    { "lesson_id": 934, "topic": "Find 90% of a number by subtracting 10%.", "example": "90% of 340" },
+    { "lesson_id": 935, "topic": "Find 110% of a number by adding 10%.", "example": "110% of 340" },
+    { "lesson_id": 936, "topic": "Find 150% of a number by adding 50%.", "example": "150% of 340" },
+    { "lesson_id": 937, "topic": "Find 200% of a number by doubling.", "example": "200% of 340" },
+    { "lesson_id": 938, "topic": "Find 300% of a number by tripling.", "example": "300% of 340" },
+    { "lesson_id": 939, "topic": "Find 45% of a number by taking 50% and subtracting 5%.", "example": "45% of 340" },
+    { "lesson_id": 940, "topic": "Find 55% of a number by taking 50% and adding 5%.", "example": "55% of 340" },
+    { "lesson_id": 941, "topic": "Find the sum 1+2+...+n using n(n+1)/2.", "example": "1+...+100" },
+    { "lesson_id": 942, "topic": "Find the sum of first n odd numbers using n².", "example": "1+3+...+19" },
+    { "lesson_id": 943, "topic": "Find the sum of first n even numbers using n(n+1).", "example": "2+4+...+20" },
+    { "lesson_id": 944, "topic": "Find the sum of squares using n(n+1)(2n+1)/6.", "example": "1²+...+10²" },
+    { "lesson_id": 945, "topic": "Find the sum of cubes using [n(n+1)/2]².", "example": "1³+...+10³" },
+    { "lesson_id": 946, "topic": "Find the nth term of an arithmetic sequence using a+(n-1)d.", "example": "3,7,11,..." },
+    { "lesson_id": 947, "topic": "Find the nth term of a geometric sequence using ar^(n-1).", "example": "2,6,18,..." },
+    { "lesson_id": 948, "topic": "Find the sum of a geometric series using a(1-r^n)/(1-r).", "example": "2+6+18+...+486" },
+    { "lesson_id": 949, "topic": "Find the sum of an infinite geometric series using a/(1-r).", "example": "1+1/2+1/4+..." },
+    { "lesson_id": 950, "topic": "Find the Fibonacci sequence by adding the previous two terms.", "example": "1,1,2,3,5,8,..." },
+    { "lesson_id": 951, "topic": "Find the nth Fibonacci number using Binet's formula approximation.", "example": "F(10)" },
+    { "lesson_id": 952, "topic": "Identify triangular numbers using n(n+1)/2.", "example": "T(5)" },
+    { "lesson_id": 953, "topic": "Identify square numbers using n².", "example": "S(7)" },
+    { "lesson_id": 954, "topic": "Identify pentagonal numbers using n(3n-1)/2.", "example": "P(5)" },
+    { "lesson_id": 955, "topic": "Identify hexagonal numbers using n(2n-1).", "example": "H(5)" },
+    { "lesson_id": 956, "topic": "Find the sum of a finite arithmetic series using n(a+l)/2.", "example": "3+7+11+...+43" },
+    { "lesson_id": 957, "topic": "Find the number of terms in an arithmetic sequence.", "example": "3,7,...,43" },
+    { "lesson_id": 958, "topic": "Find the common difference in an arithmetic sequence.", "example": "5,9,13,..." },
+    { "lesson_id": 959, "topic": "Find the common ratio in a geometric sequence.", "example": "3,12,48,..." },
+    { "lesson_id": 960, "topic": "Find the sum of consecutive integers between two numbers.", "example": "5+6+...+15" },
+    { "lesson_id": 961, "topic": "Find the sum of consecutive even integers between two numbers.", "example": "4+6+...+20" },
+    { "lesson_id": 962, "topic": "Find the sum of consecutive odd integers between two numbers.", "example": "3+5+...+19" },
+    { "lesson_id": 963, "topic": "Find the product of consecutive integers using factorial notation.", "example": "5!" },
+    { "lesson_id": 964, "topic": "Find the number of permutations nPr using n!/(n-r)!.", "example": "5P3" },
+    { "lesson_id": 965, "topic": "Find the number of combinations nCr using n!/(r!(n-r)!).", "example": "5C2" },
+    { "lesson_id": 966, "topic": "Find the probability of an event using favorable/total outcomes.", "example": "P(rolling 4)" },
+    { "lesson_id": 967, "topic": "Find the probability of independent events by multiplying.", "example": "P(2 heads)" },
+    { "lesson_id": 968, "topic": "Find the probability of mutually exclusive events by adding.", "example": "P(1 or 2)" },
+    { "lesson_id": 969, "topic": "Find expected value by summing outcomes times probabilities.", "example": "Dice game" },
+    { "lesson_id": 970, "topic": "Find the odds in favor of an event using favorable:unfavorable.", "example": "Odds of rolling 6" },
+    { "lesson_id": 971, "topic": "Find the GCD and LCM of three numbers using prime factorization.", "example": "12, 18, 24" },
+    { "lesson_id": 972, "topic": "Find the number of diagonals in a polygon using n(n-3)/2.", "example": "Hexagon" },
+    { "lesson_id": 973, "topic": "Find the sum of interior angles of a polygon using (n-2)180.", "example": "Pentagon" },
+    { "lesson_id": 974, "topic": "Find the measure of each interior angle of a regular polygon.", "example": "Regular hexagon" },
+    { "lesson_id": 975, "topic": "Find the exterior angle of a regular polygon using 360/n.", "example": "Regular octagon" },
+    { "lesson_id": 976, "topic": "Find the area of a regular polygon using (1/2)apothem × perimeter.", "example": "Regular hexagon" },
+    { "lesson_id": 977, "topic": "Find the volume of a sphere using (4/3)πr³.", "example": "r=3" },
+    { "lesson_id": 978, "topic": "Find the surface area of a sphere using 4πr².", "example": "r=3" },
+    { "lesson_id": 979, "topic": "Find the volume of a cone using (1/3)πr²h.", "example": "r=3, h=7" },
+    { "lesson_id": 980, "topic": "Find the volume of a pyramid using (1/3)base area × height.", "example": "Square base 4, h=9" },
+    { "lesson_id": 981, "topic": "Find the distance around a circular track using circumference.", "example": "r=50 m" },
+    { "lesson_id": 982, "topic": "Find the number of revolutions of a wheel using distance ÷ circumference.", "example": "1000 m, r=0.5 m" },
+    { "lesson_id": 983, "topic": "Find the area of a circular ring using π(R²-r²).", "example": "R=5, r=3" },
+    { "lesson_id": 984, "topic": "Find the length of an arc using (θ/360)2πr.", "example": "θ=60°, r=6" },
+    { "lesson_id": 985, "topic": "Find the area of a sector using (θ/360)πr².", "example": "θ=90°, r=4" },
+    { "lesson_id": 986, "topic": "Find the volume of a hemisphere using (2/3)πr³.", "example": "r=3" },
+    { "lesson_id": 987, "topic": "Find the surface area of a hemisphere using 3πr².", "example": "r=3" },
+    { "lesson_id": 988, "topic": "Find the volume of a frustum using (1/3)πh(R²+Rr+r²).", "example": "R=5, r=3, h=4" },
+    { "lesson_id": 989, "topic": "Find the diagonal of a rectangle using √(l²+w²).", "example": "l=3, w=4" },
+    { "lesson_id": 990, "topic": "Find the diagonal of a cube using s√3.", "example": "s=5" },
+    { "lesson_id": 991, "topic": "Find the diagonal of a rectangular prism using √(l²+w²+h²).", "example": "2,3,6" },
+    { "lesson_id": 992, "topic": "Use the Pythagorean theorem to find the hypotenuse.", "example": "3,4" },
+    { "lesson_id": 993, "topic": "Use the Pythagorean theorem to find a leg.", "example": "5,3" },
+    { "lesson_id": 994, "topic": "Identify Pythagorean triples like 3-4-5 and multiples.", "example": "6-8-10" },
+    { "lesson_id": 995, "topic": "Find trigonometric ratios using SOH-CAH-TOA for 3-4-5 triangle.", "example": "sin, cos, tan" },
+    { "lesson_id": 996, "topic": "Find the area of a triangle using Heron's formula.", "example": "sides 3,4,5" },
+    { "lesson_id": 997, "topic": "Find the area of a triangle using (1/2)ab sin C.", "example": "a=5, b=6, C=30°" },
+    { "lesson_id": 998, "topic": "Find the volume of a torus using 2π²Rr².", "example": "R=5, r=1" },
+    { "lesson_id": 999, "topic": "Find the surface area of a torus using 4π²Rr.", "example": "R=5, r=1" },
+    { "lesson_id": 1000, "topic": "Use estimation and mental math to check the reasonableness of any answer.", "example": "Verify 47 × 53 ≈ 2500" }
   ]
 }

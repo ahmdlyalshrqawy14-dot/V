@@ -29,11 +29,11 @@ FONT_NAME = "Cairo"
 GOLD_HEX = "#FFD700"
 FPS = 25
 
-# Character Micro-Behaviors (حل المشكلة 16: ضبط معدل ومدّة الرمش)
+# Character Micro-Behaviors (حل المشكلة 16: ضبط الرمش)
 BLINK_INTERVAL = 2.8
 BLINK_DURATION = 0.16
 
-# حل المشاكل 3 و25 و31 و44: تقليص وقت النهاية لمنع الصمت والوقت الميت بعد انتهاء الإلقاء
+# حل المشاكل 3 و25 و31 و44: تقليص وقت النهاية لمنع الصمت والوقت الميت
 TAIL_PAD = 0.3
 
 # Teacher Coordinate Anchors
@@ -155,7 +155,6 @@ def generate_lesson_script(lesson_info, persona):
     teacher_name = persona.get("name", "Professor")
 
     print(f"[GEMINI] Generating lesson script for '{topic}'...")
-    # حل المشاكل: (4) منع المضروب، (8 و19) صياغة وتعميم القاعدة، (10 و28) خطاف سريع، (12) تحدي الجمهور بالتعليقات، (34) منع تكدس المعادلات
     prompt = f"""
     You are {teacher_name}, an elite viral math educator on TikTok and YouTube Shorts.
     Create an ultra-retaining 20 to 25-second math hack.
@@ -218,16 +217,13 @@ def generate_lesson_script(lesson_info, persona):
                 if raw_text.endswith("```"): raw_text = raw_text[:-3]
                 parsed = json.loads(raw_text.strip())
                 if "spoken_hook" in parsed and "step_1" in parsed:
-                    # حل المشكلة 2 و4: حذف | وعلامات التعجب لمنع خطأ المضروب
                     for k, v in parsed.items():
                         if isinstance(v, str):
                             parsed[k] = v.replace("|", "").replace("!", "").strip()
 
-                    # حل المشكلة 7: منع بقاء نصوص الخطوات فارغة
                     if not parsed.get("step_1"): parsed["step_1"] = "1. First step"
                     if not parsed.get("step_2"): parsed["step_2"] = "2. Second step"
 
-                    # حل المشكلة 20: التأكد من أن النتيجة تبدأ برقم 3
                     res_str = parsed.get("result_text", "")
                     if not res_str.startswith("3."):
                         clean_res = res_str.lstrip("1234567890. ")
@@ -279,7 +275,6 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     cond_idle_open = f"(not({is_pointing}))*({is_talking})"
     cond_point_closed = f"({is_pointing})*(not({is_talking}))"
     cond_point_open = f"({is_pointing})*({is_talking})"
-    # حل المشكلة 16: جعل المعلم يرمش بانتظام وبشكل طبيعي حتى أثناء الإشارة والشرح
     cond_blink = f"between(mod(t,{BLINK_INTERVAL}),0,{BLINK_DURATION})"
 
     # Dynamic camera movements
@@ -292,11 +287,12 @@ def render_final_composition(content_data, timestamps, words_data, persona, outp
     pan_x = f"max(0,min(70,70*{ease}+2*sin(2*PI*t*1.2)+{shake_x}))"
     pan_y = f"max(0,min(90,70*{ease}+2*sin(2*PI*t*0.8+1)+{shake_y}))"
 
-    # حل المشكلة 17: زووم ديناميكي حركي في البداية وعند إعلان النتيجة بدلاً من الثبات الكامل
-    zoom_expr = f"if(lt(t,{t_hook}),1.08,if(between(t,{t_res},{t_res+1.5}),1.06,1.0))"
+    # تصحيح الخطأ: استخدام إطارات 'on' بدلاً من 't' داخل zoompan
+    f_hook = int(t_hook * FPS)
+    f_res = int(t_res * FPS)
+    f_res_end = int((t_res + 1.5) * FPS)
+    zoom_expr = f"if(lte(on,{f_hook}),1.08,if(between(on,{f_res},{f_res_end}),1.06,1.0))"
 
-    # حل المشكلة 1 و33: رفع شريط التقدم لـ y=1740 لحمايته من أزرار المنصة السفلية
-    # حل المشكلة 21: حذف drawbox الخاص بالإطار المحيط الخارجي تماماً
     vf = (
         f"[0:v]scale=1400:2400,zoompan=z='{zoom_expr}':d=1:s=1180x2020:fps={FPS},"
         f"crop=w=1080:h=1920:x='{pan_x}':y='{pan_y}'[bg];"

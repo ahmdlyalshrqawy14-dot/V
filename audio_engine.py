@@ -20,7 +20,6 @@ def get_audio_duration(file_path):
     except Exception:
         return 2.0
 
-# حل المشاكل: (4) حذف ! لمنع خطأ المضروب، (7 و26 و28 و42) دعم سرعات متغيرة لكل مقطع
 async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="+0%"):
     clean = re.sub(r'["\'`*_~<>{}[\]\\/^$|!]', ' ', str(text))
     clean = " ".join(clean.split()).strip()
@@ -51,7 +50,6 @@ async def synthesize_raw_chunk(text, voice_model, raw_output_path, rate="+0%"):
     dur = get_audio_duration(raw_output_path)
     return words, dur, clean
 
-# حل المشكلة 24: هندسة صوتية احترافية مع فلترة الترددات الخفيضة وإبراز نقاء ودفء الصوت
 def apply_vocal_dsp(input_path, output_path, dsp_config):
     pitch_semitones = float(dsp_config.get("pitch_shift", 0.0))
     chest_gain = float(dsp_config.get("chest_eq_gain", 2.5))
@@ -86,12 +84,14 @@ async def build_complete_voiceover(content_data, persona):
     voice_model = voice_config.get("model", "en-GB-RyanNeural")
     dsp_config = voice_config.get("dsp", {})
 
-    # حل المشاكل: (10 و28) خطاف سريع ومحفز، (39 و42) خطوات متزنة وواضحة، (26) نتيجة مفعمة بالحماس
+    # إبطاء سرعة الصوت بنسبة 50%
+    SPEECH_RATE = "-50%"
+
     sections = [
-        ("hook", content_data.get("spoken_hook", ""), "+3%"),
-        ("step1", content_data.get("spoken_step1", ""), "-2%"),
-        ("step2", content_data.get("spoken_step2", ""), "-2%"),
-        ("result", content_data.get("spoken_result", ""), "+2%")
+        ("hook", content_data.get("spoken_hook", ""), SPEECH_RATE),
+        ("step1", content_data.get("spoken_step1", ""), SPEECH_RATE),
+        ("step2", content_data.get("spoken_step2", ""), SPEECH_RATE),
+        ("result", content_data.get("spoken_result", ""), SPEECH_RATE)
     ]
 
     all_words = []
@@ -99,8 +99,8 @@ async def build_complete_voiceover(content_data, persona):
     current_time = 0.35
     processed_files = []
 
-    # حل المشاكل 29 و43: فاصل معرفي متزن (0.75 ثانية) يتيح للمشاهد استيعاب الحسابات ذهنياً
-    pause_duration = 0.75
+    # ضبط فاصل الصمت على ثانية كاملة (1.0s)
+    pause_duration = 1.0
     silence_file = "silence_pause.mp3"
     subprocess.run(
         ["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SAMPLE_RATE}:cl=mono", "-t", str(pause_duration), "-c:a", "libmp3lame", silence_file],
@@ -151,7 +151,6 @@ async def build_complete_voiceover(content_data, persona):
     concat_filter = f"".join([f"[{j}:a]" for j in range(n)]) + f"concat=n={n}:v=0:a=1[v_raw];"
     
     total_dur = current_time
-    # حل المشاكل 25 و31: تلاشٍ ناعم وقصير يمنع الانقطاع المبتور دون إهدار وقت ميت
     fade_start = max(0.1, round(total_dur - 0.3, 2))
 
     final_audio_filter = (
@@ -172,14 +171,12 @@ async def build_complete_voiceover(content_data, persona):
     ]
     subprocess.run(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-    # تنظيف الملفات المؤقتة
     for f in processed_files:
         raw_f = f.replace("dsp_", "raw_")
         if os.path.exists(f): os.remove(f)
         if os.path.exists(raw_f): os.remove(raw_f)
     if os.path.exists(silence_file): os.remove(silence_file)
 
-    # حل المشاكل 3 و31 و44: إزالة الوقت الميت في نهاية ملف الصوت
     total_dur = get_audio_duration("voice.mp3") + 0.05
     timestamps["total"] = round(total_dur, 2)
     print(f"[AUDIO] Voiceover synthesized successfully ({timestamps['total']:.2f}s).")

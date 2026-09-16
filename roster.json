@@ -14,9 +14,9 @@
       "voice": {
         "model": "en-GB-RyanNeural",
         "dsp": {
-          "pitch_shift": "-1.5",
-          "chest_eq_gain": "4",
-          "presence_eq_gain": "-3"
+          "pitch_shift": "0.5",
+          "chest_eq_gain": "3",
+          "presence_eq_gain": "2"
         }
       },
       "theme": {
@@ -44,9 +44,9 @@
       "voice": {
         "model": "en-US-MichelleNeural",
         "dsp": {
-          "pitch_shift": "+0.5",
-          "chest_eq_gain": "2",
-          "presence_eq_gain": "-4"
+          "pitch_shift": "0.3",
+          "chest_eq_gain": "1",
+          "presence_eq_gain": "3"
         }
       },
       "theme": {
@@ -74,9 +74,9 @@
       "voice": {
         "model": "en-AU-WilliamNeural",
         "dsp": {
-          "pitch_shift": "-2.0",
-          "chest_eq_gain": "5",
-          "presence_eq_gain": "-5"
+          "pitch_shift": "-1.5",
+          "chest_eq_gain": "6",
+          "presence_eq_gain": "1"
         }
       },
       "theme": {
@@ -104,9 +104,9 @@
       "voice": {
         "model": "en-IE-EmilyNeural",
         "dsp": {
-          "pitch_shift": "-0.5",
-          "chest_eq_gain": "3",
-          "presence_eq_gain": "-3"
+          "pitch_shift": "0.0",
+          "chest_eq_gain": "2",
+          "presence_eq_gain": "0"
         }
       },
       "theme": {

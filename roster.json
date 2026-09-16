@@ -5,6 +5,12 @@
       "name": "Prof. Arthur Sterling",
       "tagline": "The Eccentric Genius",
       "watermark": "Prof. Arthur Sterling | Speed Math",
+      "avatar": {
+        "suit_color": "#1e3a8a",
+        "tie_color": "#b91c1c",
+        "hair_color": "#26150f",
+        "glasses": "round"
+      },
       "voice": {
         "model": "en-GB-RyanNeural",
         "dsp": {
@@ -29,6 +35,12 @@
       "name": "Dr. Maya Lin",
       "tagline": "MIT Algorithm Hacker",
       "watermark": "Dr. Maya Lin | Math Hacks",
+      "avatar": {
+        "suit_color": "#0f172a",
+        "tie_color": "#06b6d4",
+        "hair_color": "#09090b",
+        "glasses": "cateye"
+      },
       "voice": {
         "model": "en-US-MichelleNeural",
         "dsp": {
@@ -53,6 +65,12 @@
       "name": "Leo Vance",
       "tagline": "The Math Coach",
       "watermark": "Leo Vance | Brain Gains",
+      "avatar": {
+        "suit_color": "#292524",
+        "tie_color": "#ea580c",
+        "hair_color": "#1c1917",
+        "glasses": "square"
+      },
       "voice": {
         "model": "en-AU-WilliamNeural",
         "dsp": {
@@ -77,6 +95,12 @@
       "name": "Prof. Clara Dubois",
       "tagline": "Architect of Logic",
       "watermark": "Prof. Clara Dubois | Pure Logic",
+      "avatar": {
+        "suit_color": "#312e81",
+        "tie_color": "#c084fc",
+        "hair_color": "#451a03",
+        "glasses": "cateye"
+      },
       "voice": {
         "model": "en-IE-EmilyNeural",
         "dsp": {

@@ -15,8 +15,8 @@
         "model": "en-GB-RyanNeural",
         "dsp": {
           "pitch_shift": "0.5",
-          "chest_eq_gain": "3",
-          "presence_eq_gain": "2"
+          "chest_eq_gain": "4",
+          "presence_eq_gain": "3"
         }
       },
       "theme": {
@@ -31,21 +31,21 @@
       }
     },
     {
-      "id": "maya",
-      "name": "Dr. Maya Lin",
-      "tagline": "MIT Algorithm Hacker",
-      "watermark": "Dr. Maya Lin | Math Hacks",
+      "id": "jordan",
+      "name": "Jordan Blake",
+      "tagline": "The Code Whisperer",
+      "watermark": "Jordan Blake | Math Hacks",
       "avatar": {
         "suit_color": "#0f172a",
         "tie_color": "#06b6d4",
-        "hair_color": "#09090b",
-        "glasses": "cateye"
+        "hair_color": "#1c1917",
+        "glasses": "aviator"
       },
       "voice": {
-        "model": "en-US-MichelleNeural",
+        "model": "en-US-GuyNeural",
         "dsp": {
-          "pitch_shift": "0.3",
-          "chest_eq_gain": "1",
+          "pitch_shift": "-0.3",
+          "chest_eq_gain": "4",
           "presence_eq_gain": "3"
         }
       },
@@ -75,8 +75,8 @@
         "model": "en-AU-WilliamNeural",
         "dsp": {
           "pitch_shift": "-1.5",
-          "chest_eq_gain": "6",
-          "presence_eq_gain": "1"
+          "chest_eq_gain": "7",
+          "presence_eq_gain": "2"
         }
       },
       "theme": {
@@ -91,22 +91,22 @@
       }
     },
     {
-      "id": "clara",
-      "name": "Prof. Clara Dubois",
-      "tagline": "Architect of Logic",
-      "watermark": "Prof. Clara Dubois | Pure Logic",
+      "id": "marcus",
+      "name": "Marcus Webb",
+      "tagline": "The Logic Architect",
+      "watermark": "Marcus Webb | Pure Logic",
       "avatar": {
         "suit_color": "#312e81",
         "tie_color": "#c084fc",
-        "hair_color": "#451a03",
-        "glasses": "cateye"
+        "hair_color": "#1c1917",
+        "glasses": "rectangle"
       },
       "voice": {
-        "model": "en-IE-EmilyNeural",
+        "model": "en-GB-ThomasNeural",
         "dsp": {
-          "pitch_shift": "0.0",
-          "chest_eq_gain": "2",
-          "presence_eq_gain": "0"
+          "pitch_shift": "-1.0",
+          "chest_eq_gain": "4",
+          "presence_eq_gain": "1"
         }
       },
       "theme": {

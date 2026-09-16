@@ -133,10 +133,10 @@ async def build_complete_voiceover(content_data, persona):
 
     # سرعات متغيرة حسب طبيعة كل جزء لإيقاع أنسب لفيديوهات الشورتس
     sections = [
-        ("hook",   content_data.get("spoken_hook", ""),   "-8%"),
-        ("step1",  content_data.get("spoken_step1", ""),  "-18%"),
-        ("step2",  content_data.get("spoken_step2", ""),  "-18%"),
-        ("result", content_data.get("spoken_result", ""), "-12%")
+        ("hook",   content_data.get("spoken_hook", ""),   "+5%"),
+        ("step1",  content_data.get("spoken_step1", ""),  "+0%"),
+        ("step2",  content_data.get("spoken_step2", ""),  "+0%"),
+        ("result", content_data.get("spoken_result", ""), "+0%")
     ]
 
     all_words = []

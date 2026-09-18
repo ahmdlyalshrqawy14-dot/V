@@ -1,7 +1,7 @@
 {
   "series_id": "speed_math",
-  "current_lesson_index": 29,
-  "last_completed_lesson_id": 29,
+  "current_lesson_index": 30,
+  "last_completed_lesson_id": 30,
   "completed_lessons": [
     1,
     2,
@@ -31,6 +31,7 @@
     26,
     27,
     28,
-    29
+    29,
+    30
   ]
 }

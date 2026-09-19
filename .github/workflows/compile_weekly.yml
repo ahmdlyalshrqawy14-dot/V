@@ -5,7 +5,7 @@ on:
   schedule:
     # يعمل تلقائياً كل جمعة الساعة 15:00 UTC
     # بتوقيت مصر: 6:00 مساءً
-    - cron: '0 15 * * 5'
+    - cron:
 
 permissions:
   contents: write

@@ -19,7 +19,7 @@ on:
   schedule:
     # 5:00 UTC = 8:00 صباحاً بتوقيت مصر
     # 11:00 UTC = 2:00 ظهراً بتوقيت مصر
-    - cron: '0 5,11 * * *'
+    - cron: 
 
 permissions:
   contents: write
